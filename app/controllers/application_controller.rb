@@ -40,17 +40,17 @@ class ApplicationController < ActionController::API
     decode_token
   end
 
-  def authorize_vendedor
+  def authorize_usuario
     user = decode_token
-    unless user.role == "vendedor"
-      render json: {error: "Rol de vendedor Requerido"}, status: :forbidden
+    unless user.role == "usuario"
+      render json: {error: "Rol de usuario Requerido"}, status: :forbidden
     end
   end
 
-  def authorize_comprador
+  def authorize_moderador
     user = decode_token
-    unless user.role == "comprador"
-      render json: {error: "Rol de comprador Requerido"}, status: :forbidden
+    unless user.role == "moderador"
+      render json: {error: "Rol de moderador Requerido"}, status: :forbidden
     end
   end
 

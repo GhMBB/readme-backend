@@ -1,6 +1,5 @@
 # app/controllers/auth_controller.rb
 class AuthController < ApplicationController
-  #before_action :authenticate_request, only: [:register]
 
   def login
     user = User.find_by(username: params[:username])
@@ -16,12 +15,10 @@ class AuthController < ApplicationController
   end
 
   def register
-    #authenticate_request # Requiere autenticación para registrar nuevos usuarios
-
     user = User.new(user_params)
 
-    unless ["vendedor","comprador"].include?(user.role)
-      render json: { error: "Solo se permiten los roles 'vendedor' y 'comprador'"}, status: :unprocessable_entity
+    unless ["usuario","moderador"].include?(user.role)
+      render json: { error: "Solo se permiten los roles 'usuario' y 'moderador'"}, status: :unprocessable_entity
       return
     end
 
