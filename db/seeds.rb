@@ -7,9 +7,9 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
-defaultComprador = User.find_by(username: "comprador")
-defaultVendedor = User.find_by(username: "vendedor")
-defaultComprador.destroy! if !defaultComprador.nil?
-defaultVendedor.destroy! if !defaultVendedor.nil?
-User.create(username:"comprador",password:"123456",role:"comprador")
-User.create(username:"vendedor",password:"123456",role:"vendedor")
+defaultUsuario = User.find_by(username: "usuario")
+defaultModerador = User.find_by(username: "moderador")
+defaultUsuario.destroy! if !defaultUsuario.nil?
+defaultModerador.destroy! if !defaultModerador.nil?
+User.create(username:"usuario",password:"123456",role:"usuario")
+User.create(username:"moderador",password:"123456",role:"moderador")
