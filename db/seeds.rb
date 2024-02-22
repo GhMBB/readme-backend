@@ -11,5 +11,9 @@ defaultUsuario = User.find_by(username: "usuario")
 defaultModerador = User.find_by(username: "moderador")
 defaultUsuario.destroy! if !defaultUsuario.nil?
 defaultModerador.destroy! if !defaultModerador.nil?
-User.create(username:"usuario",password:"123456",role:"usuario")
-User.create(username:"moderador",password:"123456",role:"moderador")
+User.create(username:"usuario",password:"ab123456",role:"usuario")
+User.create(username:"moderador",password:"ab123456",role:"moderador")
+Libro.create(titulo: "libro", categoria: "historia",user_id: 1)
+Libro.create(titulo: "libro", categoria: "magia",user_id: 1)
+Favorito.create(libro_id: 1, user_id: 1, favorito: true)
+Favorito.create(libro_id: 2, user_id: 1, favorito: true)
