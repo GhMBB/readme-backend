@@ -52,6 +52,19 @@ end
   # Método para buscar un favorito por user_id y libro_id
   # GET /favoritos/find_by
   def buscar_por_usuario_y_libro
+    #Verificar los parametros
+    libro = Libro.find_by(id: params[:libro_id])
+    if libro.nil?
+      render json: { error: "El libro no fue encontrado" }, status: :bad_request
+      return
+    end
+    usuario = User.find_by(id:params[:user_id])
+    if usuario.nil?
+      render json: { error: "El usuario no fue encontrado" }, status: :bad_request
+      return
+    end
+
+
     @favorito = Favorito.find_by(user_id: params[:user_id], libro_id: params[:libro_id],favorito: true, deleted: false)
     if @favorito
       render json: @favorito, status: :ok
@@ -62,7 +75,7 @@ end
 
   def libros_favoritos_por_usuario
   begin
-   user_id = params[:user_id] # Obtener el user_id de los parámetros de la solicitud
+   user_id = params[:user_id]
    # Verificar si existe el usuario por su id
    usuario = User.find_by(id: user_id)
    # Si no se encuentra el usuario, devolver un error 404
