@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   post '/register', to: 'auth#register'
   get 'favoritos/find_by', to: 'favoritos#buscar_por_usuario_y_libro'
   get 'favoritos/user', to: 'favoritos#libros_favoritos_por_usuario'
-  resources :favoritos , only: [:create, :update]
+  resources :favoritos , only: [:create]
 
   get "up" => "rails/health#show", as: :rails_health_check
 
