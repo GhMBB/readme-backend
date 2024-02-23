@@ -1,0 +1,11 @@
+development: 
+  cloud_name: "dkrmah0f7"
+  api_key: "183549582925518"
+  api_secret: "LRDlCyJxSBI03yiQzOGQZpBdrvA"
+  secure: true
+
+production:
+  cloud_name: "dkrmah0f7"
+  api_key: "183549582925518"
+  api_secret: "LRDlCyJxSBI03yiQzOGQZpBdrvA"
+  secure: true

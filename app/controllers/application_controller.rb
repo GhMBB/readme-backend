@@ -54,4 +54,9 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def internal_server_error
+    render json: {error: "Ha ocurrido un error en el servidor."}, status: 500
+    return
+  end
+
 end

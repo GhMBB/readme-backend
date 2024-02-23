@@ -16,6 +16,10 @@ module ReadmeBackend
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w(assets tasks))
 
+    
+    config.cloudinary_cloud_name = 'dkrmah0f7'
+    config.cloudinary_api_key = '183549582925518'
+
     config.secret_key = "0e50eb247f43cea90a1da58dfa146e3154ff884f408a788bf27d7a42c6f873cd39107ca4a288997d82a8cbfdf5187194c864a54171270a465ac3d1d2cd2c62cb"
     # Configuration for the application, engines, and railties goes here.
     #
