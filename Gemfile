@@ -18,6 +18,10 @@ gem 'bcrypt', '~> 3.1.7'
 
 gem 'jwt'
 
+gem 'rest-client'
+gem 'ffi'
+gem 'cloudinary'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 

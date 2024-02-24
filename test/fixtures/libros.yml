@@ -1,21 +1,25 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# test/fixtures/libros.yml
 
 one:
-  titulo: MyString
-  sinopsis: MyText
-  portada: MyString
+  titulo: "Libro One"
+  sinopsis: "Sinopsis del libro one"
+  portada: "URL de la portada del libro one"
   adulto: false
-  puntuacion_media: 1.5
-  cantidad_comentarios: 1
-  portada_url: MyString
+  cantidad_lecturas: 100
+  cantidad_resenhas: 20
+  puntuacion_media: 4.5
+  cantidad_comentarios: 30
+  categoria: "Categoria del libro one"
   user: one
 
 two:
-  titulo: MyString
-  sinopsis: MyText
-  portada: MyString
-  adulto: false
-  puntuacion_media: 1.5
-  cantidad_comentarios: 1
-  portada_url: MyString
+  titulo: "Libro Two"
+  sinopsis: "Sinopsis del libro two"
+  portada: "URL de la portada del libro two"
+  adulto: true
+  cantidad_lecturas: 50
+  cantidad_resenhas: 10
+  puntuacion_media: 3.8
+  cantidad_comentarios: 15
+  categoria: "Categoria del libro two"
   user: two

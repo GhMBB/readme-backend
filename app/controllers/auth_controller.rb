@@ -25,7 +25,7 @@ class AuthController < ApplicationController
     if user.save
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
-      render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id:user.id }
+      render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id:user.id, fecha_nacimiento: user.fecha_nacimiento }
     else
       render json: { error: user.errors.full_messages }, status: :unprocessable_entity
     end
@@ -34,6 +34,6 @@ class AuthController < ApplicationController
   private
 
   def user_params
-    params.permit(:username, :password, :password_confirmation, :role)
+    params.permit(:username, :password, :password_confirmation, :role, :fecha_nacimiento)
   end
 end

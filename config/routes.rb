@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   post 'resenhas', to: 'resenhas#create_or_update'
   get 'resenhas/user', to: 'resenhas#find_by_user_and_libro'
   resources :favoritos , only: [:create]
+  resources :libros
   resources :resenhas, only: [:destroy]
+
 
   get "up" => "rails/health#show", as: :rails_health_check
 
