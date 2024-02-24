@@ -50,18 +50,7 @@ class LibrosController < ApplicationController
   end
 
   def update
-    usuario = @libro.user
-    if params[:user_id].present?
-      usuario = User.find_by(id: params[:user_id])
-      if usuario.nil?
-        render json: { error: "El usuario no existe." }, status: :unprocessable_entity
-        return
-      end
-    end
-  
     if @libro.update(libro_params)
-
-      @libro.user = usuario
       @libro.portada = guardar_portada if params[:portada].present?
       
       if @libro.save
