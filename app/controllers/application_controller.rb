@@ -1,10 +1,9 @@
 class ApplicationController < ActionController::API
-  class << self
-    def PAGE_SIZE
-      2
-    end
-  end
 
+  def get_user
+    user = decode_token
+    return user
+  end
   def decode_token
     authorization_header = request.headers["Authorization"]
 
