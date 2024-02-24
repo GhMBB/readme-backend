@@ -26,18 +26,13 @@ class LibrosController < ApplicationController
     @libro.cantidad_lecturas = @libro.cantidad_lecturas+1
     @libro.save
     formated_libro = @libro
-    formated_libro.portada = obtener_portada(@libro.portada) 
+    formated_libro.portada ||= obtener_portada(@libro.portada)
     render json: formated_libro
   end
 
   # POST /libros
   def create
-    usuario = User.find_by(id: params[:user_id])
-    if(usuario.nil?)
-      render json:{error: "El usuario no existe."} , status: :unprocessable_entity
-      return
-    end
-
+    usuario = get_user
     @libro = Libro.new(libro_params)
     @libro.user = usuario
     @libro.portada = guardar_portada
@@ -50,6 +45,10 @@ class LibrosController < ApplicationController
   end
 
   def update
+    if @libro.user != get_user
+      render json: {error: "Debes ser el propietario del libro para editarlo."}, status: 401
+      return
+    end
     if @libro.update(libro_params)
       @libro.portada = guardar_portada if params[:portada].present?
       
@@ -66,6 +65,12 @@ class LibrosController < ApplicationController
 
   # DELETE /libros/1
   def destroy
+    usuario = get_user
+    if @libro.user != usuario && usuario.role != "moderador"
+      render json: {error: "Debes ser el propietario del libro para editarlo o tener el rol de moderador."}, status: 401
+      return
+    end
+
     @libro.deleted = true
     if @libro.save
       render status: :ok
@@ -90,6 +95,10 @@ class LibrosController < ApplicationController
   end
 
   def obtener_portada(portada_public_id)
+    if !portada_public_id
+      return ""
+    end
+
     begin
       enlace_temporal = Cloudinary::Utils.cloudinary_url("#{portada_public_id}", :resource_type => :image, :expires_at => (Time.now + 3600).to_i)
       return enlace_temporal

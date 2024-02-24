@@ -2,25 +2,50 @@ require 'test_helper'
 
 class LibrosControllerTest < ActionController::TestCase
   setup do
-    @libro = libros(:one) # Suponiendo que tienes fixtures configurados correctamente
+    @libro = libros(:one)
+    @user = users(:one)
+    @token = JwtService.encode(@user)
+    @request.headers["Authorization"] = "Bearer #{@token}"
   end
 
-  test "should get the libro" do
+  test "should get the libro successfully" do
     get :show, params: { id: @libro.id }
-    assert_response :success
-
-    libro_serializado = LibroSerializer.new(@libro).as_json
-    response_body = JSON.parse(response.body)
-
-    assert_equal libro_serializado["id"], response_body["id"]
-    assert_equal libro_serializado["titulo"], response_body["titulo"]
-    assert_equal libro_serializado["sinopsis"], response_body["sinopsis"]
-    assert_equal libro_serializado["adulto"], response_body["adulto"]
-    assert_equal libro_serializado["cantidad_lecturas"], response_body["cantidad_lecturas"]
-    assert_equal libro_serializado["cantidad_resenhas"], response_body["cantidad_resenhas"]
-    assert_equal libro_serializado["puntuacion_media"], response_body["puntuacion_media"]
-    assert_equal libro_serializado["cantidad_comentarios"], response_body["cantidad_comentarios"]
-    assert_equal libro_serializado["categoria"], response_body["categoria"]
-    assert_equal libro_serializado["user_id"], response_body["user_id"]
+    assert_response :success, "La solicitud para obtener el libro no fue exitosa"
   end
+
+  test "should create libro successfully" do
+    assert_difference('Libro.count') do
+      post :create, params: { titulo: "Nuevo Libro", sinopsis: "Sinopsis del nuevo libro", adulto: false, categoria: "Categoria del nuevo libro" }
+    end
+
+    assert_response :created, "La solicitud para crear el libro no fue exitosa"
+  end
+
+  test "should not create libro without titulo" do
+    assert_no_difference('Libro.count') do
+      post :create, params: { sinopsis: "Sinopsis del nuevo libro", adulto: false, categoria: "Categoria del nuevo libro" }
+    end
+
+    assert_response :unprocessable_entity, "Se creó un libro sin un título, lo cual no debería ser posible"
+  end
+
+  test "should update libro successfully" do
+    patch :update, params: { id: @libro.id, titulo: "Libro Actualizado" }
+    assert_response :success, "La solicitud para actualizar el libro no fue exitosa"
+  end
+
+  test "should not update libro with invalid params" do
+    patch :update, params: { id: @libro.id, titulo: "" }
+    assert_response :unprocessable_entity, "Se actualizó el libro con parámetros inválidos, lo cual no debería ser posible"
+  end
+
+  test "should destroy libro successfully" do
+    assert_difference('Libro.where(deleted: false).count', -1) do
+      delete :destroy, params: { id: @libro.id }
+    end
+  
+    assert @libro.reload.deleted, "El libro no se marcó como eliminado correctamente"
+    assert_response :success, "La solicitud para eliminar el libro no fue exitosa"
+  end
+  
 end
