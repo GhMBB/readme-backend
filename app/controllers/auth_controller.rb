@@ -8,7 +8,7 @@ class AuthController < ApplicationController
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
       puts(expiration)
-      render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role }
+      render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id }
     else
       render json: { error: 'Invalid username or password' }, status: :unauthorized
     end
@@ -25,7 +25,7 @@ class AuthController < ApplicationController
     if user.save
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
-      render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role }
+      render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id:user.id }
     else
       render json: { error: user.errors.full_messages }, status: :unprocessable_entity
     end

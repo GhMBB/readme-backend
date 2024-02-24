@@ -1,12 +1,10 @@
 class FavoritosController < ApplicationController
   #before_action :authenticate_request
-  #before_action :authorize_usuario
   before_action :set_favorito, only: %i[ show update destroy ]
 
   # GET /favoritos
   def index
     @favoritos = Favorito.all
-
     render json: @favoritos
   end
 
@@ -54,6 +52,19 @@ end
   # Método para buscar un favorito por user_id y libro_id
   # GET /favoritos/find_by
   def buscar_por_usuario_y_libro
+    #Verificar los parametros
+    libro = Libro.find_by(id: params[:libro_id])
+    if libro.nil?
+      render json: { error: "El libro no fue encontrado" }, status: :bad_request
+      return
+    end
+    usuario = User.find_by(id:params[:user_id])
+    if usuario.nil?
+      render json: { error: "El usuario no fue encontrado" }, status: :bad_request
+      return
+    end
+
+
     @favorito = Favorito.find_by(user_id: params[:user_id], libro_id: params[:libro_id],favorito: true, deleted: false)
     if @favorito
       render json: @favorito, status: :ok
@@ -62,31 +73,32 @@ end
     end
   end
 
-   def libros_favoritos_por_usuario
-     begin
-      user_id = params[:user_id] # Obtener el user_id de los parámetros de la solicitud
-      # Verificar si existe el usuario por su id
-      usuario = User.find_by(id: user_id)
-      # Si no se encuentra el usuario, devolver un error 404
-      raise ActiveRecord::RecordNotFound.new("Usuario no encontrado") if usuario.nil?
+  def libros_favoritos_por_usuario
+  begin
+   user_id = params[:user_id]
+   # Verificar si existe el usuario por su id
+   usuario = User.find_by(id: user_id)
+   # Si no se encuentra el usuario, devolver un error 404
+   raise ActiveRecord::RecordNotFound.new("Usuario no encontrado") if usuario.nil?
+   # Encuentra todos los favoritos del usuario dado
+   @favoritos = Favorito.where(user_id: params[:user_id], favorito: true, deleted: false)
 
-      # Encuentra todos los favoritos del usuario dado
-      @favoritos = Favorito.where(user_id: params[:user_id], favorito: true, deleted: false)
-      if @favoritos.size >= 1
-        # Extrae los IDs de los libros favoritos
-        ids = @favoritos.pluck(:libro_id)
-        # Encuentra los libros correspondientes a los IDs obtenidos
-        libros_favoritos = Libro.where(id: ids)
-        render json: libros_favoritos, status: :ok
-      else
-        render json: { error: 'Favoritos no encontrado' }, status: :not_found
-      end
-       rescue ActiveRecord::RecordNotFound => e
-      render json: { error: e.message }, status: :not_found
-    rescue => e
-      render json: { error: e.message }, status: :unprocessable_entity
-    end
+   if @favoritos.size >= 1
+     # Extrae los IDs de los libros favoritos
+     ids = @favoritos.pluck(:libro_id)
+     # Encuentra los libros correspondientes a los IDs obtenidos y pagínalos
+     @libros_favoritos = Libro.where(id: ids).paginate(page: params[:page])
+
+     render json: @libros_favoritos, status: :ok
+   else
+     render json: { error: 'Favoritos no encontrados' }, status: :not_found
+   end
+  rescue ActiveRecord::RecordNotFound => e
+    render json: { error: e.message }, status: :not_found
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
+end
 
   private
     # Use callbacks to share common setup or constraints between actions.
