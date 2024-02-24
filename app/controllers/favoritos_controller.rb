@@ -1,5 +1,5 @@
 class FavoritosController < ApplicationController
-  #before_action :authenticate_request
+  before_action :authenticate_request
   before_action :set_favorito, only: %i[ show update destroy ]
 
   # GET /favoritos
@@ -15,7 +15,13 @@ class FavoritosController < ApplicationController
 
   # POST /favoritos
   def create
-  existe_favorito = Favorito.find_by(libro_id: favorito_params[:libro_id], user_id: favorito_params[:user_id])
+  user = get_user
+  if user.nil?
+    render json: {error: "El usuario no se encuentra"}, status: 400
+    return
+  end
+
+  existe_favorito = Favorito.find_by(libro_id: favorito_params[:libro_id], user_id: user.id)
 
   if existe_favorito.present?
     existe_favorito.update(favorito_params)
@@ -36,6 +42,12 @@ end
 
   # PATCH/PUT /favoritos/1
   def update
+    #Solo el usuario puede actualizar su fav
+    user = get_user
+  if user.nil?
+    render json: {error: "El usuario no se encuentra"}, status: 400
+    return
+  end
      @favorito = Favorito.find_by(id: params[:id], deleted: false)
     if @favorito.update(favorito: params[:fav])
       render json: @favorito
@@ -52,20 +64,20 @@ end
   # Método para buscar un favorito por user_id y libro_id
   # GET /favoritos/find_by
   def buscar_por_usuario_y_libro
+    user = get_user
+    if user.nil?
+      render json: {error: "El usuario no se encuentra"}, status: 400
+      return
+   end
     #Verificar los parametros
     libro = Libro.find_by(id: params[:libro_id])
     if libro.nil?
       render json: { error: "El libro no fue encontrado" }, status: :bad_request
       return
     end
-    usuario = User.find_by(id:params[:user_id])
-    if usuario.nil?
-      render json: { error: "El usuario no fue encontrado" }, status: :bad_request
-      return
-    end
 
 
-    @favorito = Favorito.find_by(user_id: params[:user_id], libro_id: params[:libro_id],favorito: true, deleted: false)
+    @favorito = Favorito.find_by(user_id: user.id, libro_id: params[:libro_id],favorito: true, deleted: false)
     if @favorito
       render json: @favorito, status: :ok
     else
@@ -108,6 +120,6 @@ end
 
     # Only allow a list of trusted parameters through.
     def favorito_params
-      params.require(:favorito).permit(:user_id, :libro_id, :fav => :boolean)
+      params.require(:favorito).permit(:libro_id, :fav => :boolean)
     end
 end
