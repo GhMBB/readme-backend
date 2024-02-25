@@ -60,7 +60,7 @@ end
   # POST /resenhas
   def create_or_update
     libro_id = params[:libro_id]
-    puntuacion = params[:puntuacion]
+    puntuacion = params[:puntuacion].to_f
     #Verificar los parametros
     user = get_user
 
@@ -104,7 +104,7 @@ end
         libro.update(puntuacion_media: (libro.sumatoria.to_f / libro.cantidad_resenhas))
       end
 
-      render json: { message: 'Reseña actualizada exitosamente', resenha: ResenhaSerializer.new(@resenha) } ,status: :ok
+      render json: { message: 'Reseña actualizada exitosamente', resenha: ResenhaSerializer.new(@resenha) } ,status: 201
     end
 
   end
@@ -115,7 +115,7 @@ end
     #
     libro = Libro.find_by(id: params[:libro_id])
     if libro.nil?
-      render json: { error: "El libro no fue encontrado" }, status: :bad_request
+      render json: { error: "El libro no fue encontrado" }, status: 404
       return
     end
     usuario = User.find_by(id: params[:user_id])

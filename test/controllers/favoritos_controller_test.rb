@@ -1,35 +1,28 @@
-require "test_helper"
-
-class FavoritosControllerTest < ActionDispatch::IntegrationTest
+require 'test_helper'
+class FavoritosControllerTest < ActionController::TestCase
   setup do
-    @favorito = favoritos(:one)
+    @user = users(:one)
+    @libro_id = libros(:one).id
+    @token = JwtService.encode(@user)
+    @request.headers["Authorization"] = "Bearer #{@token}"
   end
 
-  #test "should get index" do
-  #  get favoritos_url, as: :json
-  #  assert_response :success
-  #end
+ test "should create favorito" do
+  post :create, params: { favorito: { libro_id: @libro_id, user_id: @user.id, fav: true } }
+  assert_response :created
+end
 
-  test "should create favorito" do
-    post favoritos_url, params: {fav: @favorito.favorito, libro_id: @favorito.libro_id, user_id: @favorito.user_id }, as: :json
-    assert_response :created
+
+  test "should update favorito if already exists" do
+    favorito = Favorito.create(libro_id: @libro_id, user_id: @user.id, fav: false)
+    post :create, params: { favorito: { libro_id: @libro_id, user_id: @user.id, fav: true } }
+    favorito.find_by(libro_id: @libro_id, user_id: @user.id)
+    assert_equal true, favorito.fav
+    assert_response :ok
   end
 
-  #test "should show favorito" do
-  #  get favorito_url(@favorito), as: :json
-  #  assert_response :success
-  #end
-
-  test "should update favorito" do
-    patch favorito_url(@favorito), params: { favorito: false }, as: :json
-    assert_response :success
+  test "should return error if user not found" do
+    post :create, params: { favorito: { libro_id: @libro_id, user_id: "non_existing_id", fav: true  }}
+    assert_response :bad_request
   end
-
-  #test "should destroy favorito" do
-  #  assert_difference("Favorito.count", -1) do
-  #    delete favorito_url(@favorito), as: :json
-  #  end
-
-  #  assert_response :no_content
-  #end
 end
