@@ -16,16 +16,16 @@ class FavoritosController < ApplicationController
   # POST /favoritos
   def create
   user = get_user
-  if user.nil?
+  if user.nil? || (user.deleted == true)
     render json: {error: "El usuario no se encuentra"}, status: 400
     return
   end
 
-  existe_favorito = Favorito.find_by(libro_id: favorito_params[:libro_id], user_id: user.id)
+  existe_favorito = Favorito.find_by(libro_id: params[:libro_id], user_id: user.id)
 
   if existe_favorito.present?
     existe_favorito.update(favorito_params)
-    render json: existe_favorito, status: :ok #ver que hacer en este caso
+    render json: existe_favorito, status: :ok
   else
     # Si no existe el favorito, crea un nuevo favorito
     @favorito = Favorito.new(favorito_params)
@@ -34,7 +34,7 @@ class FavoritosController < ApplicationController
     if @favorito.save
       render json: @favorito, status: :created, location: @favorito
     else
-      render json: @favorito.errors, status: :unprocessable_entity
+      render json: @favorito.errors, status: 400
     end
   end
 end
@@ -66,7 +66,7 @@ end
   def buscar_por_usuario_y_libro
     user = get_user
     if user.nil?
-      render json: {error: "El usuario no se encuentra"}, status: 400
+      render json: {error: "El usuario no se encuentra"}, status: 422
       return
    end
     #Verificar los parametros
