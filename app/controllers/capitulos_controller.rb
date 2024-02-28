@@ -17,13 +17,13 @@ class CapitulosController < ApplicationController
     end
 
     capitulos = libro.capitulos.where(deleted:false).order(:indice)
+    capitulos = capitulos.where(publicado: true) if user != libro.user
 
     capitulos.each do |capitulo|
       capitulo.contenido = obtener_contenido(capitulo.nombre_archivo)
     end
     
     if user == libro.user
-      #data = paginated_clientes.map { |cliente| ClienteSerializer.new(cliente).as_json }
       capitulos_serializados = capitulos.map{ |capitulo| CapituloForOwnerSerializer.new(capitulo).as_json }
 
       render json: capitulos_serializados,status: :ok
@@ -47,7 +47,9 @@ class CapitulosController < ApplicationController
   def create
     libro = Libro.find_by(id: params[:libro_id])
     usuario = get_user
-  
+    
+    return if usuario.nil?
+
     if libro.nil?
       render json: {error: "Libro no encontrado"}, status: 404
       return
