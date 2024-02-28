@@ -9,6 +9,7 @@ one:
   cantidad_resenhas: 20
   puntuacion_media: 4.5
   cantidad_comentarios: 30
+  sumatoria: 20
   categoria: "Categoria del libro one"
   user: one
 
