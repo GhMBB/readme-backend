@@ -1,4 +1,3 @@
 class CapituloSerializer < ActiveModel::Serializer
-  attributes :id, :titulo, :nombre_archivo
-  has_one :libro
+  attributes :id, :indice, :titulo, :libro_id, :contenido, :next_capitulo_id, :previous_capitulo_id
 end
