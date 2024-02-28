@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_24_152936) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_26_152448) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,9 +20,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_24_152936) do
     t.string "nombre_archivo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "previous_capitulo"
-    t.bigint "next_capitulo"
+    t.bigint "previous_capitulo_id"
+    t.bigint "next_capitulo_id"
     t.boolean "deleted", default: false
+    t.integer "indice"
+    t.boolean "publicado"
     t.index ["libro_id"], name: "index_capitulos_on_libro_id"
   end
 
@@ -111,8 +113,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_24_152936) do
     t.date "fecha_nacimiento"
   end
 
-  add_foreign_key "capitulos", "capitulos", column: "next_capitulo"
-  add_foreign_key "capitulos", "capitulos", column: "previous_capitulo"
+  add_foreign_key "capitulos", "capitulos", column: "next_capitulo_id"
+  add_foreign_key "capitulos", "capitulos", column: "previous_capitulo_id"
   add_foreign_key "capitulos", "libros"
   add_foreign_key "comentarios", "libros"
   add_foreign_key "comentarios", "users"
