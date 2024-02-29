@@ -86,17 +86,16 @@ class ComentariosController < ApplicationController
         render json: { error: "El usuario no fue encontrado" }, status: :bad_request
         return
       end
-      comentarios = Comentario.where(user_id: params[:user_id], libro_id: params[:libro_id], deleted: false)
+      comentarios = Comentario.where(user_id: params[:user_id], libro_id: params[:libro_id], deleted: false).order(created_at: :desc)
     else
-      comentarios = Comentario.where(libro_id: params[:libro_id], deleted: false)
+      comentarios = Comentario.where(libro_id: params[:libro_id], deleted: false).order(created_at: :desc)
     end
-    @comentarios = comentarios.paginate(page: params[:page])
-    if @comentarios.any?
-      render json: @comentarios, status: :ok
-    else
-      render json: { error: 'Comentario no encontrado' }, status: :not_found
-    end
-  end
+    @comentarios = comentarios.paginate(page: params[:page], per_page: params[:size])
+    render json: {
+      cant_paginas: @comentarios.total_pages,
+      resultado: ActiveModel::Serializer::CollectionSerializer.new(@comentarios, serializer: ComentarioSerializer)
+    }, status: 200
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -108,4 +107,5 @@ class ComentariosController < ApplicationController
     def comentario_params
       params.require(:comentario).permit(:user_id, :libro_id, :comentario)
     end
+  end
 end

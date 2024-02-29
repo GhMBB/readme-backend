@@ -26,6 +26,7 @@ class FavoritosController < ApplicationController
   if existe_favorito.present?
     existe_favorito.update(favorito_params)
     render json: existe_favorito, status: :ok
+    return
   else
     # Si no existe el favorito, crea un nuevo favorito
     @favorito = Favorito.new(favorito_params)
@@ -33,8 +34,10 @@ class FavoritosController < ApplicationController
     @favorito.deleted = false
     if @favorito.save
       render json: @favorito, status: :created, location: @favorito
+      return
     else
       render json: @favorito.errors, status: 400
+      return
     end
   end
 end
