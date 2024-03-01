@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_26_152448) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_25_182722) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -48,6 +49,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_152448) do
     t.boolean "deleted", default: false
     t.index ["libro_id"], name: "index_favoritos_on_libro_id"
     t.index ["user_id"], name: "index_favoritos_on_user_id"
+  end
+
+  create_table "lecturas", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "libro_id", null: false
+    t.date "fecha"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["libro_id"], name: "index_lecturas_on_libro_id"
+    t.index ["user_id"], name: "index_lecturas_on_user_id"
   end
 
   create_table "libros", force: :cascade do |t|
@@ -120,6 +131,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_152448) do
   add_foreign_key "comentarios", "users"
   add_foreign_key "favoritos", "libros"
   add_foreign_key "favoritos", "users"
+  add_foreign_key "lecturas", "libros"
+  add_foreign_key "lecturas", "users"
   add_foreign_key "libros", "users"
   add_foreign_key "reportes", "libros"
   add_foreign_key "reportes", "users"

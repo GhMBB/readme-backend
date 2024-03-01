@@ -69,6 +69,11 @@ end
       render json: { error: "El libro no fue encontrado" }, status: :not_found
       return
     end
+    # Validar que la puntuación esté dentro del rango
+  if puntuacion < 0 || puntuacion > 5
+    render json: { error: "La puntuación debe estar en el rango de 0 a 5" }, status: :unprocessable_entity
+    return
+  end
 
     # Buscar una reseña existente para el libro y usuario dados
     @resenha = Resenha.find_by(user_id: user.id, libro_id: libro_id)
@@ -139,6 +144,6 @@ end
 
     # Only allow a list of trusted parameters through.
     def resenha_params
-      params.require(:resenha).permit(:user_id, :libro_id, :puntuacion => integer)
+      params.require(:resenha).permit(:user_id, :libro_id, :puntuacion)
     end
 end

@@ -14,7 +14,12 @@ class AuthController < ApplicationController
     end
   end
 
+
   def register
+   if params[:role] == "moderador" && get_user.role != "moderador"
+      render json: { error: "Debes ser moderador para crear otro moderador"}, status: :unprocessable_entity
+      return
+   end
     user = User.new(user_params)
 
     unless ["usuario","moderador"].include?(user.role)
@@ -25,7 +30,7 @@ class AuthController < ApplicationController
     if user.save
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
-      render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id:user.id, fecha_nacimiento: user.fecha_nacimiento }
+      render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id:user.id }
     else
       render json: { error: user.errors.full_messages }, status: :unprocessable_entity
     end
@@ -34,6 +39,6 @@ class AuthController < ApplicationController
   private
 
   def user_params
-    params.permit(:username, :password, :password_confirmation, :role, :fecha_nacimiento)
+    params.permit(:username, :password, :password_confirmation, :role,  :fecha_nacimiento)
   end
 end
