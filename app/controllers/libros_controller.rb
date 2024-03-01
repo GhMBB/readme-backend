@@ -26,7 +26,7 @@ class LibrosController < ApplicationController
     @libro.cantidad_lecturas = @libro.cantidad_lecturas+1
     @libro.save
     formated_libro = @libro
-    formated_libro.portada ||= obtener_portada(@libro.portada)
+    formated_libro.portada = obtener_portada(@libro.portada)
     render json: formated_libro
   end
 
@@ -38,6 +38,7 @@ class LibrosController < ApplicationController
     @libro.portada = guardar_portada
     
     if @libro.save
+      @libro.portada = obtener_portada(@libro.portada)
       render json: @libro, status: :created
     else
       render json: @libro.errors, status: :unprocessable_entity
@@ -53,6 +54,7 @@ class LibrosController < ApplicationController
       @libro.portada = guardar_portada if params[:portada].present?
       
       if @libro.save
+        @libro.portada = obtener_portada(@libro.portada)
         render json: @libro, status: :ok
       else
         render json: @libro.errors, status: :unprocessable_entity
@@ -101,6 +103,7 @@ class LibrosController < ApplicationController
 
     begin
       enlace_temporal = Cloudinary::Utils.cloudinary_url("#{portada_public_id}", :resource_type => :image, :expires_at => (Time.now + 3600).to_i)
+      puts "LIBRPOOOOOO OBTENIDOOOO"
       return enlace_temporal
     rescue CloudinaryException => e
       puts "Error al obtener la portada de Cloudinary: #{e.message}"
