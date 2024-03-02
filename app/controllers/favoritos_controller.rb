@@ -16,7 +16,7 @@ class FavoritosController < ApplicationController
   # POST /favoritos
   def create
   user = get_user
-  if user.nil? || (user.deleted == true)
+  if user.nil?
     render json: {error: "El usuario no se encuentra"}, status: 400
     return
   end
@@ -24,12 +24,11 @@ class FavoritosController < ApplicationController
   existe_favorito = Favorito.find_by(libro_id: params[:libro_id], user_id: user.id)
 
   if existe_favorito.present?
-    existe_favorito.update(favorito_params)
+    existe_favorito.update(libro_id: params[:libro_id], user_id: user.id, favorito: params[:fav])
     render json: existe_favorito, status: :ok
     return
   else
-    # Si no existe el favorito, crea un nuevo favorito
-    @favorito = Favorito.new(favorito_params)
+    @favorito = Favorito.new(libro_id: params[:libro_id], user_id: user.id)
     @favorito.favorito = params[:fav]
     @favorito.deleted = false
     if @favorito.save
@@ -41,6 +40,7 @@ class FavoritosController < ApplicationController
     end
   end
 end
+
 
 
   # PATCH/PUT /favoritos/1
@@ -123,6 +123,6 @@ end
 
     # Only allow a list of trusted parameters through.
     def favorito_params
-      params.require(:favorito).permit(:libro_id, :fav => :boolean)
+      params.require(:favorito).permit(:libro_id,:user_id ,:fav)
     end
 end
