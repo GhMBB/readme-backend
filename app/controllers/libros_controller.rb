@@ -8,7 +8,7 @@ class LibrosController < ApplicationController
 
   # GET /libros
   def index
-    libros = Libro.where(deleted: false)
+    libros = Libro.where(deleted: false).order(created_at: :desc)
     libros = filter_libros(libros)
 
     libros.each do |libro|
@@ -103,7 +103,6 @@ class LibrosController < ApplicationController
 
     begin
       enlace_temporal = Cloudinary::Utils.cloudinary_url("#{portada_public_id}", :resource_type => :image, :expires_at => (Time.now + 3600).to_i)
-      puts "LIBRPOOOOOO OBTENIDOOOO"
       return enlace_temporal
     rescue CloudinaryException => e
       puts "Error al obtener la portada de Cloudinary: #{e.message}"
