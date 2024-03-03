@@ -1,5 +1,4 @@
 class ReporteSerializer < ActiveModel::Serializer
-  attributes :id, :motivo, :estado
-  has_one :user
-  has_one :libro
+  attributes :libro_id, :comentario_id, :usuario_reportado_id, :total_reportes
+  #has_one :libro
 end
