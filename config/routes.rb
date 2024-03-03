@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   #Comentarios
   get 'comentarios/find_by', to: 'comentarios#find_by_user_and_libro'
 
-  resources :favoritos , only: [:create]
+  resources :favoritos , only: [:create, :update]
   resources :libros
   resources :resenhas, only: [:destroy]
   resources :capitulos, except: [:index]

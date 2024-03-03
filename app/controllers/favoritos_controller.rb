@@ -15,31 +15,31 @@ class FavoritosController < ApplicationController
 
   # POST /favoritos
   def create
-  user = get_user
-  if user.nil?
-    render json: {error: "El usuario no se encuentra"}, status: 400
-    return
-  end
-
-  existe_favorito = Favorito.find_by(libro_id: params[:libro_id], user_id: user.id)
-
-  if existe_favorito.present?
-    existe_favorito.update(libro_id: params[:libro_id], user_id: user.id, favorito: params[:fav])
-    render json: existe_favorito, status: :ok
-    return
-  else
-    @favorito = Favorito.new(libro_id: params[:libro_id], user_id: user.id)
-    @favorito.favorito = params[:fav]
-    @favorito.deleted = false
-    if @favorito.save
-      render json: @favorito, status: :created, location: @favorito
-      return
-    else
-      render json: @favorito.errors, status: 400
+    user = get_user
+    if user.nil?
+      render json: {error: "El usuario no se encuentra"}, status: 400
       return
     end
+
+    existe_favorito = Favorito.find_by(libro_id: params[:libro_id], user_id: user.id)
+
+    if existe_favorito.present?
+      existe_favorito.update(libro_id: params[:libro_id], user_id: user.id, favorito: params[:fav])
+      render json: { message: 'Favorito actualizado exitosamente', favorito: FavoritoSerializer.new(existe_favorito) }, status: :ok
+      return
+    else
+      @favorito = Favorito.new(libro_id: params[:libro_id], user_id: user.id)
+      @favorito.favorito = params[:fav]
+      @favorito.deleted = false
+      if @favorito.save
+        render json: { message: 'Favorito creado exitosamente', favorito: FavoritoSerializer.new(@favorito) }, status: :created, location: @favorito
+        return
+      else
+        render json: @favorito.errors, status: 400
+        return
+      end
+    end
   end
-end
 
 
 
@@ -47,13 +47,13 @@ end
   def update
     #Solo el usuario puede actualizar su fav
     user = get_user
-  if user.nil?
-    render json: {error: "El usuario no se encuentra"}, status: 400
-    return
-  end
-     @favorito = Favorito.find_by(id: params[:id], deleted: false)
+    if user.nil?
+      render json: {error: "El usuario no se encuentra"}, status: 400
+      return
+    end
+    @favorito = Favorito.find_by(id: params[:id], deleted: false)
     if @favorito.update(favorito: params[:fav])
-      render json: @favorito
+      return render json: { message: 'Favorito actualizado exitosamente', favorito: FavoritoSerializer.new(@favorito) }, status: :ok
     else
       render json: @favorito.errors, status: :unprocessable_entity
     end
@@ -89,40 +89,40 @@ end
   end
 
   def libros_favoritos_por_usuario
-  begin
-   user_id = params[:user_id]
-   # Verificar si existe el usuario por su id
-   usuario = User.find_by(id: user_id)
-   # Si no se encuentra el usuario, devolver un error 404
-   raise ActiveRecord::RecordNotFound.new("Usuario no encontrado") if usuario.nil?
-   # Encuentra todos los favoritos del usuario dado
-   @favoritos = Favorito.where(user_id: params[:user_id], favorito: true, deleted: false)
+    begin
+      user_id = params[:user_id]
+      # Verificar si existe el usuario por su id
+      usuario = User.find_by(id: user_id)
+      # Si no se encuentra el usuario, devolver un error 404
+      raise ActiveRecord::RecordNotFound.new("Usuario no encontrado") if usuario.nil?
+      # Encuentra todos los favoritos del usuario dado
+      @favoritos = Favorito.where(user_id: params[:user_id], favorito: true, deleted: false)
 
-   if @favoritos.size >= 1
-     # Extrae los IDs de los libros favoritos
-     ids = @favoritos.pluck(:libro_id)
-     # Encuentra los libros correspondientes a los IDs obtenidos y pagínalos
-     @libros_favoritos = Libro.where(id: ids).paginate(page: params[:page])
+      if @favoritos.size >= 1
+        # Extrae los IDs de los libros favoritos
+        ids = @favoritos.pluck(:libro_id)
+        # Encuentra los libros correspondientes a los IDs obtenidos y pagínalos
+        @libros_favoritos = Libro.where(id: ids).paginate(page: params[:page])
 
-     render json: @libros_favoritos, status: :ok
-   else
-     render json: { error: 'Favoritos no encontrados' }, status: :not_found
-   end
-  rescue ActiveRecord::RecordNotFound => e
-    render json: { error: e.message }, status: :not_found
-  rescue => e
-    render json: { error: e.message }, status: :unprocessable_entity
+        render json: @libros_favoritos, status: :ok
+      else
+        render json: { error: 'Favoritos no encontrados' }, status: :not_found
+      end
+     rescue ActiveRecord::RecordNotFound => e
+       render json: { error: e.message }, status: :not_found
+     rescue => e
+       render json: { error: e.message }, status: :unprocessable_entity
+    end
   end
-end
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_favorito
-      @favorito = Favorito.find(params[:id])
-    end
+  def set_favorito
+    @favorito = Favorito.find(params[:id])
+  end
 
     # Only allow a list of trusted parameters through.
-    def favorito_params
-      params.require(:favorito).permit(:libro_id,:user_id ,:fav)
-    end
+  def favorito_params
+    params.require(:favorito).permit(:libro_id,:user_id ,:fav)
+  end
 end
