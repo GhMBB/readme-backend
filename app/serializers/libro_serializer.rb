@@ -5,5 +5,4 @@ class LibroSerializer < ActiveModel::Serializer
   def autorUsername
     object.user.username if object.user
   end
-  #has_one :user
 end
