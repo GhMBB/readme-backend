@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_25_182722) do
-
+ActiveRecord::Schema[7.1].define(version: 2024_03_02_191759) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -88,8 +87,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_25_182722) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
+    t.bigint "comentario_id"
+    t.bigint "usuario_reportado_id"
+    t.index ["comentario_id"], name: "index_reportes_on_comentario_id"
     t.index ["libro_id"], name: "index_reportes_on_libro_id"
     t.index ["user_id"], name: "index_reportes_on_user_id"
+    t.index ["usuario_reportado_id"], name: "index_reportes_on_usuario_reportado_id"
   end
 
   create_table "resenhas", force: :cascade do |t|
@@ -134,8 +137,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_25_182722) do
   add_foreign_key "lecturas", "libros"
   add_foreign_key "lecturas", "users"
   add_foreign_key "libros", "users"
+  add_foreign_key "reportes", "comentarios"
   add_foreign_key "reportes", "libros"
   add_foreign_key "reportes", "users"
+  add_foreign_key "reportes", "users", column: "usuario_reportado_id"
   add_foreign_key "resenhas", "libros"
   add_foreign_key "resenhas", "users"
   add_foreign_key "total_resenhas", "libros"

@@ -1,5 +1,5 @@
 class ReportesController < ApplicationController
-  before_action :set_reporte, only: %i[ show update destroy ]
+  before_action :set_reporte, only: %i[show update destroy]
 
   # GET /reportes
   def index
@@ -40,12 +40,12 @@ class ReportesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_reporte
-      @reporte = Reporte.find(params[:id])
-    end
+  def set_reporte
+    @reporte = Reporte.find(params[:id])
+  end
 
     # Only allow a list of trusted parameters through.
-    def reporte_params
-      params.require(:reporte).permit(:user_id, :libro_id, :motivo, :estado)
-    end
+  def reporte_params
+    params.require(:reporte).permit(:user_id, :libro_id, :motivo, :estado)
+  end
 end
