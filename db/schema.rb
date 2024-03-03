@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_02_191759) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_03_203027) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -81,23 +81,27 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_02_191759) do
 
   create_table "reportes", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "libro_id", null: false
+    t.bigint "libro_id"
     t.string "motivo"
     t.string "estado"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
+    t.string "categoria"
     t.bigint "comentario_id"
     t.bigint "usuario_reportado_id"
+    t.text "conclusion"
+    t.bigint "moderador_id"
     t.index ["comentario_id"], name: "index_reportes_on_comentario_id"
     t.index ["libro_id"], name: "index_reportes_on_libro_id"
+    t.index ["moderador_id"], name: "index_reportes_on_moderador_id"
     t.index ["user_id"], name: "index_reportes_on_user_id"
     t.index ["usuario_reportado_id"], name: "index_reportes_on_usuario_reportado_id"
   end
 
   create_table "resenhas", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "libro_id", null: false
+    t.bigint "libro_id"
     t.integer "puntuacion"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -140,6 +144,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_02_191759) do
   add_foreign_key "reportes", "comentarios"
   add_foreign_key "reportes", "libros"
   add_foreign_key "reportes", "users"
+  add_foreign_key "reportes", "users", column: "moderador_id"
   add_foreign_key "reportes", "users", column: "usuario_reportado_id"
   add_foreign_key "resenhas", "libros"
   add_foreign_key "resenhas", "users"

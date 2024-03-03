@@ -20,6 +20,17 @@ Rails.application.routes.draw do
   put '/capitulos/publicar/:id', to: 'capitulos#publicar', as: "publicar_capitulo"
   resources :comentarios, only: [:create,:update, :destroy]
 
+  post 'reportes_comentarios/update_all', to: 'reportes_comentarios#actualizar_muchos_reportes'
+  post 'reportes_libros/update_all', to: 'reportes_libros#actualizar_muchos_reportes'
+  post 'reportes_usuarios/update_all', to:  'reportes_usuarios#actualizar_muchos_reportes'
+
+  get 'reportes/find_by',to: 'reportes#find_by_params'
+  get 'reportes',to: 'reportes#find_with_counts'
+  resources :reportes_comentarios
+  resources :reportes_libros
+  resources :reportes_usuarios
+  resources :reportes
+
 
   get "up" => "rails/health#show", as: :rails_health_check
 
