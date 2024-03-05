@@ -104,6 +104,10 @@ class FavoritosController < ApplicationController
         # Encuentra los libros correspondientes a los IDs obtenidos y pagínalos
         @libros_favoritos = Libro.where(id: ids).paginate(page: params[:page])
 
+        @libros_favoritos.each do |libro|
+          libro.portada = obtener_portada(libro.portada)
+        end  
+
         render json: @libros_favoritos, status: :ok
       else
         render json: { error: 'Favoritos no encontrados' }, status: :not_found
@@ -116,6 +120,21 @@ class FavoritosController < ApplicationController
   end
 
   private
+
+  def obtener_portada(portada_public_id)
+    if !portada_public_id
+      return ""
+    end
+
+    begin
+      enlace_temporal = Cloudinary::Utils.cloudinary_url("#{portada_public_id}", :resource_type => :image, :expires_at => (Time.now + 3600).to_i)
+      return enlace_temporal
+    rescue CloudinaryException => e
+      puts "Error al obtener la portada de Cloudinary: #{e.message}"
+      return ""
+    end
+  end
+
     # Use callbacks to share common setup or constraints between actions.
   def set_favorito
     @favorito = Favorito.find(params[:id])
