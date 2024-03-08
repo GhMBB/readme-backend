@@ -15,4 +15,5 @@
     has_many :resenhas
     has_many :favoritos
     has_many :reportes, -> { where(deleted: false) }, foreign_key: :libro_id
+    has_many :lecturas
   end

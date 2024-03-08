@@ -26,12 +26,16 @@ Rails.application.routes.draw do
 
   get 'reportes/find_by',to: 'reportes#find_by_params'
   get 'reportes',to: 'reportes#find_with_counts'
+
+  get '/libros_en_progreso', to: 'lecturas#libros_en_progreso'
+  get '/capitulo_actual', to: 'lecturas#capitulo_actual'
+
   resources :reportes_comentarios
   resources :reportes_libros
   resources :reportes_usuarios
   resources :reportes
+  resources :lecturas, only: [:create, :destroy]
 
-  resources :lecturas, only: [:create, :update, :destroy]
 
   get "up" => "rails/health#show", as: :rails_health_check
 
