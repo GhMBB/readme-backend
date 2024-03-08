@@ -4,7 +4,6 @@ class CreateLecturas < ActiveRecord::Migration[7.1]
       t.references :user, null: false, foreign_key: true
       t.references :libro, null: false, foreign_key: true
       t.date :fecha
-
       t.timestamps
     end
   end

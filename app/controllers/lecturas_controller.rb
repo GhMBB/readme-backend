@@ -16,7 +16,6 @@ class LecturasController < ApplicationController
   # POST /lecturas
   def create
     @lectura = Lectura.new(lectura_params)
-
     if @lectura.save
       render json: @lectura, status: :created, location: @lectura
     else
