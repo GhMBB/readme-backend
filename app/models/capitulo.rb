@@ -11,6 +11,7 @@ class Capitulo < ApplicationRecord
 
   before_create :generar_indice
 
+  has_many :lecturas
   private
 
   def generar_indice
