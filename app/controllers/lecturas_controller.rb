@@ -99,7 +99,7 @@ class LecturasController < ApplicationController
       return
     end
     # Encuentra todos los libros del usuario actual que tienen al menos un capítulo no publicado
-    libros = user.libros.includes(:capitulos).where(capitulos: { publicado: false }).distinct
+    libros = user.libros.includes(:capitulos).where(capitulos: { publicado: false }).distinct.paginate(page: params[:page])
 
     # Itera sobre cada libro para encontrar el último capítulo no publicado actualizado más recientemente
     libros_con_ultimo_capitulo_no_publicado = libros.map do |libro|
@@ -111,7 +111,6 @@ class LecturasController < ApplicationController
       libro = LibroSerializer.new(libro)
       { libro: libro, ultimo_capitulo_no_publicado: capitulo }
     end
-
     render json: libros_con_ultimo_capitulo_no_publicado, status: 200
   end
 
