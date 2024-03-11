@@ -8,6 +8,7 @@
 
 /config/database.yml
 
+/.idea/*
 # Ignore bundler config.
 /.bundle
 

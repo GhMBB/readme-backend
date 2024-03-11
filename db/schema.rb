@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_24_152936) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_08_151101) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,9 +20,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_24_152936) do
     t.string "nombre_archivo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "previous_capitulo"
-    t.bigint "next_capitulo"
+    t.bigint "previous_capitulo_id"
+    t.bigint "next_capitulo_id"
     t.boolean "deleted", default: false
+    t.integer "indice"
+    t.boolean "publicado"
     t.index ["libro_id"], name: "index_capitulos_on_libro_id"
   end
 
@@ -46,6 +48,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_24_152936) do
     t.boolean "deleted", default: false
     t.index ["libro_id"], name: "index_favoritos_on_libro_id"
     t.index ["user_id"], name: "index_favoritos_on_user_id"
+  end
+
+  create_table "lecturas", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "libro_id", null: false
+    t.date "fecha"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "deleted"
+    t.boolean "terminado"
+    t.bigint "capitulo_id", null: false
+    t.index ["capitulo_id"], name: "index_lecturas_on_capitulo_id"
+    t.index ["libro_id"], name: "index_lecturas_on_libro_id"
+    t.index ["user_id"], name: "index_lecturas_on_user_id"
   end
 
   create_table "libros", force: :cascade do |t|
@@ -75,8 +91,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_24_152936) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
+    t.bigint "comentario_id"
+    t.bigint "usuario_reportado_id"
+    t.text "conclusion"
+    t.bigint "moderador_id"
+    t.index ["comentario_id"], name: "index_reportes_on_comentario_id"
     t.index ["libro_id"], name: "index_reportes_on_libro_id"
+    t.index ["moderador_id"], name: "index_reportes_on_moderador_id"
     t.index ["user_id"], name: "index_reportes_on_user_id"
+    t.index ["usuario_reportado_id"], name: "index_reportes_on_usuario_reportado_id"
   end
 
   create_table "resenhas", force: :cascade do |t|
@@ -111,16 +134,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_24_152936) do
     t.date "fecha_nacimiento"
   end
 
-  add_foreign_key "capitulos", "capitulos", column: "next_capitulo"
-  add_foreign_key "capitulos", "capitulos", column: "previous_capitulo"
+  add_foreign_key "capitulos", "capitulos", column: "next_capitulo_id"
+  add_foreign_key "capitulos", "capitulos", column: "previous_capitulo_id"
   add_foreign_key "capitulos", "libros"
   add_foreign_key "comentarios", "libros"
   add_foreign_key "comentarios", "users"
   add_foreign_key "favoritos", "libros"
   add_foreign_key "favoritos", "users"
+  add_foreign_key "lecturas", "capitulos"
+  add_foreign_key "lecturas", "libros"
+  add_foreign_key "lecturas", "users"
   add_foreign_key "libros", "users"
+  add_foreign_key "reportes", "comentarios"
   add_foreign_key "reportes", "libros"
   add_foreign_key "reportes", "users"
+  add_foreign_key "reportes", "users", column: "moderador_id"
+  add_foreign_key "reportes", "users", column: "usuario_reportado_id"
   add_foreign_key "resenhas", "libros"
   add_foreign_key "resenhas", "users"
   add_foreign_key "total_resenhas", "libros"

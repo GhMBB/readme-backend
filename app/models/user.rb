@@ -8,8 +8,9 @@ class User < ApplicationRecord
 
     has_many :favoritos
     has_many :libros
-    has_many :reportes
+    has_many :reportes, -> { where(deleted: false) }, foreign_key: :usuario_reportado_id
     has_many :resenhas
     has_many :comentarios
+    has_many :lecturas
   end
   

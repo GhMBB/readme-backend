@@ -8,13 +8,13 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 # Encuentra y elimina los usuarios predeterminados si existen
-defaultUsuario = User.find_by(username: "usuario")
-defaultModerador = User.find_by(username: "moderador")
-defaultUsuario.destroy! if defaultUsuario
-defaultModerador.destroy! if defaultModerador
 
 # Crea 10 usuarios y moderadores
 10.times do |i|
+  defaultUsuario = User.find_by(username: "usuario_#{i}")
+  defaultModerador = User.find_by(username: "moderador_#{i}")
+  defaultUsuario.destroy! if defaultUsuario
+  defaultModerador.destroy! if defaultModerador
   User.create(username: "usuario_#{i}", password: "ab123456", role: "usuario")
   User.create(username: "moderador_#{i}", password: "ab123456", role: "moderador")
 end

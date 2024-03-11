@@ -8,7 +8,7 @@ class LibrosController < ApplicationController
 
   # GET /libros
   def index
-    libros = Libro.where(deleted: false)
+    libros = Libro.where(deleted: false).order(created_at: :desc)
     libros = filter_libros(libros)
 
     libros.each do |libro|
@@ -16,17 +16,17 @@ class LibrosController < ApplicationController
     end if !params[:page]
 
     libros = paginate_libros(libros) if params[:page]
-  
+
     render json: libros
   end
-  
+
 
   # GET /libros/1
   def show
     @libro.cantidad_lecturas = @libro.cantidad_lecturas+1
     @libro.save
     formated_libro = @libro
-    formated_libro.portada ||= obtener_portada(@libro.portada)
+    formated_libro.portada = obtener_portada(@libro.portada)
     render json: formated_libro
   end
 
@@ -36,8 +36,9 @@ class LibrosController < ApplicationController
     @libro = Libro.new(libro_params)
     @libro.user = usuario
     @libro.portada = guardar_portada
-    
+
     if @libro.save
+      @libro.portada = obtener_portada(@libro.portada)
       render json: @libro, status: :created
     else
       render json: @libro.errors, status: :unprocessable_entity
@@ -51,8 +52,9 @@ class LibrosController < ApplicationController
     end
     if @libro.update(libro_params)
       @libro.portada = guardar_portada if params[:portada].present?
-      
+
       if @libro.save
+        @libro.portada = obtener_portada(@libro.portada)
         render json: @libro, status: :ok
       else
         render json: @libro.errors, status: :unprocessable_entity
@@ -61,7 +63,7 @@ class LibrosController < ApplicationController
       render json: @libro.errors, status: :unprocessable_entity
     end
   end
-  
+
 
   # DELETE /libros/1
   def destroy
@@ -83,7 +85,7 @@ class LibrosController < ApplicationController
   def guardar_portada
     if params[:portada].present?
       cloudinary_response = Cloudinary::Uploader.upload(params[:portada], :folder => "libros")
-  
+
       if cloudinary_response['public_id'].present?
         return cloudinary_response['public_id']
       else
@@ -119,7 +121,7 @@ class LibrosController < ApplicationController
 
   def paginate_libros(libros)
     page_number = params[:page].to_i
-    
+
 
     paginated_libros = libros.paginate(page: page_number, per_page: WillPaginate.per_page)
     total_pages = paginated_libros.total_pages
@@ -135,8 +137,8 @@ class LibrosController < ApplicationController
       data: data
     }
   end
-  
-  
+
+
 
   def set_libro
     @libro = Libro.find_by(id: params[:id], deleted: false)
@@ -144,7 +146,7 @@ class LibrosController < ApplicationController
       render json: { error: 'Libro no encontrado' }, status: :not_found
     end
   end
-  
+
 
     def libro_params
       params.permit(:titulo, :sinopsis, :adulto, :categoria)

@@ -1,5 +1,7 @@
 class ComentarioSerializer < ActiveModel::Serializer
-  attributes :id, :comentario
-  has_one :user
-  has_one :libro
+  attributes :id, :comentario, :created_at, :username
+
+  def username
+    object.user.username if object.user
+  end
 end

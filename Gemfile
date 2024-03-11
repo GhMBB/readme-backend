@@ -49,6 +49,8 @@ gem "bootsnap", require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ]
+  gem 'rails-controller-testing'
+  gem 'rubocop', require: false
 end
 
 group :development do
@@ -57,3 +59,5 @@ group :development do
 
   gem "error_highlight", ">= 0.4.0", platforms: [:ruby]
 end
+
+gem "dockerfile-rails", ">= 1.6", :group => :development
