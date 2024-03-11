@@ -30,6 +30,8 @@ Rails.application.routes.draw do
   get '/libros_en_progreso', to: 'lecturas#libros_en_progreso'
   get '/capitulo_actual', to: 'lecturas#capitulo_actual'
 
+  get '/libros_con_capitulos_no_publicados', to: 'lecturas#libros_con_capitulos_no_publicados'
+
   resources :reportes_comentarios
   resources :reportes_libros
   resources :reportes_usuarios
