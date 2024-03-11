@@ -91,7 +91,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_151101) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
-    t.string "categoria"
     t.bigint "comentario_id"
     t.bigint "usuario_reportado_id"
     t.text "conclusion"
@@ -105,7 +104,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_151101) do
 
   create_table "resenhas", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "libro_id"
+    t.bigint "libro_id", null: false
     t.integer "puntuacion"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
