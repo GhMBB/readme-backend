@@ -38,7 +38,9 @@ Rails.application.routes.draw do
   resources :reportes
   resources :lecturas, only: [:create, :destroy]
 
-
+  put 'users/username', to: 'users#update_username'
+  put 'users/password', to: 'users#update_password'
+  put 'users/profile', to:  'users#update_profile'
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Defines the root path route ("/")

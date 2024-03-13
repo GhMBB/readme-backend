@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_08_151101) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_13_174249) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -83,6 +83,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_151101) do
     t.index ["user_id"], name: "index_libros_on_user_id"
   end
 
+  create_table "personas", force: :cascade do |t|
+    t.date "fecha_de_nacimiento"
+    t.string "profile"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_personas_on_user_id"
+  end
+
   create_table "reportes", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "libro_id", null: false
@@ -91,6 +100,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_151101) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
+    t.string "categoria"
     t.bigint "comentario_id"
     t.bigint "usuario_reportado_id"
     t.text "conclusion"
@@ -104,7 +114,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_151101) do
 
   create_table "resenhas", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "libro_id", null: false
+    t.bigint "libro_id"
     t.integer "puntuacion"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -131,7 +141,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_151101) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
-    t.date "fecha_nacimiento"
   end
 
   add_foreign_key "capitulos", "capitulos", column: "next_capitulo_id"
@@ -145,6 +154,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_08_151101) do
   add_foreign_key "lecturas", "libros"
   add_foreign_key "lecturas", "users"
   add_foreign_key "libros", "users"
+  add_foreign_key "personas", "users"
   add_foreign_key "reportes", "comentarios"
   add_foreign_key "reportes", "libros"
   add_foreign_key "reportes", "users"
