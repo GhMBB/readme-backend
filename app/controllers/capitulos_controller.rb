@@ -1,4 +1,5 @@
 class CapitulosController < ApplicationController
+  before_action :authenticate_request
   before_action :set_capitulo, only: %i[ show update destroy publicar ]
 
   #GET /capitulos/libro/1

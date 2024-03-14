@@ -1,4 +1,5 @@
 class TotalResenhasController < ApplicationController
+  before_action :authenticate_request
   before_action :set_total_resenha, only: %i[ show update destroy ]
 
   # GET /total_resenhas
