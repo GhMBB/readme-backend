@@ -1,4 +1,5 @@
 class LecturasController < ApplicationController
+  before_action :authenticate_request
   before_action :set_lectura, only: %i[ show destroy ]
 
 
@@ -66,6 +67,10 @@ class LecturasController < ApplicationController
       return render json: {error: "El usuario no se encuentra"}, status: 400
     end
     @lectura = Lectura.find_by(user_id: user.id, libro_id: params[:libro_id])
+
+    if @lectura.nil?
+      return render json: {error: "No se encuentra el capitulo actual"}, stauts: 404
+    end
     capitulo_actual =  @lectura.capitulo_id
     capitulo = Capitulo.find_by(id: capitulo_actual)
     capitulo.contenido = obtener_contenido(capitulo.nombre_archivo)

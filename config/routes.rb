@@ -41,6 +41,8 @@ Rails.application.routes.draw do
   put 'users/username', to: 'users#update_username'
   put 'users/password', to: 'users#update_password'
   put 'users/profile', to:  'users#update_profile'
+
+  resources :users
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Defines the root path route ("/")
