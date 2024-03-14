@@ -7,7 +7,6 @@ class AuthController < ApplicationController
     if user && user.authenticate(params[:password])
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
-      puts(expiration)
       profile = obtener_perfil(user.persona.profile)
       render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile}
     else
