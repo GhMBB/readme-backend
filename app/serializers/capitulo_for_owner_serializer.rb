@@ -1,5 +1,5 @@
 class CapituloForOwnerSerializer < ActiveModel::Serializer
-    attributes :id, :indice, :titulo, :libro_id, :contenido, :next_capitulo_id, :previous_capitulo_id, :publicado, :progreso
+    attributes :id, :indice, :titulo, :libro_id, :contenido, :next_capitulo_id, :previous_capitulo_id, :publicado, :progreso, :updated_at
 
     def progreso
       # Obtener todos los capítulos del libro actual que no han sido eliminados y están publicados
