@@ -48,6 +48,9 @@ class LecturasController < ApplicationController
   # DELETE /lecturas/1
   def destroy
     usuario = get_user
+    if @lectura.nil?
+      return render json: {message: "No existe el progreso de lectura"}, status: 400
+    end
     if @lectura.user != usuario && usuario.role != "moderador"
       render json: {error: "Debes ser el propietario para editarlo o tener el rol de moderador."}, status: 401
       return
@@ -122,7 +125,7 @@ class LecturasController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_lectura
-      @lectura = Lectura.find(params[:id])
+      @lectura = Lectura.find_by(id: params[:id], deleted: false)
     end
 
   def obtener_contenido(contenido_public_id)

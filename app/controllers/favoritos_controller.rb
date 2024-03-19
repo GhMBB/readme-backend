@@ -20,6 +20,13 @@ class FavoritosController < ApplicationController
       render json: {error: "El usuario no se encuentra"}, status: 400
       return
     end
+    required_params = [:libro_id, :fav]
+    # Verificar si todos los parámetros requeridos están presentes
+    unless required_params.all? { |param| params.key?(param) }
+      missing_params = required_params - params.keys
+      render json: { error: "Faltan parámetros requeridos: #{missing_params.join(', ')}" }, status: 400
+      return
+    end
 
     existe_favorito = Favorito.find_by(libro_id: params[:libro_id], user_id: user.id)
 
