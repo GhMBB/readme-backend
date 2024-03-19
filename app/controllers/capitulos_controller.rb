@@ -115,6 +115,10 @@ class CapitulosController < ApplicationController
     return
    end
    
+   if !@capitulo.publicado && user != @capitulo.libro.user
+    render json: {error: "Capitulo no encontrado"}, status: 404
+    return
+  end
 
     @capitulo.nombre_archivo = guardar_archivo()  if params[:contenido].present?
     @capitulo.titulo = params[:titulo] if params[:titulo].present?
