@@ -66,13 +66,7 @@ class CapitulosController < ApplicationController
       return
     end
   
-    capitulo_anterior = libro.capitulos.where(deleted: false).order(indice: :desc).first
-
     @capitulo = Capitulo.new(capitulo_params)
-
-    @capitulo.previous_capitulo_id = capitulo_anterior.id if capitulo_anterior.present?
-    @capitulo.next_capitulo_id = nil
-
     @capitulo.libro = libro
 
     @capitulo.nombre_archivo = guardar_archivo
@@ -83,11 +77,6 @@ class CapitulosController < ApplicationController
     end
   
     if @capitulo.save
-      if capitulo_anterior.present?
-        capitulo_anterior.next_capitulo_id  = @capitulo.id 
-        capitulo_anterior.save
-      end
-
       @capitulo.contenido = obtener_contenido(@capitulo.nombre_archivo)
 
       if @capitulo.contenido == ""
@@ -169,7 +158,6 @@ class CapitulosController < ApplicationController
   @capitulo.deleted = true
   if @capitulo.save
     capitulos_del_libro = libro.capitulos.where(deleted:false)
-    actualizar_siguiente_anterior(capitulos_del_libro)
     
     render status: :ok
   else
@@ -216,9 +204,7 @@ class CapitulosController < ApplicationController
       capitulo1.update!(indice: capitulo2.indice)
       capitulo2.update!(indice: temp_indice)
     
-      capitulos_del_libro = Capitulo.where(libro_id: capitulo1.libro_id, deleted: false)
-      actualizar_siguiente_anterior(capitulos_del_libro)
-      
+      capitulos_del_libro = Capitulo.where(libro_id: capitulo1.libro_id, deleted: false)      
     end
 
     render json: { message: "Intercambio de índices realizado exitosamente" }
@@ -254,28 +240,6 @@ class CapitulosController < ApplicationController
     rescue CloudinaryException => e
       return ""
     end
-  end
-
-  def actualizar_siguiente_anterior(capitulos)
-    Capitulo.transaction do
-        capitulos.each do |capitulo|
-          capitulo_anterior = capitulos.where("indice < ?", capitulo.indice).order(indice: :desc).first
-          capitulo_siguiente = capitulos.where("indice > ?", capitulo.indice).order(:indice).first
-      
-          if capitulo_anterior
-            capitulo.update!(previous_capitulo_id: capitulo_anterior.id)
-          else
-            capitulo.update!(previous_capitulo_id: nil)
-          end
-      
-          if capitulo_siguiente
-            capitulo.update!(next_capitulo_id: capitulo_siguiente.id)
-          else
-            capitulo.update!(next_capitulo_id: nil)
-          end
-
-        end
-     end
   end
 
     # Use callbacks to share common setup or constraints between actions.
