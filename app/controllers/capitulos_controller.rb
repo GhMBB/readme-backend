@@ -40,6 +40,13 @@ class CapitulosController < ApplicationController
   def show
     user = get_user
     return if user.nil?
+
+    if @capitulo.libro.user != user && !@capitulo.publicado
+      render json: {error: "Capitulo no encontrado"}, status: 404
+      return
+    end
+
+
     @capitulo.contenido = obtener_contenido(@capitulo.nombre_archivo)
     render json: @capitulo, serializer: user==@capitulo.libro.user ? CapituloForOwnerSerializer : CapituloSerializer
   end
