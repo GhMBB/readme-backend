@@ -1,6 +1,20 @@
 class CapituloForOwnerSerializer < ActiveModel::Serializer
     attributes :id, :indice, :titulo, :libro_id, :contenido, :next_capitulo_id, :previous_capitulo_id, :publicado, :progreso, :updated_at
 
+    def next_capitulo_id
+      next_capitulo = Capitulo.where(libro_id: object.libro_id, deleted: false)
+                      .where("indice > ?", object.indice)
+                      .order(indice: :asc).first
+      next_capitulo.id if next_capitulo
+    end
+  
+    def previous_capitulo_id
+      previous_capitulo = Capitulo.where(libro_id: object.libro_id, deleted: false)
+                          .where("indice < ?", object.indice)
+                          .order(indice: :desc).first
+      previous_capitulo.id if previous_capitulo
+    end
+
     def progreso
       # Obtener todos los capítulos del libro actual que no han sido eliminados y están publicados
       capitulos_publicados = object.libro.capitulos.where(deleted: false)

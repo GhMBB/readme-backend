@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_13_174249) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,8 +20,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_174249) do
     t.string "nombre_archivo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "previous_capitulo_id"
-    t.bigint "next_capitulo_id"
     t.boolean "deleted", default: false
     t.integer "indice"
     t.boolean "publicado"
@@ -100,7 +98,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_174249) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
-    t.string "categoria"
     t.bigint "comentario_id"
     t.bigint "usuario_reportado_id"
     t.text "conclusion"
@@ -114,7 +111,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_174249) do
 
   create_table "resenhas", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "libro_id"
+    t.bigint "libro_id", null: false
     t.integer "puntuacion"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -141,10 +138,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_13_174249) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
+    t.date "fecha_nacimiento"
+    t.string "profile"
   end
 
-  add_foreign_key "capitulos", "capitulos", column: "next_capitulo_id"
-  add_foreign_key "capitulos", "capitulos", column: "previous_capitulo_id"
   add_foreign_key "capitulos", "libros"
   add_foreign_key "comentarios", "libros"
   add_foreign_key "comentarios", "users"
