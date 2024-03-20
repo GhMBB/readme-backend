@@ -81,7 +81,7 @@ class LecturasController < ApplicationController
     capitulo_actual =  @lectura.capitulo_id
     capitulo = Capitulo.find_by(id: capitulo_actual)
     capitulo.contenido = obtener_contenido(capitulo.nombre_archivo)
-    return render json: { capitulo_actual: CapituloSerializer.new(capitulo)}, status: 200
+    return render json: { capitulo_actual: CapituloForOwnerSerializer.new(capitulo)}, status: 200
   end
 
   # GET /libros_en_progreso
