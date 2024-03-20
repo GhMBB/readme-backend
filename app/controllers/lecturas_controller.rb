@@ -1,11 +1,23 @@
 class LecturasController < ApplicationController
   before_action :authenticate_request
-  before_action :set_lectura, only: %i[ show destroy ]
+  before_action :set_lectura, only: %i[ destroy ]
 
 
-  # GET /lecturas/1
-  def show
-    render json: @lectura
+  # GET /lecturas
+  def showById
+    user = get_user
+
+    if user.nil?
+      render json: {error: "El usuario no se encuentra"}, status: 400
+      return
+    end
+    libro_id = params[:libro_id]
+    if libro_id.blank?
+      return render json: { error: 'Falta el id del libro' }, status: :unprocessable_entity
+    end
+    @lectura = Lectura.find_by(libro_id: libro_id, user_id: user.id, deleted: false)
+
+    render json: @lectura, status: 200
   end
 
   # POST /lecturas
@@ -24,10 +36,14 @@ class LecturasController < ApplicationController
       return render json: { error: 'Falta el id del capitulo' }, status: :unprocessable_entity
     end
 
-    libro = Capitulo.find_by(id: capitulo_id, libro_id: libro_id)
-    if libro.nil?
+    capitulo = Capitulo.find_by(id: capitulo_id, libro_id: libro_id)
+    if capitulo.nil?
       return render json: {error: "El capitulo no pertenece al libro"},status: :unprocessable_entity
+    elsif capitulo.publicado == false && capitulo.libro.user_id != user.id
+      return render json: {error: "El capitulo no está disponible"}, status: :unprocessable_entity
     end
+
+
 
     leyendo = Lectura.find_by(libro_id: libro_id, user_id: user.id)
 
@@ -77,7 +93,12 @@ class LecturasController < ApplicationController
     capitulo_actual =  @lectura.capitulo_id
     capitulo = Capitulo.find_by(id: capitulo_actual)
     capitulo.contenido = obtener_contenido(capitulo.nombre_archivo)
-    return render json: { capitulo_actual: CapituloSerializer.new(capitulo)}, status: 200
+    if capitulo.libro.user == user
+      return render json: { capitulo_actual: CapituloForOwnerSerializer.new(capitulo)}, status: 200
+    else
+      return render json: { capitulo_actual: CapituloForViwerSerializer.new(capitulo)}, status: 200
+    end
+
   end
 
   # GET /libros_en_progreso

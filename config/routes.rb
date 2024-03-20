@@ -32,11 +32,13 @@ Rails.application.routes.draw do
 
   get '/libros_con_capitulos_no_publicados', to: 'lecturas#libros_con_capitulos_no_publicados'
 
+  get '/lecturas_libro_id', to: 'lecturas#showById'
+
   resources :reportes_comentarios
   resources :reportes_libros
   resources :reportes_usuarios
   resources :reportes
-  resources :lecturas, only: [:create, :destroy]
+  resources :lecturas
 
   put 'users/username', to: 'users#update_username'
   put 'users/password', to: 'users#update_password'

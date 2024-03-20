@@ -98,6 +98,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
+    t.string "categoria"
     t.bigint "comentario_id"
     t.bigint "usuario_reportado_id"
     t.text "conclusion"
@@ -111,7 +112,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
 
   create_table "resenhas", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "libro_id", null: false
+    t.bigint "libro_id"
     t.integer "puntuacion"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -138,8 +139,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
-    t.date "fecha_nacimiento"
-    t.string "profile"
   end
 
   add_foreign_key "capitulos", "libros"
