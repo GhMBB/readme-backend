@@ -26,12 +26,23 @@ Rails.application.routes.draw do
 
   get 'reportes/find_by',to: 'reportes#find_by_params'
   get 'reportes',to: 'reportes#find_with_counts'
+
+  get '/libros_en_progreso', to: 'lecturas#libros_en_progreso'
+  get '/capitulo_actual', to: 'lecturas#capitulo_actual'
+
+  get '/libros_con_capitulos_no_publicados', to: 'lecturas#libros_con_capitulos_no_publicados'
+
   resources :reportes_comentarios
   resources :reportes_libros
   resources :reportes_usuarios
   resources :reportes
+  resources :lecturas, only: [:create, :destroy]
 
+  put 'users/username', to: 'users#update_username'
+  put 'users/password', to: 'users#update_password'
+  put 'users/profile', to:  'users#update_profile'
 
+  resources :users
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Defines the root path route ("/")

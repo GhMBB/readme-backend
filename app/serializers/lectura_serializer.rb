@@ -1,5 +1,4 @@
 class LecturaSerializer < ActiveModel::Serializer
-  attributes :id, :fecha
-  has_one :user
-  has_one :libro
+  attributes :id, :libro_id, :user_id, :capitulo_id, :terminado
+
 end
