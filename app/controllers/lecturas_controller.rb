@@ -1,11 +1,23 @@
 class LecturasController < ApplicationController
   before_action :authenticate_request
-  before_action :set_lectura, only: %i[ show destroy ]
+  before_action :set_lectura, only: %i[ destroy ]
 
 
-  # GET /lecturas/1
-  def show
-    render json: @lectura
+  # GET /lecturas
+  def showById
+    user = get_user
+
+    if user.nil?
+      render json: {error: "El usuario no se encuentra"}, status: 400
+      return
+    end
+    libro_id = params[:libro_id]
+    if libro_id.blank?
+      return render json: { error: 'Falta el id del libro' }, status: :unprocessable_entity
+    end
+    @lectura = Lectura.find_by(libro_id: libro_id, user_id: user.id, deleted: false)
+
+    render json: @lectura, status: 200
   end
 
   # POST /lecturas
