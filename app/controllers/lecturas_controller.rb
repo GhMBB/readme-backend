@@ -24,10 +24,14 @@ class LecturasController < ApplicationController
       return render json: { error: 'Falta el id del capitulo' }, status: :unprocessable_entity
     end
 
-    libro = Capitulo.find_by(id: capitulo_id, libro_id: libro_id)
-    if libro.nil?
+    capitulo = Capitulo.find_by(id: capitulo_id, libro_id: libro_id)
+    if capitulo.nil?
       return render json: {error: "El capitulo no pertenece al libro"},status: :unprocessable_entity
+    elsif capitulo.publicado == false && capitulo.libro.user_id != user.id
+      return render json: {error: "El capitulo no está disponible"}, status: :unprocessable_entity
     end
+
+
 
     leyendo = Lectura.find_by(libro_id: libro_id, user_id: user.id)
 
@@ -77,7 +81,7 @@ class LecturasController < ApplicationController
     capitulo_actual =  @lectura.capitulo_id
     capitulo = Capitulo.find_by(id: capitulo_actual)
     capitulo.contenido = obtener_contenido(capitulo.nombre_archivo)
-    return render json: { capitulo_actual: CapituloSerializer.new(capitulo)}, status: 200
+    return render json: { capitulo_actual: CapituloForOwnerSerializer.new(capitulo)}, status: 200
   end
 
   # GET /libros_en_progreso
