@@ -145,8 +145,6 @@ class FavoritosController < ApplicationController
         favoritos_query = favoritos_query.joins(libro: :user)
                                          .where("LOWER(libros.titulo) LIKE ? OR LOWER(users.username) LIKE ?", "%#{search_term}%", "%#{search_term}%")
       end
-
-
       @favoritos = favoritos_query
 
       if @favoritos.size >= 1
@@ -161,7 +159,7 @@ class FavoritosController < ApplicationController
 
         render json: @libros_favoritos, status: :ok
       else
-        render json: { error: 'Favoritos no encontrados' }, status: :not_found
+        render json: @favoritos , status: 200
       end
     rescue ActiveRecord::RecordNotFound => e
       render json: { error: e.message }, status: :not_found
