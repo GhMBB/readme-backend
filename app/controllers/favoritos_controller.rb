@@ -20,6 +20,13 @@ class FavoritosController < ApplicationController
       render json: {error: "El usuario no se encuentra"}, status: 400
       return
     end
+    required_params = [:libro_id, :fav]
+    # Verificar si todos los parámetros requeridos están presentes
+    unless required_params.all? { |param| params.key?(param) }
+      missing_params = required_params - params.keys
+      render json: { error: "Faltan parámetros requeridos: #{missing_params.join(', ')}" }, status: 400
+      return
+    end
 
     existe_favorito = Favorito.find_by(libro_id: params[:libro_id], user_id: user.id)
 
@@ -88,6 +95,7 @@ class FavoritosController < ApplicationController
     end
   end
 
+=begin
   def libros_favoritos_por_usuario
     begin
       user_id = params[:user_id]
@@ -118,6 +126,48 @@ class FavoritosController < ApplicationController
        render json: { error: e.message }, status: :unprocessable_entity
     end
   end
+=end
+
+  def libros_favoritos_por_usuario
+    begin
+      user_id = params[:user_id]
+      # Verificar si existe el usuario por su id
+      usuario = User.find_by(id: user_id)
+      # Si no se encuentra el usuario, devolver un error 404
+      raise ActiveRecord::RecordNotFound.new("Usuario no encontrado") if usuario.nil?
+
+      # Encuentra todos los favoritos del usuario dado
+      favoritos_query = Favorito.where(user_id: params[:user_id], favorito: true, deleted: false)
+
+
+      if params[:busqueda].present?
+        search_term = params[:busqueda].downcase
+        favoritos_query = favoritos_query.joins(libro: :user)
+                                         .where("LOWER(libros.titulo) LIKE ? OR LOWER(users.username) LIKE ?", "%#{search_term}%", "%#{search_term}%")
+      end
+      @favoritos = favoritos_query
+
+      if @favoritos.size >= 1
+        # Extrae los IDs de los libros favoritos
+        ids = @favoritos.pluck(:libro_id)
+        # Encuentra los libros correspondientes a los IDs obtenidos y pagínalos
+        @libros_favoritos = Libro.where(id: ids).paginate(page: params[:page])
+
+        @libros_favoritos.each do |libro|
+          libro.portada = obtener_portada(libro.portada)
+        end
+
+        render json: @libros_favoritos, status: :ok
+      else
+        render json: @favoritos , status: 200
+      end
+    rescue ActiveRecord::RecordNotFound => e
+      render json: { error: e.message }, status: :not_found
+    rescue => e
+      render json: { error: e.message }, status: :unprocessable_entity
+    end
+  end
+
 
   private
 
@@ -142,6 +192,6 @@ class FavoritosController < ApplicationController
 
     # Only allow a list of trusted parameters through.
   def favorito_params
-    params.require(:favorito).permit(:libro_id,:user_id ,:fav)
+    params.require(:favorito).permit(:libro_id,:user_id ,:fav, :busqueda)
   end
 end

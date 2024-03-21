@@ -1,9 +1,9 @@
 class Capitulo < ApplicationRecord
   belongs_to :libro
-  belongs_to :previous_capitulo, class_name: 'Capitulo', optional: true
-  belongs_to :next_capitulo, class_name: 'Capitulo', optional: true
-  
+
   attr_accessor :contenido
+  attr_accessor :previous_capitulo_id
+  attr_accessor :next_capitulo_id
   attribute :deleted, :boolean, default: false
   attribute :publicado, :boolean, default: false
 
@@ -11,6 +11,7 @@ class Capitulo < ApplicationRecord
 
   before_create :generar_indice
 
+  has_many :lecturas
   private
 
   def generar_indice

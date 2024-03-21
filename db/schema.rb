@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_03_203027) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,8 +20,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_03_203027) do
     t.string "nombre_archivo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "previous_capitulo_id"
-    t.bigint "next_capitulo_id"
     t.boolean "deleted", default: false
     t.integer "indice"
     t.boolean "publicado"
@@ -56,6 +54,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_03_203027) do
     t.date "fecha"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "deleted"
+    t.boolean "terminado"
+    t.bigint "capitulo_id", null: false
+    t.index ["capitulo_id"], name: "index_lecturas_on_capitulo_id"
     t.index ["libro_id"], name: "index_lecturas_on_libro_id"
     t.index ["user_id"], name: "index_lecturas_on_user_id"
   end
@@ -79,6 +81,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_03_203027) do
     t.index ["user_id"], name: "index_libros_on_user_id"
   end
 
+  create_table "personas", force: :cascade do |t|
+    t.date "fecha_de_nacimiento"
+    t.string "profile"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_personas_on_user_id"
+  end
+
   create_table "reportes", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "libro_id", null: false
@@ -87,6 +98,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_03_203027) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
+    t.string "categoria"
     t.bigint "comentario_id"
     t.bigint "usuario_reportado_id"
     t.text "conclusion"
@@ -100,7 +112,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_03_203027) do
 
   create_table "resenhas", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "libro_id", null: false
+    t.bigint "libro_id"
     t.integer "puntuacion"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -127,19 +139,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_03_203027) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
-    t.date "fecha_nacimiento"
   end
 
-  add_foreign_key "capitulos", "capitulos", column: "next_capitulo_id"
-  add_foreign_key "capitulos", "capitulos", column: "previous_capitulo_id"
   add_foreign_key "capitulos", "libros"
   add_foreign_key "comentarios", "libros"
   add_foreign_key "comentarios", "users"
   add_foreign_key "favoritos", "libros"
   add_foreign_key "favoritos", "users"
+  add_foreign_key "lecturas", "capitulos"
   add_foreign_key "lecturas", "libros"
   add_foreign_key "lecturas", "users"
   add_foreign_key "libros", "users"
+  add_foreign_key "personas", "users"
   add_foreign_key "reportes", "comentarios"
   add_foreign_key "reportes", "libros"
   add_foreign_key "reportes", "users"
