@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   put 'users/username', to: 'users#update_username'
   put 'users/password', to: 'users#update_password'
   put 'users/profile', to:  'users#update_profile'
+  get '/users/:username', to: 'users#get_userByUsername', as: 'user_by_username'
 
   resources :users
   get "up" => "rails/health#show", as: :rails_health_check

@@ -82,6 +82,19 @@ class UsersController < ApplicationController
   end
 
 
+  # GET /users/byUsername
+  def get_userByUsername
+    @user = User.find_by(username: params[:username])
+    if @user
+      render json:@user, status: :ok
+    else
+      render json: {error: "usuario con no encontrado"}, status: :unprocessable_entity
+    end
+  end
+
+
+
+
 
   # DELETE /users/1
   # Pasar la contraseña y verificar que sea el o un mod
