@@ -84,7 +84,7 @@ class UsersController < ApplicationController
 
   # GET /users/byUsername
   def get_userByUsername
-    @user = User.find_by(username: params[:username])
+    @user = User.find_by(username: params[:username], deleted: false)
     if @user
       render json:@user, status: :ok
     else
