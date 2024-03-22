@@ -102,10 +102,12 @@ class ResenhasController < ApplicationController
       # Si la resenha fue eliminada anteriormente
       if @resenha.deleted == true
         @resenha.update(deleted: false)
-        libro.update(cantidad_resenhas: (libro.cantidad_resenhas + 1))
+        libro.update(cantidad_resenhas: (libro.cantidad_resenhas + 1),sumatoria: (libro.sumatoria.to_f + puntuacion ))
+      else
+        # Actualizar la sumatoria
+        libro.update(sumatoria: (libro.sumatoria.to_f + puntuacion - puntuacion_anterior))
       end
-      # Actualizar la sumatoria
-      libro.update(sumatoria: (libro.sumatoria.to_f + puntuacion - puntuacion_anterior))
+
 
       # Recalcular la puntuacion_media del libro
       if libro.cantidad_resenhas.present? && libro.cantidad_resenhas != 0
