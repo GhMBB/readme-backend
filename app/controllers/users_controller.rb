@@ -86,6 +86,7 @@ class UsersController < ApplicationController
   def get_userByUsername
     @user = User.find_by(username: params[:username], deleted: false)
     if @user
+      @user.persona.profile = obtener_perfil(@user.persona.profile)
       render json:@user, status: :ok
     else
       render json: {error: "usuario con no encontrado"}, status: :unprocessable_entity
