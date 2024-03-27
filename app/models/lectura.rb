@@ -2,4 +2,50 @@ class Lectura < ApplicationRecord
   belongs_to :user
   belongs_to :libro
   belongs_to :capitulo
+
+  def self.create_lectura(params, user)
+    libro_id = params[:libro_id]
+    capitulo_id = params[:capitulo_id]
+
+    if libro_id.blank? || capitulo_id.blank?
+      return { error: 'Falta el id del libro o del capitulo' }, :unprocessable_entity
+    end
+
+    capitulo = Capitulo.find_by(id: capitulo_id, libro_id: libro_id)
+    if capitulo.nil?
+      return { error: 'El capitulo no pertenece al libro' }, :unprocessable_entity
+    elsif capitulo.publicado == false && capitulo.libro.user_id != user.id
+      return { error: 'El capitulo no está disponible' }, :unprocessable_entity
+    end
+
+    leyendo = Lectura.find_by(libro_id: libro_id, user_id: user.id)
+
+    if leyendo.present?
+      leyendo.update(capitulo_id: capitulo_id, terminado: params[:terminado], deleted: false)
+      return { message: 'Progreso de lectura actualizado exitosamente', lectura: LecturaSerializer.new(leyendo) }, :created
+    else
+      lectura = Lectura.new(user_id: user.id, libro_id: libro_id, capitulo_id: capitulo_id, terminado: params[:terminado], deleted: false)
+      if lectura.save
+        return { message: 'Lectura creada exitosamente', lectura: LecturaSerializer.new(leyendo) }, :created
+      else
+        return { errors: lectura.errors.full_messages }, :unprocessable_entity
+      end
+    end
+  end
+
+  def self.current_chapter(params, user)
+    lectura = Lectura.find_by(user_id: user.id, libro_id: params[:libro_id])
+    if lectura.nil?
+      return { error: 'No se encuentra el capitulo actual' }, :not_found
+    end
+
+    capitulo_actual = lectura.capitulo_id
+    capitulo = Capitulo.find_by(id: capitulo_actual)
+    if capitulo.libro.user == user
+      return { capitulo_actual: CapituloForOwnerSerializer.new(capitulo) }, :ok
+    else
+      return { capitulo_actual: CapituloForViwerSerializer.new(capitulo) }, :ok
+    end
+  end
+
 end

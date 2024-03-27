@@ -1,7 +1,5 @@
 class User < ApplicationRecord
     has_secure_password
-
-
     validates :username, presence: { message: "El nombre de usuario no puede estar en blanco" }, uniqueness: { message: "El nombre de usuario ya está en uso" }
     validates :password, length: { minimum: 8, message: "La contraseña debe tener al menos 8 caracteres" }, format: { with: /\A.*(?=.*\d).*\z/, message: "La contraseña debe contener al menos un dígito" }
     validates :role, inclusion: { in: %w(usuario moderador), message: "El rol no es válido" }
@@ -13,5 +11,105 @@ class User < ApplicationRecord
     has_many :comentarios
     has_many :lecturas
     has_one :persona
-  end
+
+    def libros_en_progreso(params)
+        libros_en_progreso = Libro.joins(:lecturas)
+                                  .where(lecturas: { user_id: id, terminado: false, deleted: false })
+                                  .order(updated_at: :desc)
+                                  .distinct
+                                  .paginate(page: params[:page])
+
+        libros_serializados = libros_en_progreso.map { |libro| LibroSerializer.new(libro) }
+
+        return {total_pages: libros_en_progreso.total_pages,
+                last_page:  params[:page] == libros_en_progreso.total_pages,
+                libros: libros_serializados}
+    end
+
+    def libros_con_capitulos_no_publicados(params, user)
+
+        # Encuentra todos los libros del usuario actual que tienen al menos un capítulo no publicado
+        libros = user.libros.includes(:capitulos).where(capitulos: { publicado: false }).distinct.paginate(page: params[:page])
+
+        # Itera sobre cada libro para encontrar el último capítulo no publicado actualizado más recientemente
+        libros_con_ultimo_capitulo_no_publicado = libros.map do |libro|
+            ultimo_capitulo_no_publicado = libro.capitulos.where(publicado: false).order(updated_at: :desc).first
+            capitulo = CapituloForOwnerSerializer.new(ultimo_capitulo_no_publicado)
+            libro = LibroSerializer.new(libro)
+            { libro: libro, ultimo_capitulo_no_publicado: capitulo }
+        end
+
+        total_pages = libros.total_pages
+
+        return {
+          total_pages: total_pages,
+          last_page: params[:page].to_i == total_pages, # Asegúrate de convertir params[:page] a entero
+          libros: libros_con_ultimo_capitulo_no_publicado
+        }
+    end
+
+    def update_password(params, user)
+        if user.authenticate(params[:current_password])
+            if params[:new_password] == params[:confirm_password]
+                if user.update(password: params[:new_password])
+                    return  {message: 'Contraseña actualizada exitosamente'}, :ok
+                else
+                    return  user.errors, :unprocessable_entity
+                end
+            else
+                return  { error: 'Las contraseñas no coinciden' },:unprocessable_entity
+            end
+        else
+            return  { error: 'Contraseña actual incorrecta' }, :unprocessable_entity
+        end
+    end
+
+    def update_username(params, user)
+        if user.authenticate(params[:password])
+            if user.update(username: params[:username], password: params[:password])
+                return {message: "Username actualizado con exito", user: UserSerializer.new(user)},  :ok
+            else
+                return user.errors,  :unprocessable_entity
+            end
+        else
+            return { error: 'Contraseña incorrecta' }, :unprocessable_entity
+        end
+    end
+
+    def update_profile(params, user)
+        @persona = user.persona
+
+        if @persona.nil?
+            @persona = Persona.new(user_id: user.id)
+        end
+
+        if params[:profile].present?
+            @persona.profile = guardar_perfil(params)
+        else
+            return { error: 'Se debe pasar el perfil' }, 400
+        end
+
+        if @persona.save
+            return  user, :ok
+        else
+            return  @persona.errors, :unprocessable_entity
+        end
+    end
+
+
+    def guardar_perfil(params)
+        if params[:profile].present?
+            cloudinary_response = Cloudinary::Uploader.upload(params[:profile], :folder => "fotosPerfil")
+
+            if cloudinary_response['public_id'].present?
+                return cloudinary_response['public_id']
+            else
+                render json: { error: 'No se pudo guardar la imagen.' }, status: :unprocessable_entity
+                return
+            end
+        end
+        return ""
+    end
+end
+
   
