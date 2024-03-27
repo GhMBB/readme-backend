@@ -69,7 +69,7 @@ class User < ApplicationRecord
             if user.update(username: params[:username], password: params[:password])
                 return {message: "Username actualizado con exito", user: UserSerializer.new(user)},  :ok
             else
-                return user.errors,  :unprocessable_entity
+                return { error: 'Nombre de usuario en uso.' },  :unprocessable_entity
             end
         else
             return { error: 'Contraseña incorrecta' }, :unprocessable_entity
