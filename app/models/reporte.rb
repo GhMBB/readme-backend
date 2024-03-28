@@ -2,6 +2,7 @@ class Reporte < ApplicationRecord
   belongs_to :user
   #belongs_to :libro
   #belongs_to :comentario
+  #validates :estado, inclusion:  { in: ->(e) { e.class.estado.keys }, message: "El estado seleccionado no es válido" }
 
   enum estado: {
     pendiente: 'pendiente',  #Cuando se crea el reporte
