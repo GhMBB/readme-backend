@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   put 'users/username', to: 'users#update_username'
   put 'users/password', to: 'users#update_password'
   put 'users/profile', to:  'users#update_profile'
+  put 'users/birthday', to: 'users#update_birthday'
   get '/usersFind/:username', to: 'users#get_userByUsername', as: 'user_by_username'
 
   resources :users

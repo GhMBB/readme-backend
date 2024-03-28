@@ -1,5 +1,9 @@
 class Persona < ApplicationRecord
   belongs_to :user
+
+  validates :fecha_de_nacimiento, presence: { message: "Se debe pasar una fecha de nacimiento valida" }
+
+
   def update_profile(profile)
     if profile.present?
       cloudinary_response = Cloudinary::Uploader.upload(profile, :folder => "fotosPerfil")
@@ -14,4 +18,7 @@ class Persona < ApplicationRecord
       render json: { error: 'Se debe pasar el perfil' }, status: 400
     end
   end
+
+  private
+
 end

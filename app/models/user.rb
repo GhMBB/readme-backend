@@ -28,19 +28,15 @@ class User < ApplicationRecord
 
     def libros_con_capitulos_no_publicados(params, user)
 
-        # Encuentra todos los libros del usuario actual que tienen al menos un capítulo no publicado
         libros = user.libros.includes(:capitulos).where(capitulos: { publicado: false }).distinct.paginate(page: params[:page])
 
-        # Itera sobre cada libro para encontrar el último capítulo no publicado actualizado más recientemente
         libros_con_ultimo_capitulo_no_publicado = libros.map do |libro|
             ultimo_capitulo_no_publicado = libro.capitulos.where(publicado: false).order(updated_at: :desc).first
             capitulo = CapituloForOwnerSerializer.new(ultimo_capitulo_no_publicado)
             libro = LibroSerializer.new(libro)
             { libro: libro, ultimo_capitulo_no_publicado: capitulo }
         end
-
         total_pages = libros.total_pages
-
         return {
           total_pages: total_pages,
           last_page: params[:page].to_i == total_pages, # Asegúrate de convertir params[:page] a entero
@@ -96,6 +92,19 @@ class User < ApplicationRecord
         end
     end
 
+    def update_birthday(params, user)
+        @persona = user.persona
+        if @persona.nil?
+            @persona = Persona.new(user_id: user.id)
+        end
+
+        @persona.fecha_de_nacimiento = params[:fecha_de_nacimiento]
+        if @persona.save
+            return  user, :ok
+        else
+            return  @persona.errors, :unprocessable_entity
+        end
+    end
 
     def guardar_perfil(params)
         if params[:profile].present?
