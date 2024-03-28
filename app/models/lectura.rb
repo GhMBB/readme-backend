@@ -3,6 +3,14 @@ class Lectura < ApplicationRecord
   belongs_to :libro
   belongs_to :capitulo
 
+  validates :user_id, presence: { message: "El ID de usuario no puede estar en blanco" }
+  validates :libro_id, presence: { message: "El ID de libro no puede estar en blanco" }
+  validates :capitulo_id, presence: { message: "El ID de capítulo no puede estar en blanco" }
+
+  attribute :deleted, :boolean, default: false
+  attribute :terminado, :boolean, default: false
+
+  has_many :fecha_lecturas
   def self.create_lectura(params, user)
     libro_id = params[:libro_id]
     capitulo_id = params[:capitulo_id]

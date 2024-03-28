@@ -2,7 +2,9 @@ class Persona < ApplicationRecord
   belongs_to :user
 
   validates :fecha_de_nacimiento, presence: { message: "Se debe pasar una fecha de nacimiento valida" }
+  validates :user_id, presence: { message: "El ID de usuario no puede estar en blanco" }
 
+  attribute :profile, :string, default: ""
 
   def update_profile(profile)
     if profile.present?

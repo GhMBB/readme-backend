@@ -4,6 +4,8 @@ class User < ApplicationRecord
     validates :password, length: { minimum: 8, message: "La contraseña debe tener al menos 8 caracteres" }, format: { with: /\A.*(?=.*\d).*\z/, message: "La contraseña debe contener al menos un dígito" }
     validates :role, inclusion: { in: %w(usuario moderador), message: "El rol no es válido" }
 
+    attribute :deleted, :boolean, default: false
+
     has_many :favoritos
     has_many :libros
     has_many :reportes, -> { where(deleted: false) }, foreign_key: :usuario_reportado_id

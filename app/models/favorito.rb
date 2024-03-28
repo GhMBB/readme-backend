@@ -3,6 +3,10 @@ class Favorito < ApplicationRecord
   belongs_to :user
   belongs_to :libro
   attribute :favorito, :boolean, default: false
+  validates :user_id, presence: { message: "El ID de usuario no puede estar en blanco" }
+  validates :libro_id, presence: { message: "El ID de libro no puede estar en blanco" }
+
+  attribute :favorito, :boolean, default: false
   def self.create_favorito(params, user)
     return nil if user.nil?
     favorito = Favorito.find_or_initialize_by(libro_id: params[:libro_id], user_id: user.id)
