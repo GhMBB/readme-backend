@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   get 'reportes/find_by',to: 'reportes#find_by_params'
   get 'reportes',to: 'reportes#find_with_counts'
 
+  get 'reportes_estados', to: 'reportes#estados'
+
   get '/libros_en_progreso', to: 'lecturas#libros_en_progreso'
   get '/capitulo_actual', to: 'lecturas#capitulo_actual'
 
@@ -48,6 +50,10 @@ Rails.application.routes.draw do
 
   resources :users
   get "up" => "rails/health#show", as: :rails_health_check
+
+  get 'informe/lectura', to: 'informe#lecturas_diarias_por_libro'
+
+  get 'libros_categorias', to: 'libros#categorias'
 
   # Defines the root path route ("/")
   # root "posts#index"

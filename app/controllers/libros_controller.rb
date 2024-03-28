@@ -2,7 +2,7 @@ require 'cloudinary'
 
 class LibrosController < ApplicationController
   before_action :set_libro, only: %i[ show update destroy ]
-  before_action :authenticate_request
+  #before_action :authenticate_request
 
   rescue_from StandardError, with: :internal_server_error
 
@@ -80,6 +80,11 @@ class LibrosController < ApplicationController
       render json: {error: "No se pudo eliminar el libro"}, status: 400
     end
   end
+  def categorias
+    categorias_enum = Libro.categoria
+    @categorias = categorias_enum.keys.map { |key| [key.to_s, categorias_enum[key]] }
+    render json: @categorias
+  end
 
   private
   def guardar_portada
@@ -95,6 +100,8 @@ class LibrosController < ApplicationController
     end
     return ""
   end
+
+
 
   def obtener_portada(portada_public_id)
     if !portada_public_id

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_28_140632) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,6 +46,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
     t.boolean "deleted", default: false
     t.index ["libro_id"], name: "index_favoritos_on_libro_id"
     t.index ["user_id"], name: "index_favoritos_on_user_id"
+  end
+
+  create_table "fecha_lecturas", force: :cascade do |t|
+    t.bigint "lectura_id", null: false
+    t.date "fecha"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lectura_id"], name: "index_fecha_lecturas_on_lectura_id"
   end
 
   create_table "lecturas", force: :cascade do |t|
@@ -92,7 +100,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
 
   create_table "reportes", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "libro_id", null: false
+    t.bigint "libro_id"
     t.string "motivo"
     t.string "estado"
     t.datetime "created_at", null: false
@@ -146,6 +154,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
   add_foreign_key "comentarios", "users"
   add_foreign_key "favoritos", "libros"
   add_foreign_key "favoritos", "users"
+  add_foreign_key "fecha_lecturas", "lecturas"
   add_foreign_key "lecturas", "capitulos"
   add_foreign_key "lecturas", "libros"
   add_foreign_key "lecturas", "users"
