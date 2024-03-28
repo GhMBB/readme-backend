@@ -35,6 +35,14 @@ class UsersController < ApplicationController
     message, status = @user.update_profile(params, @user)
     return render json: message, status: status
   end
+  def destroy_profile
+    @user = get_user
+    if @user.nil?
+      return render json: { error: 'No se ha encontrado al usuario' }, status: 400
+    end
+    message, status = @user.delete_profile(@user)
+    return render json: message, status: status
+  end
 
 
   # GET /users/byUsername

@@ -108,6 +108,17 @@ class User < ApplicationRecord
         end
     end
 
+    def delete_profile(user)
+        @persona = user.persona
+        @persona.profile = eliminar_perfil(@persona.profile)
+        if @persona.save
+            return  user, :ok
+        else
+            return  @persona.errors, :unprocessable_entity
+        end
+    end
+
+    private
     def guardar_perfil(params)
         if params[:profile].present?
             cloudinary_response = Cloudinary::Uploader.upload(params[:profile], :folder => "fotosPerfil")
@@ -121,6 +132,20 @@ class User < ApplicationRecord
         end
         return ""
     end
+
+    def eliminar_perfil(public_id)
+        return if public_id.blank?
+
+        cloudinary_response = Cloudinary::Uploader.destroy(public_id)
+
+        if cloudinary_response['result'] == 'ok'
+            return ""
+        else
+            #render json: { error: 'No se pudo eliminar la foto de perfil.' }, status: :unprocessable_entity
+            return ""
+        end
+    end
+
 end
 
   
