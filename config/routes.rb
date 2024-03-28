@@ -55,6 +55,7 @@ Rails.application.routes.draw do
 
   get 'libros_categorias', to: 'libros#categorias'
 
+  post 'users/delete_profile', to:  'users#destroy_profile'
   # Defines the root path route ("/")
   # root "posts#index"
 end

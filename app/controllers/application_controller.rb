@@ -8,8 +8,8 @@ class ApplicationController < ActionController::API
     authorization_header = request.headers["Authorization"]
 
     if authorization_header.nil?
-      render json: {error: "Debe proporcionar un token"}, status: :forbidden
-      return
+      return render json: {error: "Debe proporcionar un token"}, status: :forbidden
+
     end
 
     token = authorization_header.split(" ").last
