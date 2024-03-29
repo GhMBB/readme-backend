@@ -18,6 +18,7 @@
     has_many :favoritos
     has_many :reportes, -> { where(deleted: false) }, foreign_key: :libro_id
     has_many :lecturas
+    has_many :lecturas_terminadas, -> { where(leido: true) }, class_name: "Lectura"
 
     enum categoria: {
       ciencia_ficción: "Ciencia ficción",

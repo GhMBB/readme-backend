@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_28_194255) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_29_123801) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -69,6 +69,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_28_194255) do
     t.boolean "deleted"
     t.boolean "terminado"
     t.bigint "capitulo_id", null: false
+    t.boolean "leido"
     t.index ["capitulo_id"], name: "index_lecturas_on_capitulo_id"
     t.index ["libro_id"], name: "index_lecturas_on_libro_id"
     t.index ["user_id"], name: "index_lecturas_on_user_id"
