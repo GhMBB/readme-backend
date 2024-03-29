@@ -130,11 +130,46 @@ class User < ApplicationRecord
         end
 
     end
+    def update_portada(params, user)
+        @persona = user.persona
+        if params[:portada].present?
+            @persona.portada = guardar_portada(params)
+        else
+            return { error: 'Se debe pasar el perfil' }, 400
+        end
+        if @persona.save
+            return  user, :ok
+        else
+            return  @persona.errors, :unprocessable_entity
+        end
+    end
+    def delete_portada(user)
+        @persona = user.persona
+        @persona.portada = eliminar_perfil(@persona.portada)
+        if @persona.save
+            return  user, :ok
+        else
+            return  @persona.errors, :unprocessable_entity
+        end
+    end
 
     private
     def guardar_perfil(params)
         if params[:profile].present?
             cloudinary_response = Cloudinary::Uploader.upload(params[:profile], :folder => "fotosPerfil")
+
+            if cloudinary_response['public_id'].present?
+                return cloudinary_response['public_id']
+            else
+                render json: { error: 'No se pudo guardar la imagen.' }, status: :unprocessable_entity
+                return
+            end
+        end
+        return ""
+    end
+    def guardar_portada(params)
+        if params[:portada].present?
+            cloudinary_response = Cloudinary::Uploader.upload(params[:portada], :folder => "fotosPerfil")
 
             if cloudinary_response['public_id'].present?
                 return cloudinary_response['public_id']
