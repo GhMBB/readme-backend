@@ -29,13 +29,13 @@ class Lectura < ApplicationRecord
     leyendo = Lectura.find_by(libro_id: libro_id, user_id: user.id)
 
     if leyendo.present?
-      leyendo.update(capitulo_id: capitulo_id, terminado: params[:terminado], deleted: false)
+      leyendo.update(capitulo_id: capitulo_id, terminado: params[:terminado], leido:params[:leido] , deleted: false)
       #Guardar la fecha de lectura
       fecha_lectura = FechaLectura.new(lectura_id: leyendo.id, user_id: user.id, libro_id: libro_id, fecha: Time.now)
       fecha_lectura.save
       return { message: 'Progreso de lectura actualizado exitosamente', lectura: LecturaSerializer.new(leyendo) }, :created
     else
-      lectura = Lectura.new(user_id: user.id, libro_id: libro_id, capitulo_id: capitulo_id, terminado: params[:terminado], deleted: false)
+      lectura = Lectura.new(user_id: user.id, libro_id: libro_id, capitulo_id: capitulo_id, terminado: params[:terminado] , leido:params[:leido] , deleted: false)
       #Guardar la fecha de lectura
       fecha_lectura = FechaLectura.new(lectura_id: lectura.id, user_id: user.id, libro_id: libro_id, fecha: Time.now)
       fecha_lectura.save
