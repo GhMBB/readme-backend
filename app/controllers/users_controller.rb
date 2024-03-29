@@ -40,7 +40,7 @@ class UsersController < ApplicationController
     if @user.nil?
       return render json: { error: 'No se ha encontrado al usuario' }, status: 400
     end
-    message, status = @user.delete_profile(@user)
+    message, status = @user.delete_profile(params, @user)
     return render json: message, status: status
   end
 
