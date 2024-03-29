@@ -30,9 +30,15 @@ class Lectura < ApplicationRecord
 
     if leyendo.present?
       leyendo.update(capitulo_id: capitulo_id, terminado: params[:terminado], deleted: false)
+      #Guardar la fecha de lectura
+      fecha_lectura = FechaLectura.new(lectura_id: leyendo.id, user_id: user.id, libro_id: libro_id, fecha: Time.now)
+      fecha_lectura.save
       return { message: 'Progreso de lectura actualizado exitosamente', lectura: LecturaSerializer.new(leyendo) }, :created
     else
       lectura = Lectura.new(user_id: user.id, libro_id: libro_id, capitulo_id: capitulo_id, terminado: params[:terminado], deleted: false)
+      #Guardar la fecha de lectura
+      fecha_lectura = FechaLectura.new(lectura_id: lectura.id, user_id: user.id, libro_id: libro_id, fecha: Time.now)
+      fecha_lectura.save
       if lectura.save
         return { message: 'Lectura creada exitosamente', lectura: LecturaSerializer.new(leyendo) }, :created
       else
@@ -46,7 +52,9 @@ class Lectura < ApplicationRecord
     if lectura.nil?
       return { error: 'No se encuentra el capitulo actual' }, :not_found
     end
-
+    #Guardar la fecha de lectura
+    #fecha_lectura = FechaLectura.new(lectura_id: lectura.id, user_id: user.id, libro_id: params[:libro_id], fecha: Time.now)
+    #fecha_lectura.save
     capitulo_actual = lectura.capitulo_id
     capitulo = Capitulo.find_by(id: capitulo_actual)
     if capitulo.libro.user == user
