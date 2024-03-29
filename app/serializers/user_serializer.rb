@@ -1,12 +1,24 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :username, :role, :profile, :fecha_de_nacimiento
+  attributes :id, :username, :role, :profile, :fecha_de_nacimiento, :portada, :descripcion, :nacionalidad, :direccion
 
   def fecha_de_nacimiento
     object.persona.fecha_de_nacimiento if object.persona
   end
 
+  def descripcion
+    object.persona.descripcion if object.persona
+  end
+  def nacionalidad
+    object.persona.nacionalidad if object.persona
+  end
+  def direccion
+    object.persona.direccion if object.persona
+  end
   def profile
     obtener_perfil(object.persona.profile)
+  end
+  def portada
+    obtener_perfil(object.persona.portada)
   end
   def obtener_perfil(perfil_public_id)
     if !perfil_public_id
