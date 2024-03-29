@@ -9,7 +9,7 @@ class Lectura < ApplicationRecord
 
   attribute :deleted, :boolean, default: false
   attribute :terminado, :boolean, default: false
-  attribute :terminado, :leido, default: false
+  attribute :leido, :boolean, default: false
   has_many :fecha_lecturas
   def self.create_lectura(params, user)
     libro_id = params[:libro_id]
