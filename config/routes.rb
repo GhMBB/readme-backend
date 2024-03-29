@@ -52,6 +52,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   get 'informe/lectura', to: 'informe#lecturas_diarias_por_libro'
+  get 'informe/estadisticas_usuario', to: 'informe#estadisticas_usuario'
 
   get 'libros_categorias', to: 'libros#categorias'
 

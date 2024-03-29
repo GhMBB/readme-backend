@@ -50,7 +50,7 @@ class Lectura < ApplicationRecord
   def self.current_chapter(params, user)
     lectura = Lectura.find_by(user_id: user.id, libro_id: params[:libro_id])
     if lectura.nil?
-      return { error: 'No se encuentra el capitulo actual' }, :not_found
+      return { error: 'No se encuentra el capitulo actual' }, :ok
     end
     #Guardar la fecha de lectura
     #fecha_lectura = FechaLectura.new(lectura_id: lectura.id, user_id: user.id, libro_id: params[:libro_id], fecha: Time.now)
