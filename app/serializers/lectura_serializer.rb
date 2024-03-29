@@ -1,4 +1,4 @@
 class LecturaSerializer < ActiveModel::Serializer
-  attributes :id, :libro_id, :user_id, :capitulo_id, :terminado
+  attributes :id, :libro_id, :user_id, :capitulo_id, :terminado, :leido
 
 end
