@@ -75,47 +75,60 @@ class User < ApplicationRecord
     end
 
     def update_profile(params, user)
-        @persona = user.persona
+        if user.authenticate(params[:password])
+            @persona = user.persona
+            if @persona.nil?
+                @persona = Persona.new(user_id: user.id)
+            end
 
-        if @persona.nil?
-            @persona = Persona.new(user_id: user.id)
-        end
+            if params[:profile].present?
+                @persona.profile = guardar_perfil(params)
+            else
+                return { error: 'Se debe pasar el perfil' }, 400
+            end
 
-        if params[:profile].present?
-            @persona.profile = guardar_perfil(params)
+            if @persona.save
+                return  user, :ok
+            else
+                return  @persona.errors, :unprocessable_entity
+            end
         else
-            return { error: 'Se debe pasar el perfil' }, 400
+            return { error: 'Contraseña incorrecta' }, :unprocessable_entity
         end
 
-        if @persona.save
-            return  user, :ok
-        else
-            return  @persona.errors, :unprocessable_entity
-        end
     end
 
     def update_birthday(params, user)
-        @persona = user.persona
-        if @persona.nil?
-            @persona = Persona.new(user_id: user.id)
-        end
+        if user.authenticate(params[:password])
+            @persona = user.persona
+            if @persona.nil?
+                @persona = Persona.new(user_id: user.id)
+            end
 
-        @persona.fecha_de_nacimiento = params[:fecha_de_nacimiento]
-        if @persona.save
-            return  user, :ok
+            @persona.fecha_de_nacimiento = params[:fecha_de_nacimiento]
+            if @persona.save
+                return  user, :ok
+            else
+                return  @persona.errors, :unprocessable_entity
+            end
         else
-            return  @persona.errors, :unprocessable_entity
+            return { error: 'Contraseña incorrecta' }, :unprocessable_entity
         end
     end
 
-    def delete_profile(user)
-        @persona = user.persona
-        @persona.profile = eliminar_perfil(@persona.profile)
-        if @persona.save
-            return  user, :ok
+    def delete_profile(params, user)
+        if user.authenticate(params[:password])
+            @persona = user.persona
+            @persona.profile = eliminar_perfil(@persona.profile)
+            if @persona.save
+                return  user, :ok
+            else
+                return  @persona.errors, :unprocessable_entity
+            end
         else
-            return  @persona.errors, :unprocessable_entity
+            return { error: 'Contraseña incorrecta' }, :unprocessable_entity
         end
+
     end
 
     private
