@@ -5,6 +5,7 @@ class Resenha < ApplicationRecord
   validates :puntuacion, presence: { message: "La puntuación no puede estar vacía" }
   validates :puntuacion, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 5, message: "La puntuación debe estar entre 0 y 5" }
 
+  attribute :deleted, :boolean, default: false
   def self.destroy_resenha(resenha_id, user_id)
     resenha = Resenha.find_by(id: resenha_id)
     user = User.find_by(id: user_id)

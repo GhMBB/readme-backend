@@ -2,6 +2,11 @@ class Comentario < ApplicationRecord
   belongs_to :user
   belongs_to :libro
 
+  validates :user_id, presence: { message: "El ID de usuario no puede estar en blanco" }
+  validates :libro_id, presence: { message: "El ID de libro no puede estar en blanco" }
+  validates :comentario, presence: { message: "El comentario no puede estar en blanco" }
+  attribute :deleted, :boolean, default: false
+
   has_many :reportes, -> { where(deleted: false) }, foreign_key: :comentario_id
 
   def self.create_comentario(libro_id, comentario, user)

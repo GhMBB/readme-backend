@@ -1,7 +1,16 @@
 class Reporte < ApplicationRecord
   belongs_to :user
-  #belongs_to :libro
-  #belongs_to :comentario
+  belongs_to :libro, optional: true
+  belongs_to :comentario, optional: true
+  belongs_to :moderador, class_name: 'User', optional: true
+  belongs_to :usuario_reportado, class_name: 'User', optional: true
+
+  validates :user_id, presence: { message: "El ID de usuario no puede estar en blanco" }
+  validates :motivo, presence: { message: "El motivo no puede estar en blanco" }
+  validates :estado, presence: { message: "El estado no puede estar en blanco" }
+
+  attribute :deleted, :boolean, default: false
+  #validates :estado, inclusion:  { in: ->(e) { e.class.estado.keys }, message: "El estado seleccionado no es válido" }
 
   enum estado: {
     pendiente: 'pendiente',  #Cuando se crea el reporte

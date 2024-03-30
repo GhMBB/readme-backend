@@ -14,6 +14,12 @@ class ReportesController < ApplicationController
     render json: reportes, status: :ok
   end
 
+  def estados
+    estado_enum = Reporte.estados
+    @categorias = estado_enum.keys.map { |key| [key.to_s, estado_enum[key]] }
+    render json: @categorias
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

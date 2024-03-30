@@ -2,7 +2,7 @@ require 'cloudinary'
 
 class LibrosController < ApplicationController
   before_action :set_libro, only: %i[ show update destroy ]
-  before_action :authenticate_request
+  #before_action :authenticate_request
 
   rescue_from StandardError, with: :internal_server_error
 
@@ -80,6 +80,11 @@ class LibrosController < ApplicationController
       render json: {error: "No se pudo eliminar el libro"}, status: 400
     end
   end
+  def categorias
+    categorias_enum = Libro.categoria
+    @categorias = categorias_enum.keys.map { |key| [key.to_s, categorias_enum[key]] }
+    render json: @categorias
+  end
 
   private
   def guardar_portada
@@ -95,6 +100,8 @@ class LibrosController < ApplicationController
     end
     return ""
   end
+
+
 
   def obtener_portada(portada_public_id)
     if !portada_public_id
@@ -114,10 +121,12 @@ class LibrosController < ApplicationController
     libros = libros.where("titulo ILIKE ?", "%#{params[:titulo]}%") if params[:titulo]
     libros = libros.where(adulto: params[:adulto]) if params[:adulto]
     libros = libros.where(user_id: params[:user_id]) if params[:user_id]
-    libros = libros.where(categoria: params[:categoria]) if params[:categoria]
-
+    libros = libros.where(categoria: params[:categorias]) if params[:categorias].present?
+    libros = libros.where("puntuacion_media >= ?", params[:puntuacion_media]) if params[:puntuacion_media].present?
+  
     libros
   end
+  
 
   def paginate_libros(libros)
     page_number = params[:page].to_i
@@ -131,9 +140,11 @@ class LibrosController < ApplicationController
       serialized_libro.merge(portada: obtener_portada(libro.portada))
     end
 
+
     {
       total_pages: total_pages,
       last_page: page_number == total_pages,
+      total_items: libros.count,
       data: data
     }
   end

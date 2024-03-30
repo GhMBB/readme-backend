@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   get 'reportes/find_by',to: 'reportes#find_by_params'
   get 'reportes',to: 'reportes#find_with_counts'
 
+  get 'reportes_estados', to: 'reportes#estados'
+
   get '/libros_en_progreso', to: 'lecturas#libros_en_progreso'
   get '/capitulo_actual', to: 'lecturas#capitulo_actual'
 
@@ -43,11 +45,20 @@ Rails.application.routes.draw do
   put 'users/username', to: 'users#update_username'
   put 'users/password', to: 'users#update_password'
   put 'users/profile', to:  'users#update_profile'
+  put 'users/birthday', to: 'users#update_birthday'
   get '/usersFind/:username', to: 'users#get_userByUsername', as: 'user_by_username'
-
+  put 'users/portada', to: 'users#update_portada'
+  post 'users/information',to: 'users#update_information'
   resources :users
   get "up" => "rails/health#show", as: :rails_health_check
 
+  get 'informe/lectura', to: 'informe#lecturas_diarias_por_libro'
+  get 'informe/estadisticas_usuario', to: 'informe#estadisticas_usuario'
+
+  get 'libros_categorias', to: 'libros#categorias'
+
+  post 'users/delete_profile', to:  'users#destroy_profile'
+  post 'users/delete_portada', to:  'users#destroy_portada'
   # Defines the root path route ("/")
   # root "posts#index"
 end

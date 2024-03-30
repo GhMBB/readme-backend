@@ -3,6 +3,14 @@ class Lectura < ApplicationRecord
   belongs_to :libro
   belongs_to :capitulo
 
+  validates :user_id, presence: { message: "El ID de usuario no puede estar en blanco" }
+  validates :libro_id, presence: { message: "El ID de libro no puede estar en blanco" }
+  validates :capitulo_id, presence: { message: "El ID de capítulo no puede estar en blanco" }
+
+  attribute :deleted, :boolean, default: false
+  attribute :terminado, :boolean, default: false
+  attribute :leido, :boolean, default: false
+  has_many :fecha_lecturas
   def self.create_lectura(params, user)
     libro_id = params[:libro_id]
     capitulo_id = params[:capitulo_id]
@@ -19,12 +27,30 @@ class Lectura < ApplicationRecord
     end
 
     leyendo = Lectura.find_by(libro_id: libro_id, user_id: user.id)
-
+    libro = Libro.find_by(id: libro_id)
     if leyendo.present?
-      leyendo.update(capitulo_id: capitulo_id, terminado: params[:terminado], deleted: false)
+      leido = params[:leido]
+      if leido.nil?
+        leyendo.update(capitulo_id: capitulo_id, terminado: params[:terminado] , deleted: false)
+      else
+        leyendo.update(capitulo_id: capitulo_id, terminado: params[:terminado], leido:params[:leido] , deleted: false)
+      end
+
+      #Guardar la fecha de lectura
+      fecha_lectura = FechaLectura.new(lectura_id: leyendo.id, user_id: user.id, libro_id: libro_id, fecha: Time.now)
+      fecha_lectura.save
       return { message: 'Progreso de lectura actualizado exitosamente', lectura: LecturaSerializer.new(leyendo) }, :created
     else
-      lectura = Lectura.new(user_id: user.id, libro_id: libro_id, capitulo_id: capitulo_id, terminado: params[:terminado], deleted: false)
+      leido = params[:leido]
+      if leido.nil?
+        lectura = Lectura.new(user_id: user.id, libro_id: libro_id, capitulo_id: capitulo_id, terminado: params[:terminado] , deleted: false)
+      else
+        lectura = Lectura.new(user_id: user.id, libro_id: libro_id, capitulo_id: capitulo_id, terminado: params[:terminado] , leido:params[:leido] , deleted: false)
+      end
+
+      #Guardar la fecha de lectura
+      fecha_lectura = FechaLectura.new(lectura_id: lectura.id, user_id: user.id, libro_id: libro_id, fecha: Time.now)
+      fecha_lectura.save
       if lectura.save
         return { message: 'Lectura creada exitosamente', lectura: LecturaSerializer.new(leyendo) }, :created
       else
@@ -36,9 +62,11 @@ class Lectura < ApplicationRecord
   def self.current_chapter(params, user)
     lectura = Lectura.find_by(user_id: user.id, libro_id: params[:libro_id])
     if lectura.nil?
-      return { error: 'No se encuentra el capitulo actual' }, :not_found
+      return { error: 'No se encuentra el capitulo actual' }, :ok
     end
-
+    #Guardar la fecha de lectura
+    #fecha_lectura = FechaLectura.new(lectura_id: lectura.id, user_id: user.id, libro_id: params[:libro_id], fecha: Time.now)
+    #fecha_lectura.save
     capitulo_actual = lectura.capitulo_id
     capitulo = Capitulo.find_by(id: capitulo_actual)
     if capitulo.libro.user == user
