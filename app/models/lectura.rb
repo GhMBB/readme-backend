@@ -27,7 +27,7 @@ class Lectura < ApplicationRecord
     end
 
     leyendo = Lectura.find_by(libro_id: libro_id, user_id: user.id)
-
+    libro = Libro.find_by(id: libro_id)
     if leyendo.present?
       leido = params[:leido]
       if leido.nil?

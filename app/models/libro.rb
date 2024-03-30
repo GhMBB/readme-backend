@@ -19,7 +19,7 @@
     has_many :reportes, -> { where(deleted: false) }, foreign_key: :libro_id
     has_many :lecturas
     has_many :lecturas_terminadas, -> { where(leido: true) }, class_name: "Lectura"
-
+    has_many :fecha_lecturas
     enum categoria: {
       ciencia_ficción: "Ciencia ficción",
       Fantasia: "Fantasía",
@@ -41,7 +41,9 @@
       Juvenil: "Juvenil"
     }
 
-
+    def cantidad_total_lecturas(libro_id)
+        fecha_lecturas.where(libro_id: libro_id).count
+    end
 =begin
     def validar_categoria_existente
         if categoria.present? && !self.class.categorias.keys.include?(categoria)

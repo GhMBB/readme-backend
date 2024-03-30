@@ -22,8 +22,9 @@ class InformeController < ApplicationController
 
   def estadisticas_usuario
     user = get_user
+    libros = user.libros
 
-    cantidad_total = FechaLectura.where(user_id: user.id).count
+    cantidad_total = FechaLectura.where(libro_id: libros.pluck(:id)).count
 
     # Calcular el crecimiento en la última semana
     fecha_actual = Date.today
