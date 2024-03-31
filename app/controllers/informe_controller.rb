@@ -35,16 +35,16 @@ class InformeController < ApplicationController
     crecimiento =  cantidad_lecturas_semana_pasada.to_f/cantidad_total
 
     # Contar la cantidad total de favoritos del usuario
-    cantidad_total_favitos = Favorito.where(user_id: user.id).count
+    cantidad_total_favitos = Favorito.where(libro_id: libros.pluck(:id)).count
 
     # Calcular el crecimiento en la última semana
-    cantidad_favoritos_semana_pasada = Favorito.where(user_id: user.id, created_at: fecha_inicio_semana_pasada..fecha_actual).count
+    cantidad_favoritos_semana_pasada = Favorito.where(libro_id: libros.pluck(:id), created_at: fecha_inicio_semana_pasada..fecha_actual+1).count
 
     # Contar la cantidad total de comentarios del usuario
-    cantidad_total_comentarios = Comentario.where(user_id: user.id).count
+    cantidad_total_comentarios = Comentario.where(libro_id: libros.pluck(:id)).count
 
     # Calcular el crecimiento en la última semana
-    cantidad_comentarios_semana_pasada = Comentario.where(user_id: user.id, created_at: fecha_inicio_semana_pasada..fecha_actual).count
+    cantidad_comentarios_semana_pasada = Comentario.where(libro_id: libros.pluck(:id), created_at: fecha_inicio_semana_pasada..fecha_actual+1).count
 
     subquery = Lectura.where(libro_id: Libro.where(user_id: user.id).pluck(:id)).pluck(:user_id).uniq
 

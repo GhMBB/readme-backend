@@ -86,11 +86,13 @@ class UsersController < ApplicationController
     end
     @persona = @user.persona
     if @persona.update(persona_params)
-      render json: @persona, status: :ok
+      render json: @user, status: :ok
     else
       render json: @persona.errors, status: :unprocessable_entity
     end
   end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
