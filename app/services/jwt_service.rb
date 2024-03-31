@@ -5,7 +5,7 @@ class JwtService
         user_id: user.id,
         username: user.username,
         role: user.role,
-        exp: 5.hour.from_now.to_i  # Expire en 1 hora
+        exp: 30.hour.from_now.to_i  # Expire en 1 hora
       }
       JWT.encode(payload, Rails.application.config.secret_key, 'HS256')
     end
