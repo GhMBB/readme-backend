@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_29_204910) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_30_134856) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -139,6 +139,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_29_204910) do
     t.index ["user_id"], name: "index_resenhas_on_user_id"
   end
 
+  create_table "seguidors", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "follower_id"
+    t.bigint "followed_id"
+    t.boolean "deleted"
+    t.index ["followed_id"], name: "index_seguidors_on_followed_id"
+    t.index ["follower_id"], name: "index_seguidors_on_follower_id"
+  end
+
   create_table "total_resenhas", force: :cascade do |t|
     t.bigint "libro_id", null: false
     t.integer "cantidad"
@@ -179,5 +189,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_29_204910) do
   add_foreign_key "reportes", "users", column: "usuario_reportado_id"
   add_foreign_key "resenhas", "libros"
   add_foreign_key "resenhas", "users"
+  add_foreign_key "seguidors", "users", column: "followed_id"
+  add_foreign_key "seguidors", "users", column: "follower_id"
   add_foreign_key "total_resenhas", "libros"
 end
