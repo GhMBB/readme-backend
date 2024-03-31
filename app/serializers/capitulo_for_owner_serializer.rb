@@ -28,5 +28,20 @@ class CapituloForOwnerSerializer < ActiveModel::Serializer
       end
       progreso
     end
+    def contenido
+      obtener_contenido(object.nombre_archivo)
+    end
+    def obtener_contenido(contenido_public_id)
+      if !contenido_public_id
+        return ""
+      end
+
+      begin
+        enlace_temporal = Cloudinary::Utils.cloudinary_url("#{contenido_public_id}", :resource_type => :raw, :expires_at => (Time.now + 3600).to_i)
+        return enlace_temporal
+      rescue CloudinaryException => e
+        return ""
+      end
+    end
   end
   

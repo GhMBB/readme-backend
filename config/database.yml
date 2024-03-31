@@ -57,10 +57,10 @@ test:
   <<: *default
   database: readme_backend_test
 
-  username: 123
+  username: postgres
 
   # The password associated with the PostgreSQL role (username).
-  password: postgres
+  password: 123
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.
@@ -82,4 +82,4 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 #production:
-#  url: '<%= ENV["DATABASE_URL"] %>'
+# url: '<%= ENV["DATABASE_URL"] %>'

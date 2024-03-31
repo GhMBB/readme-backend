@@ -10,6 +10,7 @@
 # Encuentra y elimina los usuarios predeterminados si existen
 
 # Crea 10 usuarios y moderadores
+=begin
 10.times do |i|
   defaultUsuario = User.find_by(username: "usuario_#{i}")
   defaultModerador = User.find_by(username: "moderador_#{i}")
@@ -33,3 +34,4 @@ User.all.each do |user|
     Favorito.create(libro_id: i + 1, user_id: user.id, favorito: true)
   end
 end
+=end

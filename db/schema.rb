@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_30_134856) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -48,6 +48,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
     t.index ["user_id"], name: "index_favoritos_on_user_id"
   end
 
+  create_table "fecha_lecturas", force: :cascade do |t|
+    t.bigint "lectura_id", null: false
+    t.date "fecha"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.bigint "libro_id", null: false
+    t.index ["lectura_id"], name: "index_fecha_lecturas_on_lectura_id"
+    t.index ["libro_id"], name: "index_fecha_lecturas_on_libro_id"
+    t.index ["user_id"], name: "index_fecha_lecturas_on_user_id"
+  end
+
   create_table "lecturas", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "libro_id", null: false
@@ -57,6 +69,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
     t.boolean "deleted"
     t.boolean "terminado"
     t.bigint "capitulo_id", null: false
+    t.boolean "leido"
     t.index ["capitulo_id"], name: "index_lecturas_on_capitulo_id"
     t.index ["libro_id"], name: "index_lecturas_on_libro_id"
     t.index ["user_id"], name: "index_lecturas_on_user_id"
@@ -87,12 +100,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "descripcion"
+    t.string "nacionalidad"
+    t.string "direccion"
+    t.string "email"
+    t.string "portada"
     t.index ["user_id"], name: "index_personas_on_user_id"
   end
 
   create_table "reportes", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "libro_id", null: false
+    t.bigint "libro_id"
     t.string "motivo"
     t.string "estado"
     t.datetime "created_at", null: false
@@ -121,6 +139,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
     t.index ["user_id"], name: "index_resenhas_on_user_id"
   end
 
+  create_table "seguidors", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "follower_id"
+    t.bigint "followed_id"
+    t.boolean "deleted"
+    t.index ["followed_id"], name: "index_seguidors_on_followed_id"
+    t.index ["follower_id"], name: "index_seguidors_on_follower_id"
+  end
+
   create_table "total_resenhas", force: :cascade do |t|
     t.bigint "libro_id", null: false
     t.integer "cantidad"
@@ -146,6 +174,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
   add_foreign_key "comentarios", "users"
   add_foreign_key "favoritos", "libros"
   add_foreign_key "favoritos", "users"
+  add_foreign_key "fecha_lecturas", "lecturas"
+  add_foreign_key "fecha_lecturas", "libros"
+  add_foreign_key "fecha_lecturas", "users"
   add_foreign_key "lecturas", "capitulos"
   add_foreign_key "lecturas", "libros"
   add_foreign_key "lecturas", "users"
@@ -158,5 +189,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_123953) do
   add_foreign_key "reportes", "users", column: "usuario_reportado_id"
   add_foreign_key "resenhas", "libros"
   add_foreign_key "resenhas", "users"
+  add_foreign_key "seguidors", "users", column: "followed_id"
+  add_foreign_key "seguidors", "users", column: "follower_id"
   add_foreign_key "total_resenhas", "libros"
 end

@@ -16,9 +16,14 @@ class AuthController < ApplicationController
 
 
   def register
-   if params[:role] == "moderador" && get_user.role != "moderador"
-      render json: { error: "Debes ser moderador para crear otro moderador"}, status: :unprocessable_entity
-      return
+
+   if params[:role] == "moderador"
+     authorization_header = request.headers["Authorization"]
+     if authorization_header.nil?
+       return render json: {error: "Debe proporcionar un token"}, status: :forbidden
+     end
+     user = get_user
+     return render json: { error: "Debes ser moderador para crear otro moderador"}, status: :unprocessable_entity if (user.role.blank? || user.role != "moderador")
    end
    @user = User.new(user_params)
 
