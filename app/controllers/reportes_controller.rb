@@ -16,8 +16,8 @@ class ReportesController < ApplicationController
 
   def estados
     estado_enum = Reporte.estados
-    @categorias = estado_enum.keys.map { |key| [key.to_s, estado_enum[key]] }
-    render json: @categorias
+    @estados = estado_enum.keys.map { |key| [key.to_s, estado_enum[key]] }
+    render json: @estados
   end
 
   private
