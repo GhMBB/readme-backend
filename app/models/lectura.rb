@@ -27,7 +27,6 @@ class Lectura < ApplicationRecord
     end
 
     leyendo = Lectura.find_by(libro_id: libro_id, user_id: user.id)
-    libro = Libro.find_by(id: libro_id)
     if leyendo.present?
       leido = params[:leido]
       if leido.nil?
@@ -36,9 +35,6 @@ class Lectura < ApplicationRecord
         leyendo.update(capitulo_id: capitulo_id, terminado: params[:terminado], leido:params[:leido] , deleted: false)
       end
 
-      #Guardar la fecha de lectura
-      fecha_lectura = FechaLectura.new(lectura_id: leyendo.id, user_id: user.id, libro_id: libro_id, fecha: Time.now)
-      fecha_lectura.save
       return { message: 'Progreso de lectura actualizado exitosamente', lectura: LecturaSerializer.new(leyendo) }, :created
     else
       leido = params[:leido]
@@ -47,15 +43,23 @@ class Lectura < ApplicationRecord
       else
         lectura = Lectura.new(user_id: user.id, libro_id: libro_id, capitulo_id: capitulo_id, terminado: params[:terminado] , leido:params[:leido] , deleted: false)
       end
-
-      #Guardar la fecha de lectura
-      fecha_lectura = FechaLectura.new(lectura_id: lectura.id, user_id: user.id, libro_id: libro_id, fecha: Time.now)
-      fecha_lectura.save
       if lectura.save
         return { message: 'Lectura creada exitosamente', lectura: LecturaSerializer.new(leyendo) }, :created
       else
         return { errors: lectura.errors.full_messages }, :unprocessable_entity
       end
+    end
+  end
+
+  def self.crear_fecha_lectura(params, user)
+    libro_id = params[:libro_id]
+    leyendo = Lectura.find_by(libro_id: libro_id, user_id: user.id)
+    #Guardar la fecha de lectura
+    fecha_lectura = FechaLectura.new(lectura_id: leyendo.id, user_id: user.id, libro_id: libro_id, fecha: Time.now)
+    if fecha_lectura.save
+      return {message: "Guardado con exito"}, 200
+    else
+      return {errors: "No se pudo guardar"}, 400
     end
   end
 

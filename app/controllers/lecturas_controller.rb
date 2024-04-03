@@ -75,6 +75,15 @@ class LecturasController < ApplicationController
 
     render json: response, status: status
   end
+  def fecha_lectura
+    user = get_user
+    if user.nil?
+      render json: { error: "El usuario no se encuentra" }, status: 400
+      return
+    end
+    response, status = Lectura.crear_fecha_lectura(params, user)
+    render json: response, status: status
+  end
 
   def libros_con_capitulos_no_publicados
     user = get_user

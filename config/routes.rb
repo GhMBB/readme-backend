@@ -59,6 +59,8 @@ Rails.application.routes.draw do
 
   post 'users/delete_profile', to:  'users#destroy_profile'
   post 'users/delete_portada', to:  'users#destroy_portada'
+
+  post 'lecturas/createfecha', to:  'lecturas#fecha_lectura'
   # Defines the root path route ("/")
   # root "posts#index"
 end
