@@ -19,8 +19,6 @@ class Reporte < ApplicationRecord
     rechazado: 'rechazado', #Si el moderador rechaza el reporte
     resuelto: 'resuelto' #Una vez que se ha tomado alguna acción sobre el reporte, como la eliminacion del contenido reportado.
   }
-
-
   def self.create_reporte(tipo, tipo_id, reporte_params, user)
     if tipo == "libro"
       recurso = Libro.find_by(id: tipo_id)
