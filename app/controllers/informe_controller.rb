@@ -29,7 +29,7 @@ class InformeController < ApplicationController
     # Calcular el crecimiento en la última semana
     fecha_actual = Date.today
     fecha_inicio_semana_pasada = (fecha_actual - 7.days).beginning_of_day
-    cantidad_lecturas_semana_pasada = FechaLectura.where(user_id: user.id, fecha: fecha_inicio_semana_pasada..fecha_actual).count
+    cantidad_lecturas_semana_pasada = FechaLectura.where(libro_id: libros.pluck(:id), fecha: fecha_inicio_semana_pasada..fecha_actual+1).count
 
     # Calcular el crecimiento
     crecimiento =  cantidad_lecturas_semana_pasada.to_f/cantidad_total
