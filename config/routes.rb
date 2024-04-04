@@ -27,7 +27,7 @@ Rails.application.routes.draw do
   get 'reportes/find_by',to: 'reportes#find_by_params'
   get 'reportes',to: 'reportes#find_with_counts'
 
-  get 'reportes_estados', to: 'reportes#estados'
+  get 'reportes/estados/', to: 'reportes#estados'
 
   get '/libros_en_progreso', to: 'lecturas#libros_en_progreso'
   get '/capitulo_actual', to: 'lecturas#capitulo_actual'
@@ -68,6 +68,12 @@ Rails.application.routes.draw do
   get 'seguidos', to: 'seguidors#seguidos'
   get 'cantseguidores',to: 'seguidors#cant_seguidores'
   delete 'seguidors/seguidor/:id', to: 'seguidors#destroy_follower'
+
+
+  get 'reportes/categorias/comentarios', to: 'reportes#repCatComentarios'
+  get 'reportes/categorias/libros', to: 'reportes#repCatLibros'
+  get 'reportes/categorias/usuarios', to: 'reportes#repCatUsuarios'
+  get 'reportes/categorias', to: 'reportes#repCategorias'
   # Defines the root path route ("/")
   # root "posts#index"
 end

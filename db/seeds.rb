@@ -35,3 +35,36 @@ User.all.each do |user|
   end
 end
 =end
+# db/seeds.rb
+
+# Cargar datos para categorías de reportes de usuarios
+UserReportCategory.create([
+                            { name: 'Comportamiento inapropiado' },
+                            { name: 'Suplantación de identidad' },
+                            { name: 'Publicación de contenido inapropiado' },
+                            { name: 'Acoso' },
+                            { name: 'Spam' },
+                            { name: 'Otro' }
+                          ])
+
+# Cargar datos para categorías de reportes de libros
+BookReportCategory.create([
+                            { name: 'Contenido inapropiado' },
+                            { name: 'Derechos de autor' },
+                            { name: 'Calidad del contenido' },
+                            { name: 'Contenido engañoso' },
+                            { name: 'Spam' },
+                            { name: 'Violación de políticas de la comunidad' },
+                            { name: 'Otro' }
+                          ])
+
+# Cargar datos para categorías de reportes de comentarios
+CommentReportCategory.create([
+                               { name: 'Contenido inapropiado' },
+                               { name: 'Acoso' },
+                               { name: 'Spam' },
+                               { name: 'Lenguaje ofensivo' },
+                               { name: 'Incitación al odio' },
+                               { name: 'Otro' }
+                             ])
+

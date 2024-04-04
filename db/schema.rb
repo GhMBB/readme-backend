@@ -10,9 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_04_133737) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_04_144529) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "book_report_categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "capitulos", force: :cascade do |t|
     t.bigint "libro_id", null: false
@@ -35,6 +41,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_04_133737) do
     t.boolean "deleted", default: false
     t.index ["libro_id"], name: "index_comentarios_on_libro_id"
     t.index ["user_id"], name: "index_comentarios_on_user_id"
+  end
+
+  create_table "comment_report_categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "favoritos", force: :cascade do |t|
@@ -159,6 +171,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_04_133737) do
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
     t.index ["libro_id"], name: "index_total_resenhas_on_libro_id"
+  end
+
+  create_table "user_report_categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
