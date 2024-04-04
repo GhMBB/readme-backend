@@ -22,11 +22,6 @@ class ReportesController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_reporte
-    @reporte = Reporte.find(params[:id])
-  end
-
   # Only allow a list of trusted parameters through.
   def reporte_params
     params.require(:reporte).permit(:user_id, :libro_id, :motivo, :estado, :categoria, :usuario_reportado_id)

@@ -11,52 +11,34 @@ class UsersController < ApplicationController
 
   def update_password
     @user = get_user
-    if @user.nil?
-      return render json: { error: 'No se ha encontrado al usuario' }, status: 400
-    end
     message, status = @user.update_password(params, @user)
     return render json: message , status: status
   end
 
   def update_username
     @user = get_user
-    if @user.nil?
-      return render json: { error: 'No se ha encontrado al usuario' }, status: 400
-    end
     message, status = @user.update_username(params, @user)
     return render json: message , status: status
   end
 
   def update_profile
     @user = get_user
-    if @user.nil?
-      return render json: { error: 'No se ha encontrado al usuario' }, status: 400
-    end
     message, status = @user.update_profile(params, @user)
     return render json: message, status: status
   end
   def destroy_profile
     @user = get_user
-    if @user.nil?
-      return render json: { error: 'No se ha encontrado al usuario' }, status: 400
-    end
     message, status = @user.delete_profile(params, @user)
     return render json: message, status: status
   end
 
   def update_portada
     @user = get_user
-    if @user.nil?
-      return render json: { error: 'No se ha encontrado al usuario' }, status: 400
-    end
     message, status = @user.update_portada(params, @user)
     return render json: message, status: status
   end
   def destroy_portada
     @user = get_user
-    if @user.nil?
-      return render json: { error: 'No se ha encontrado al usuario' }, status: 400
-    end
     message, status = @user.delete_portada( @user)
     return render json: message, status: status
   end
@@ -72,18 +54,12 @@ class UsersController < ApplicationController
   end
   def update_birthday
     @user = get_user
-    if @user.nil?
-      return render json: { error: 'No se ha encontrado al usuario' }, status: 400
-    end
     message, status = @user.update_birthday(params, @user)
     return render json: message, status: status
   end
 
   def update_information
     @user = get_user
-    if @user.nil?
-      return render json: { error: 'No se ha encontrado al usuario' }, status: 400
-    end
     @persona = @user.persona
     if @persona.update(persona_params)
       render json: @user, status: :ok
@@ -104,6 +80,6 @@ class UsersController < ApplicationController
       params.require(:user).permit(:username, :current_password , :new_password, :confirm_password, :profile, :fecha_de_nacimiento)
     end
   def persona_params
-    params.permit(:fecha_de_nacimiento, :descripcion, :nacionalidad, :direccion)
+    params.permit(:fecha_de_nacimiento, :descripcion, :nacionalidad, :direccion, :nombre)
   end
 end

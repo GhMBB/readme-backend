@@ -22,7 +22,7 @@ class CapituloForViwerSerializer < ActiveModel::Serializer
     capitulos_anteriores = capitulos_publicados.where('indice < ?', object.indice).count
     # Calcular el progreso dividiendo el número de capítulos anteriores por el total de capítulos
     if capitulos_publicados.count > 0
-      progreso = capitulos_anteriores.to_f / capitulos_publicados.count
+      progreso = (capitulos_anteriores.to_f + 1) / capitulos_publicados.count
     else
       progreso = 0.0 # Si no hay capítulos publicados, el progreso es 0
     end

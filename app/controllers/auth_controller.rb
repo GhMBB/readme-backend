@@ -7,13 +7,12 @@ class AuthController < ApplicationController
     if user && user.authenticate(params[:password])
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
-      profile = obtener_perfil(user.persona.profile)
+      profile = obtener_perfil(Persona.find_by(user_id: user.id).profile)
       render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile}
     else
       render json: { error: 'Invalid username or password' }, status: :unauthorized
     end
   end
-
 
   def register
 

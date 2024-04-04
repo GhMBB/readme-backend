@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_30_134856) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_04_133737) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,7 +49,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_30_134856) do
   end
 
   create_table "fecha_lecturas", force: :cascade do |t|
-    t.bigint "lectura_id", null: false
+    t.bigint "lectura_id"
     t.date "fecha"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -105,6 +105,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_30_134856) do
     t.string "direccion"
     t.string "email"
     t.string "portada"
+    t.string "nombre"
     t.index ["user_id"], name: "index_personas_on_user_id"
   end
 
@@ -167,6 +168,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_30_134856) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
+    t.date "fecha_nacimiento"
+    t.string "profile"
   end
 
   add_foreign_key "capitulos", "libros"

@@ -123,10 +123,8 @@ class LibrosController < ApplicationController
     libros = libros.where(user_id: params[:user_id]) if params[:user_id]
     libros = libros.where(categoria: params[:categorias]) if params[:categorias].present?
     libros = libros.where("puntuacion_media >= ?", params[:puntuacion_media]) if params[:puntuacion_media].present?
-  
     libros
   end
-  
 
   def paginate_libros(libros)
     page_number = params[:page].to_i

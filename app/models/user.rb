@@ -75,27 +75,22 @@ class User < ApplicationRecord
     end
 
     def update_profile(params, user)
-        if user.authenticate(params[:password])
-            @persona = user.persona
-            if @persona.nil?
-                @persona = Persona.new(user_id: user.id)
-            end
-
-            if params[:profile].present?
-                @persona.profile = guardar_perfil(params)
-            else
-                return { error: 'Se debe pasar el perfil' }, 400
-            end
-
-            if @persona.save
-                return  user, :ok
-            else
-                return  @persona.errors, :unprocessable_entity
-            end
-        else
-            return { error: 'Contraseña incorrecta' }, :unprocessable_entity
+        @persona = user.persona
+        if @persona.nil?
+            @persona = Persona.new(user_id: user.id)
         end
 
+        if params[:profile].present?
+            @persona.profile = guardar_perfil(params)
+        else
+            return { error: 'Se debe pasar el perfil' }, 400
+        end
+
+        if @persona.save
+            return  user, :ok
+        else
+            return  @persona.errors, :unprocessable_entity
+        end
     end
 
     def update_birthday(params, user)
