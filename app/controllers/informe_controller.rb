@@ -66,7 +66,4 @@ class InformeController < ApplicationController
 
   private
 
-  def set_lectura
-    @lectura = Lectura.find_by(id: params[:id], deleted: false)
-  end
 end

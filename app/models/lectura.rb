@@ -53,9 +53,10 @@ class Lectura < ApplicationRecord
 
   def self.crear_fecha_lectura(params, user)
     libro_id = params[:libro_id]
-    leyendo = Lectura.find_by(libro_id: libro_id, user_id: user.id)
+    #leyendo = Lectura.find_by(libro_id: libro_id, user_id: user.id)
     #Guardar la fecha de lectura
-    fecha_lectura = FechaLectura.new(lectura_id: leyendo.id, user_id: user.id, libro_id: libro_id, fecha: Time.now)
+    #fecha_lectura = FechaLectura.new(lectura_id: leyendo.id, user_id: user.id, libro_id: libro_id, fecha: Time.now)
+    fecha_lectura = FechaLectura.new(user_id: user.id, libro_id: libro_id, fecha: Time.now)
     if fecha_lectura.save
       return {message: "Guardado con exito"}, 200
     else

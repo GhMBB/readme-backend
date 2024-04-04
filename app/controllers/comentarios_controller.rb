@@ -32,8 +32,4 @@ class ComentariosController < ApplicationController
   def set_comentario
     @comentario = Comentario.find(params[:id])
   end
-
-  def comentario_params
-    params.permit(:user_id, :libro_id, :comentario)
-  end
 end

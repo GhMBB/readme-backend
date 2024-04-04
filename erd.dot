@@ -1,0 +1,172 @@
+digraph ReadmeBackend {
+rankdir = "LR";
+ranksep = "0.5";
+nodesep = "0.4";
+pad = "0.4,0.4";
+margin = "0,0";
+concentrate = "true";
+labelloc = "t";
+fontsize = "13";
+fontname = "Arial Bold";
+splines = "spline";
+node[ shape  =  "Mrecord" , fontsize  =  "10" , fontname  =  "Arial" , margin  =  "0.07,0.05" , penwidth  =  "1.0"];
+edge[ fontname  =  "Arial" , fontsize  =  "7" , dir  =  "both" , arrowsize  =  "0.9" , penwidth  =  "1.0" , labelangle  =  "32" , labeldistance  =  "1.8"];
+rankdir = "TB";
+label = "ReadmeBackend domain model\n\n";
+m_Capitulo [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Capitulo</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="deleted">deleted <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="indice">indice <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="nombre_archivo">nombre_archivo <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="publicado">publicado <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="titulo">titulo <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+</table>
+}>];
+m_Comentario [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Comentario</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="comentario">comentario <font face="Arial Italic" color="grey60">text ∗</font></td></tr>
+  <tr><td align="left" width="130" port="deleted">deleted <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+</table>
+}>];
+m_Favorito [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Favorito</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="deleted">deleted <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="favorito">favorito <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+</table>
+}>];
+m_FechaLectura [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">FechaLectura</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="fecha">fecha <font face="Arial Italic" color="grey60">date</font></td></tr>
+</table>
+}>];
+m_Lectura [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Lectura</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="deleted">deleted <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="fecha">fecha <font face="Arial Italic" color="grey60">date</font></td></tr>
+  <tr><td align="left" width="130" port="leido">leido <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="terminado">terminado <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+</table>
+}>];
+m_Libro [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Libro</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="adulto">adulto <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="cantidad_comentarios">cantidad_comentarios <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="cantidad_lecturas">cantidad_lecturas <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="cantidad_resenhas">cantidad_resenhas <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="categoria">categoria <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="deleted">deleted <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="portada">portada <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="portada_url">portada_url <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="puntuacion_media">puntuacion_media <font face="Arial Italic" color="grey60">float</font></td></tr>
+  <tr><td align="left" width="130" port="sinopsis">sinopsis <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="sumatoria">sumatoria <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="titulo">titulo <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+</table>
+}>];
+m_Persona [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Persona</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="descripcion">descripcion <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="direccion">direccion <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="email">email <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="fecha_de_nacimiento">fecha_de_nacimiento <font face="Arial Italic" color="grey60">date ∗</font></td></tr>
+  <tr><td align="left" width="130" port="nacionalidad">nacionalidad <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="portada">portada <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="profile">profile <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+}>];
+m_Reporte [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Reporte</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="categoria">categoria <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="conclusion">conclusion <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="deleted">deleted <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="estado">estado <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="motivo">motivo <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+</table>
+}>];
+m_Resenha [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Resenha</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="deleted">deleted <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="puntuacion">puntuacion <font face="Arial Italic" color="grey60">integer ∗</font></td></tr>
+</table>
+}>];
+m_Seguidor [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Seguidor</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="deleted">deleted <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="followed_id">followed_id <font face="Arial Italic" color="grey60">integer (8)</font></td></tr>
+  <tr><td align="left" width="130" port="follower_id">follower_id <font face="Arial Italic" color="grey60">integer (8)</font></td></tr>
+</table>
+}>];
+m_TotalResenha [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">TotalResenha</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="cantidad">cantidad <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="deleted">deleted <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="media">media <font face="Arial Italic" color="grey60">float</font></td></tr>
+  <tr><td align="left" width="130" port="sumatoria">sumatoria <font face="Arial Italic" color="grey60">integer</font></td></tr>
+</table>
+}>];
+m_User [label = <{<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">User</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="deleted">deleted <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="fecha_nacimiento">fecha_nacimiento <font face="Arial Italic" color="grey60">date</font></td></tr>
+  <tr><td align="left" width="130" port="password_digest">password_digest <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="profile">profile <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="role">role <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="username">username <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+</table>
+}>];
+  m_User -> m_Favorito [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_User -> m_Libro [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_User -> m_Reporte [arrowhead = "normal", arrowtail = "none", weight = "4"];
+  m_User -> m_Resenha [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_User -> m_Comentario [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_User -> m_Lectura [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_User -> m_Persona [arrowhead = "none", arrowtail = "none", weight = "2"];
+  m_Libro -> m_TotalResenha [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_Libro -> m_Resenha [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Libro -> m_Reporte [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Comentario -> m_Reporte [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Libro -> m_Capitulo [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Libro -> m_Favorito [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Libro -> m_Lectura [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_Libro -> m_FechaLectura [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Capitulo -> m_Lectura [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Lectura -> m_FechaLectura [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_User -> m_FechaLectura [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_Libro -> m_Comentario [arrowhead = "normal", arrowtail = "none", weight = "1"];
+}

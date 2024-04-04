@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :lecturas
+  resources :lecturas,only: [:create, :destroy]
   post '/login', to: 'auth#login'
   post '/register', to: 'auth#register'
   #Favoritos
@@ -36,11 +36,11 @@ Rails.application.routes.draw do
 
   get '/lecturas_libro_id', to: 'lecturas#showById'
 
-  resources :reportes_comentarios
-  resources :reportes_libros
-  resources :reportes_usuarios
-  resources :reportes
-  resources :lecturas
+  resources :reportes_comentarios, only: [:create, :update, :destroy]
+  resources :reportes_libros,only: [:create, :update, :destroy]
+  resources :reportes_usuarios, only: [:create, :update, :destroy]
+  resources :reportes, only: []
+  resources :lecturas,only: [:create, :destroy]
 
   put 'users/username', to: 'users#update_username'
   put 'users/password', to: 'users#update_password'
@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   get '/usersFind/:username', to: 'users#get_userByUsername', as: 'user_by_username'
   put 'users/portada', to: 'users#update_portada'
   post 'users/information',to: 'users#update_information'
-  resources :users
+  resources :users, only: [:show]
   get "up" => "rails/health#show", as: :rails_health_check
 
   get 'informe/lectura', to: 'informe#lecturas_diarias_por_libro'
@@ -62,7 +62,7 @@ Rails.application.routes.draw do
 
   post 'lecturas/createfecha', to:  'lecturas#fecha_lectura'
 
-  resources :seguidors
+  resources :seguidors, except: [:update]
 
   get 'seguidores', to: 'seguidors#seguidores'
   get 'seguidos', to: 'seguidors#seguidos'

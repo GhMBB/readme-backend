@@ -1,4 +1,5 @@
 class SeguidorsController < ApplicationController
+  before_action :authenticate_request
   before_action :set_seguidor, only: %i[ show ]
 
   # GET /seguidors
@@ -16,15 +17,9 @@ class SeguidorsController < ApplicationController
   # POST /seguidors
   def create
     @user = get_user
-    if @user.nil?
-      render json: { error: "El usuario no se encuentra" }, status: 400
-      return
-    end
-
     if params[:followed_id].blank?
       return render json:  {message: "Debe pasar el id del seguidor"}, status: 400
     end
-
     #Crear al verificar si existe o no
     @seguidor = Seguidor.find_by(follower_id: @user.id, followed_id: params[:followed_id])
     if @seguidor.nil?
@@ -57,10 +52,6 @@ class SeguidorsController < ApplicationController
   # DELETE /seguidors/1
   def destroy
     @user = get_user
-    if @user.nil?
-      render json: { error: "El usuario no se encuentra" }, status: 400
-      return
-    end
     @seguidor = Seguidor.find_by(follower_id: @user.id, followed_id: params[:id], deleted: false)
     return render json: { error: 'No se encuentra el seguimiento del usuario' }, status: :not_found if @seguidor.nil?
     return render json: { error: 'El usuario no puede eliminar el seguidor de otro usuario' }, status: :forbidden if @seguidor.follower_id != @user.id && @user.role != 'moderador'
