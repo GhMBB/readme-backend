@@ -61,6 +61,13 @@ Rails.application.routes.draw do
   post 'users/delete_portada', to:  'users#destroy_portada'
 
   post 'lecturas/createfecha', to:  'lecturas#fecha_lectura'
+
+  resources :seguidors
+
+  get 'seguidores', to: 'seguidors#seguidores'
+  get 'seguidos', to: 'seguidors#seguidos'
+  get 'cantseguidores',to: 'seguidors#cant_seguidores'
+  delete 'seguidors/seguidor/:id', to: 'seguidors#destroy_follower'
   # Defines the root path route ("/")
   # root "posts#index"
 end

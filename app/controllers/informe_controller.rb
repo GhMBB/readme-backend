@@ -14,7 +14,7 @@ class InformeController < ApplicationController
 
     usuarios_por_dia = FechaLectura.where(libro_id: libro_id, fecha: fecha_inicio..fecha_fin)
                                    .group(:fecha)
-                                   .distinct(:user_id)
+                                   #.distinct(:user_id)
                                    .count(:user_id)
 
     render json: usuarios_por_dia, status: :ok
