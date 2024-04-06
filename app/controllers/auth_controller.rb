@@ -1,6 +1,6 @@
 # app/controllers/auth_controller.rb
 class AuthController < ApplicationController
-
+  rescue_from StandardError, with: :internal_server_error
   def login
     user = User.find_by(username: params[:username], deleted: false)
 

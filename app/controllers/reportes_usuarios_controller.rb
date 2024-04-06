@@ -4,6 +4,7 @@ class ReportesUsuariosController < ApplicationController
   before_action :set_usuario, only: [:create]
   before_action :set_reporte, only: [:update, :destroy]
   before_action :authenticate_request
+  rescue_from StandardError, with: :internal_server_error
 
   def new
     @reporte = @usuario.reportes.new

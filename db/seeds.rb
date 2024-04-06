@@ -10,8 +10,8 @@
 # Encuentra y elimina los usuarios predeterminados si existen
 
 # Crea 10 usuarios y moderadores
-=begin
-10.times do |i|
+
+5.times do |i|
   defaultUsuario = User.find_by(username: "usuario_#{i}")
   defaultModerador = User.find_by(username: "moderador_#{i}")
   defaultUsuario.destroy! if defaultUsuario
@@ -20,6 +20,11 @@
   User.create(username: "moderador_#{i}", password: "ab123456", role: "moderador")
 end
 
+moderadores = User.where(role: 'moderador')
+moderadores.each do |moderador|
+  Persona.create(user_id: moderador.id, fecha_de_nacimiento: '01/01/2000')
+end
+=begin
 # Crea 10 libros para cada usuario
 User.all.each do |user|
   10.times do |i|
@@ -38,6 +43,7 @@ end
 # db/seeds.rb
 
 # Cargar datos para categorías de reportes de usuarios
+=begin
 UserReportCategory.create([
                             { name: 'Comportamiento inapropiado' },
                             { name: 'Suplantación de identidad' },
@@ -67,4 +73,5 @@ CommentReportCategory.create([
                                { name: 'Incitación al odio' },
                                { name: 'Otro' }
                              ])
+=end
 

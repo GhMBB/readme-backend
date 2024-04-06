@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
   before_action :authenticate_request
-  before_action :set_user, only: %i[show ]
+  before_action :set_user, only: %i[show]
 
   rescue_from StandardError, with: :internal_server_error
 
@@ -11,51 +13,48 @@ class UsersController < ApplicationController
 
   def update_password
     @user = get_user
-    message, status = @user.update_password(params, @user)
-    return render json: message , status: status
+    message, status = User.update_password(params, @user)
+    render json: message, status:
   end
 
   def update_username
     @user = get_user
-    message, status = @user.update_username(params, @user)
-    return render json: message , status: status
+    message, status = User.update_username(params, @user)
+    render json: message, status:
   end
 
   def update_profile
     @user = get_user
-    message, status = @user.update_profile(params, @user)
-    return render json: message, status: status
+    message, status = User.update_profile(params, @user)
+    render json: message, status:
   end
+
   def destroy_profile
     @user = get_user
-    message, status = @user.delete_profile(params, @user)
-    return render json: message, status: status
+    message, status = User.delete_profile(params, @user)
+    render json: message, status:
   end
 
   def update_portada
-    @user = get_user
-    message, status = @user.update_portada(params, @user)
-    return render json: message, status: status
+    user = get_user
+    message, status = User.update_portada(params, user)
+    render json: message, status:
   end
+
   def destroy_portada
     @user = get_user
-    message, status = @user.delete_portada( @user)
-    return render json: message, status: status
+    message, status = User.delete_portada(@user)
+    render json: message, status:
   end
 
   # GET /users/byUsername
-  def get_userByUsername
+  def get_user_by_username
     @user = User.find_by(username: params[:username], deleted: false)
     if @user
-      render json:@user, status: :ok
+      render json: @user, status: :ok
     else
-      render json: {error: "usuario con no encontrado"}, status: :unprocessable_entity
+      render json: { error: 'usuario con no encontrado' }, status: :unprocessable_entity
     end
-  end
-  def update_birthday
-    @user = get_user
-    message, status = @user.update_birthday(params, @user)
-    return render json: message, status: status
   end
 
   def update_information
@@ -68,17 +67,22 @@ class UsersController < ApplicationController
     end
   end
 
+  # DELETE /users/
+  def destroy
+    @user = get_user
+    usuario_a_eliminar = User.find_by(id: params[:id], deleted: false)
+    message, status = User.delete_user(@user, usuario_a_eliminar, params)
+    render json: message, status:
+  end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def user_params
-      params.require(:user).permit(:username, :current_password , :new_password, :confirm_password, :profile, :fecha_de_nacimiento)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
   def persona_params
     params.permit(:fecha_de_nacimiento, :descripcion, :nacionalidad, :direccion, :nombre)
   end

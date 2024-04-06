@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class InformeController < ApplicationController
   before_action :authenticate_request
-
+  rescue_from StandardError, with: :internal_server_error
   def lecturas_diarias_por_libro
     libro_id = params[:libro_id]
     fecha_inicio = params[:fecha_inicio]

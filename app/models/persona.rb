@@ -7,6 +7,7 @@ class Persona < ApplicationRecord
 
   attribute :profile, :string, default: ""
 
+=begin
   def update_profile(profile)
     if profile.present?
       cloudinary_response = Cloudinary::Uploader.upload(profile, :folder => "fotosPerfil")
@@ -21,6 +22,7 @@ class Persona < ApplicationRecord
       render json: { error: 'Se debe pasar el perfil' }, status: 400
     end
   end
+=end
 
   private
 

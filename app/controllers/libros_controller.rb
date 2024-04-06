@@ -1,10 +1,10 @@
 require 'cloudinary'
 
 class LibrosController < ApplicationController
-  before_action :set_libro, only: %i[ show update destroy ]
+  before_action :set_libro, only: %i[ show update destroy]
   #before_action :authenticate_request
 
-  rescue_from StandardError, with: :internal_server_error
+  #rescue_from StandardError, with: :internal_server_error
 
   # GET /libros
   def index
@@ -84,6 +84,21 @@ class LibrosController < ApplicationController
     categorias_enum = Libro.categoria
     @categorias = categorias_enum.keys.map { |key| [key.to_s, categorias_enum[key]] }
     render json: @categorias
+  end
+
+  def destroy_portada
+    usuario = get_user
+    @libro = Libro.find_by(id: params[:id], deleted: false)
+    if @libro.user != usuario && usuario.role != "moderador"
+      render json: {error: "Debes ser el propietario del libro para editarlo o tener el rol de moderador."}, status: 401
+      return
+    end
+    @libro.portada = Libro.delete_portada(@libro.portada)
+    if @libro.save
+      return render json: @libro, status: :ok
+    else
+      return render json: {error: 'No se pudo eliminar la portada'}, status: :unprocessable_entity
+    end
   end
 
   private
