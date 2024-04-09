@@ -60,10 +60,11 @@ class UsersController < ApplicationController
   def find_by_username
     #Agregar paginacion
     @user = User.where("username ILIKE ? and deleted = ?", "%#{params[:username]}%", false).paginate(page: params[:page], per_page: WillPaginate.per_page)
+    user = @user.map { |user| UserSerializer.new(user)  }
     data = {
       total_pages: @user.total_pages,
       total_items: @user.count,
-      users: @user
+      users: user
     }
     render json: data, status: :ok
   end
