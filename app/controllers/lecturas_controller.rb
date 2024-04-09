@@ -27,9 +27,7 @@ class LecturasController < ApplicationController
       render json: { error: 'El usuario no se encuentra' }, status: 400
       return
     end
-
     response, status = Lectura.create_lectura(params, user)
-
     render json: response, status:
   end
 
@@ -100,9 +98,9 @@ class LecturasController < ApplicationController
       render json: { error: 'El usuario no se encuentra' }, status: 400
       return
     end
-    libros_con_ultimo_capitulo_no_publicado, = user.libros_con_capitulos_no_publicados(params, user)
+    borradores, = user.borradores(params, user)
 
-    render json: libros_con_ultimo_capitulo_no_publicado, status: 200
+    render json: borradores, status: 200
   end
 
   private

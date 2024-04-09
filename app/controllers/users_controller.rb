@@ -2,9 +2,9 @@
 
 class UsersController < ApplicationController
   before_action :authenticate_request
-  before_action :set_user, only: %i[show]
+  #before_action :set_user, only: %i[show]
 
-  rescue_from StandardError, with: :internal_server_error
+  #rescue_from StandardError, with: :internal_server_error
 
   # GET /users/1
   def show
@@ -56,6 +56,19 @@ class UsersController < ApplicationController
       render json: { error: 'usuario con no encontrado' }, status: :unprocessable_entity
     end
   end
+
+  def find_by_username
+    #Agregar paginacion
+    @user = User.where("username ILIKE ? and deleted = ?", "%#{params[:username]}%", false).paginate(page: params[:page], per_page: WillPaginate.per_page)
+    user = @user.map { |user| UserSerializer.new(user)  }
+    data = {
+      total_pages: @user.total_pages,
+      total_items: @user.count,
+      users: user
+    }
+    render json: data, status: :ok
+  end
+
 
   def update_information
     @user = get_user

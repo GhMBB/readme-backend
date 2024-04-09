@@ -19,7 +19,6 @@ class User < ApplicationRecord
   has_one :persona
 
   def libros_en_progreso(params)
-
     libros_en_progreso = Libro.joins(:lecturas)
                               .where(lecturas: { user_id: id, terminado: false, deleted: false })
                               .order(updated_at: :desc)
@@ -27,30 +26,29 @@ class User < ApplicationRecord
                               .paginate(page: params[:page])
     total_items = libros_en_progreso.count
     libros_serializados = libros_en_progreso.map { |libro| LibroSerializer.new(libro) }
-    page = params[:page]
-    total_pages = libros_en_progreso.total_pages
+    params[:page]
+    libros_en_progreso.total_pages
     { total_pages: libros_en_progreso.total_pages,
-      total_items: total_items,
+      total_items:,
       last_page: params[:page] == libros_en_progreso.total_pages,
       libros: libros_serializados }
   end
 
   def lista_lectura(params)
     libros_en_progreso = Libro.joins(:lecturas)
-                              .where(lecturas: { user_id: id, deleted: false })
+                              .where(lecturas: { user_id: params[:user_id], deleted: false })
                               .order(updated_at: :desc)
                               .distinct
                               .paginate(page: params[:page])
     total_items = libros_en_progreso.count
     libros_serializados = libros_en_progreso.map { |libro| LibroSerializer.new(libro) }
 
-
     { total_pages: libros_en_progreso.total_pages,
-      total_items: total_items,
+      total_items:,
       libros: libros_serializados }
   end
 
-  def libros_con_capitulos_no_publicados(params, user)
+  def borradores(params, user)
     libros = user.libros.includes(:capitulos).where(capitulos: { publicado: false }).distinct.paginate(page: params[:page])
 
     libros_con_ultimo_capitulo_no_publicado = libros.map do |libro|
@@ -83,6 +81,7 @@ class User < ApplicationRecord
     end
   end
 
+  # @return [[Hash{Symbol->String (frozen) | UserSerializer}, Symbol]]
   def self.update_username(params, user)
     if user.authenticate(params[:password])
       if user.update(username: params[:username], password: params[:password])
@@ -155,12 +154,8 @@ class User < ApplicationRecord
     if usuario_a_eliminar.id != user.id && usuario_a_eliminar.role == 'moderador' && user.role == 'moderador'
       return { error: 'El moderador no puede eliminar a otro moderador' }, :forbidden
     end
-    #Desactivar cuenta 30 dias de acceso
-    if user.id == usuario_a_eliminar.id
 
-    elsif user.id != usuario_a_eliminar.id
-
-    end
+    # Desactivar cuenta 30 dias de acceso
 
     if usuario_a_eliminar.authenticate(params[:password])
       eliminar_datos(usuario_a_eliminar.id)
@@ -204,6 +199,7 @@ class User < ApplicationRecord
 
   def eliminar_perfil(public_id)
     return if public_id.blank?
+
     cloudinary_response = Cloudinary::Uploader.destroy(public_id)
     unless cloudinary_response['result'] == 'ok'
       # render json: { error: 'No se pudo eliminar la foto de perfil.' }, status: :unprocessable_entity
@@ -219,7 +215,7 @@ class User < ApplicationRecord
     # Itera sobre cada tabla y actualiza los registros
     tables_to_update.each do |table_name|
       model_class = table_name.singularize.classify.constantize
-      model_class.where(user_id: user_id).update_all(deleted: true)
+      model_class.where(user_id:).update_all(deleted: true)
     end
   end
 end

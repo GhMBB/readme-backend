@@ -4,7 +4,7 @@ class ReportesUsuariosController < ApplicationController
   before_action :set_usuario, only: [:create]
   before_action :set_reporte, only: [:update, :destroy]
   before_action :authenticate_request
-  rescue_from StandardError, with: :internal_server_error
+  #rescue_from StandardError, with: :internal_server_error
 
   def new
     @reporte = @usuario.reportes.new
@@ -12,7 +12,7 @@ class ReportesUsuariosController < ApplicationController
 
   def create
     user = get_user
-    result, status = Reporte.create_reporte("usuario", params[:usuario_reportado_id], reporte_params, user)
+    result, status = Reporte.create_reporte('usuario', params[:usuario_reportado_id], reporte_params, user)
     render json: result, status: status
   end
 
@@ -55,6 +55,6 @@ class ReportesUsuariosController < ApplicationController
   end
 
   def reporte_params
-    params.require(:reporte).permit(:user_id, :usuario_reportado_id, :motivo, :estado, :categoria, :nuevo_estado, :conclusion)
+    params.require(:reporte).permit(:user_id,  :motivo, :estado, :categoria, :nuevo_estado, :conclusion)
   end
 end

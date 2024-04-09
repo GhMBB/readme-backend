@@ -2,9 +2,8 @@ require 'cloudinary'
 
 class LibrosController < ApplicationController
   before_action :set_libro, only: %i[ show update destroy]
-  #before_action :authenticate_request
-
-  #rescue_from StandardError, with: :internal_server_error
+  before_action :authenticate_request
+  rescue_from StandardError, with: :internal_server_error
 
   # GET /libros
   def index
@@ -138,6 +137,10 @@ class LibrosController < ApplicationController
     libros = libros.where(user_id: params[:user_id]) if params[:user_id]
     libros = libros.where(categoria: params[:categorias]) if params[:categorias].present?
     libros = libros.where("puntuacion_media >= ?", params[:puntuacion_media]) if params[:puntuacion_media].present?
+    libros = libros.joins(:capitulos).where("capitulos.publicado = ?", true)
+                   .group("libros.id")
+                   .having("COUNT(capitulos.id) >= ?", params[:cantidad_minima_capitulos].to_i) if params[:cantidad_minima_capitulos]
+
     libros
   end
 

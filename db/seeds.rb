@@ -11,6 +11,7 @@
 
 # Crea 10 usuarios y moderadores
 
+=begin
 5.times do |i|
   defaultUsuario = User.find_by(username: "usuario_#{i}")
   defaultModerador = User.find_by(username: "moderador_#{i}")
@@ -24,6 +25,7 @@ moderadores = User.where(role: 'moderador')
 moderadores.each do |moderador|
   Persona.create(user_id: moderador.id, fecha_de_nacimiento: '01/01/2000')
 end
+=end
 =begin
 # Crea 10 libros para cada usuario
 User.all.each do |user|
