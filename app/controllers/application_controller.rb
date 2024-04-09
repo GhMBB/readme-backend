@@ -9,7 +9,6 @@ class ApplicationController < ActionController::API
 
     if authorization_header.nil?
       return render json: {error: "Debe proporcionar un token"}, status: :forbidden
-
     end
 
     token = authorization_header.split(" ").last
@@ -23,6 +22,9 @@ class ApplicationController < ActionController::API
 
         if user
           return user
+        else
+          render json: {error: "Usuario no encontrado, token invalido"}, status: :forbidden
+          return nil
         end
       end
     rescue JWT::ExpiredSignature

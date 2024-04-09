@@ -5,7 +5,6 @@ class Reporte < ApplicationRecord
   belongs_to :libro, optional: true
   belongs_to :comentario, optional: true
   belongs_to :moderador, class_name: 'User', optional: true
-  belongs_to :usuario_reportado, class_name: 'User', optional: true
 
   validates :user_id, presence: { message: 'El ID de usuario no puede estar en blanco' }
   validates :motivo, presence: { message: 'El motivo no puede estar en blanco' }
@@ -37,7 +36,7 @@ class Reporte < ApplicationRecord
 
     reporte = recurso.reportes.new(reporte_params)
     reporte.user_id = user.id
-    return { message: 'Reporte creado exitosamente', reporte: }, :ok if reporte.save
+    return { message: 'Reporte creado exitosamente', reporte: reporte}, :ok if reporte.save
 
     [{ errors: reporte.errors.full_messages }, :unprocessable_entity]
   end

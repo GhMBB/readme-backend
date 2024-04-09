@@ -78,6 +78,8 @@ Rails.application.routes.draw do
   get 'lecturas/lista_lecturas', to: 'lecturas#lista_de_lectura'
 
   delete 'libros/eliminar_portada/:id',to: 'libros#destroy_portada'
+
+  get 'users/find_by_username/:username', to: 'users#find_by_username'
   # Defines the root path route ("/")
   # root "posts#index"
 end
