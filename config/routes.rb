@@ -82,7 +82,8 @@ Rails.application.routes.draw do
   get 'users/find_by_username/:username', to: 'users#find_by_username'
 
   delete 'users/delete_account/', to: 'users#destroy_account'
-  delete 'users/banear/:id', to: 'users#destroy'
+  delete 'users/ban/:id', to: 'users#destroy'
+  post 'users/desbanear/:id', to: 'users#desbanear'
   # Defines the root path route ("/")
   # root "posts#index"
 end

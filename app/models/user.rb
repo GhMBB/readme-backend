@@ -148,18 +148,18 @@ class User < ApplicationRecord
       eliminar_recuperar_datos(user.id, true)
       user.persona.update(fecha_eliminacion: Time.now)
       if user.update(deleted: true, password: params[:password])
-        return [{ message: 'Eliminado con exito' }, :ok]
+        [{ message: 'Eliminado con exito' }, :ok]
       else
-        return [{ error: 'Error al eliminar el usuario' }, :unprocessable_entity]
+        [{ error: 'Error al eliminar el usuario' }, :unprocessable_entity]
       end
     else
-      return [{ error: 'Contraseña incorrecta' }, :unprocessable_entity]
+      [{ error: 'Contraseña incorrecta' }, :unprocessable_entity]
     end
   end
 
   def delete_user(user, usuario_a_eliminar, params)
     return { error: 'El usuario no se encontró' }, :bad_request if usuario_a_eliminar.blank?
-    if usuario_a_eliminar.id != user.id && user.role != 'moderador'
+    if usuario_a_eliminar.id != user.id && user.role != 'moderador' && user.role != 'administrador'
       return { error: 'El usuario no puede eliminar a otro usuario' }, :forbidden
     end
     if usuario_a_eliminar.id != user.id && usuario_a_eliminar.role == 'moderador' && user.role == 'moderador'
@@ -174,19 +174,23 @@ class User < ApplicationRecord
   end
 
   def restablecer_cuenta(user, params)
-    eliminar_recuperar_datos(user.id, true)
+    eliminar_recuperar_datos(user.id, false)
     user.persona.update(fecha_eliminacion: nil)
     user.update(deleted: false, password: params[:password])
   end
 
   def desbanear(id)
     user = User.find_by(id: id)
-    eliminar_recuperar_datos(user.id, true)
+    return {message: "Usuario no encontrado"}, 400 if user.blank?
+    eliminar_recuperar_datos(user.id, false)
     if user.persona.update(baneado: false, fecha_eliminacion: nil)
       return {message: "Usuario desbaneado"}, 200
     else
       return {error: "Ha ocurrido un error al desbanear al usuario"}, 400
     end
+  end
+
+  def eliminar_email_usuarios_no_baneados
 
   end
   private
@@ -224,11 +228,12 @@ class User < ApplicationRecord
   def eliminar_recuperar_datos(user_id, deleted)
     tables_to_update = ActiveRecord::Base.connection.tables.select do |table_name|
       ActiveRecord::Base.connection.column_exists?(table_name, :user_id) &&
-        ActiveRecord::Base.connection.column_exists?(table_name, :deleted)
+        ActiveRecord::Base.connection.column_exists?(table_name, :deleted) &&
+          ActiveRecord::Base.connection.column_exists?(table_name, :deleted_by_user)
     end
     tables_to_update.each do |table_name|
       model_class = table_name.singularize.classify.constantize
-      model_class.where(user_id: user_id).update_all(deleted: deleted)
+      model_class.where(user_id: user_id, deleted_by_user: false).update_all(deleted: deleted)
     end
   end
 end

@@ -52,8 +52,8 @@ class Reporte < ApplicationRecord
   end
 
   def destroy_reporte(user)
-    if user.role != 'moderador'
-      return { error: 'Debes ser moderador para eliminar los reportes' }, :unprocessable_entity
+    if user.role != 'administrador'
+      return { error: 'Debes ser administrador para eliminar los reportes' }, :unprocessable_entity
     end
     return { error: 'Reporte no encontrado' }, :not_found if nil?
 

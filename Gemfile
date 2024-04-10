@@ -65,13 +65,11 @@ end
 
 gem "dockerfile-rails", ">= 1.6", :group => :development
 
-
 gem 'rails_best_practices'
 #Auditar la aplicacion
 gem 'bundler-audit'
 #Crear un modelo de la db
 gem 'rails-erd', group: :development #bundle exec erd --filetype=dot
-
 gem "rubycritic"
-
 gem 'bullet', group: 'development'
+gem 'whenever', require: false

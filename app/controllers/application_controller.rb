@@ -56,6 +56,13 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def authorize_administrador
+    user = decode_token
+    unless user.role == "administrador"
+      render json: {error: "Rol de moderador administrador"}, status: :forbidden
+    end
+  end
+
   def internal_server_error
     render json: {error: "Ha ocurrido un error en el servidor."}, status: 500
     return

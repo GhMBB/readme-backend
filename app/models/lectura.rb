@@ -12,9 +12,10 @@ class Lectura < ApplicationRecord
   attribute :deleted, :boolean, default: false
   attribute :terminado, :boolean, default: false
   attribute :leido, :boolean, default: false
+  attribute :deleted_by_user, :boolean, default: false
   has_many :fecha_lecturas
   # @param [Object] params
-  # @param [Object] user
+  # @param [Object] users
   def self.create_lectura(params, user)
     libro_id = params[:libro_id]
     capitulo_id = params[:capitulo_id]

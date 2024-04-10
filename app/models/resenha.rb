@@ -10,6 +10,7 @@ class Resenha < ApplicationRecord
                             message: 'La puntuación debe estar entre 0 y 5' }
 
   attribute :deleted, :boolean, default: false
+  attribute :deleted_by_user, :boolean, default: false
   def self.destroy_resenha(resenha_id, user_id)
     resenha = Resenha.find_by(id: resenha_id)
     user = User.find_by(id: user_id)
@@ -23,7 +24,7 @@ class Resenha < ApplicationRecord
     libro.sumatoria = libro.sumatoria.to_f - resenha.puntuacion
     libro.puntuacion_media = libro.cantidad_resenhas.positive? ? libro.sumatoria.to_f / libro.cantidad_resenhas : 0
     libro.save
-    resenha.update(deleted: true)
+    resenha.update(deleted: true, deleted_by_user: true)
     [{ message: 'Eliminado exitosamente' }, :ok]
   end
 

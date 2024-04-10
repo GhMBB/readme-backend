@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_05_184514) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_10_142729) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -39,6 +39,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_05_184514) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
+    t.boolean "deleted_by_user"
     t.index ["libro_id"], name: "index_comentarios_on_libro_id"
     t.index ["user_id"], name: "index_comentarios_on_user_id"
   end
@@ -56,6 +57,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_05_184514) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
+    t.boolean "deleted_by_user"
     t.index ["libro_id"], name: "index_favoritos_on_libro_id"
     t.index ["user_id"], name: "index_favoritos_on_user_id"
   end
@@ -82,6 +84,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_05_184514) do
     t.boolean "terminado"
     t.bigint "capitulo_id", null: false
     t.boolean "leido"
+    t.boolean "deleted_by_user"
     t.index ["capitulo_id"], name: "index_lecturas_on_capitulo_id"
     t.index ["libro_id"], name: "index_lecturas_on_libro_id"
     t.index ["user_id"], name: "index_lecturas_on_user_id"
@@ -103,6 +106,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_05_184514) do
     t.integer "cantidad_lecturas"
     t.integer "cantidad_resenhas"
     t.integer "sumatoria"
+    t.boolean "deleted_by_user"
     t.index ["user_id"], name: "index_libros_on_user_id"
   end
 
@@ -136,6 +140,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_05_184514) do
     t.bigint "usuario_reportado_id"
     t.text "conclusion"
     t.bigint "moderador_id"
+    t.boolean "deleted_by_user"
     t.index ["comentario_id"], name: "index_reportes_on_comentario_id"
     t.index ["libro_id"], name: "index_reportes_on_libro_id"
     t.index ["moderador_id"], name: "index_reportes_on_moderador_id"
@@ -150,6 +155,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_05_184514) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted", default: false
+    t.boolean "deleted_by_user"
     t.index ["libro_id"], name: "index_resenhas_on_libro_id"
     t.index ["user_id"], name: "index_resenhas_on_user_id"
   end

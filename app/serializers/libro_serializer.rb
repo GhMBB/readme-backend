@@ -5,7 +5,11 @@ class LibroSerializer < ActiveModel::Serializer
              :cantidad_comentarios, :categoria, :user_id, :autorUsername, :cantidad_capitulos, :cantidad_capitulos_publicados, :cantidad_usuarios_leyeron, :cantidad_usuarios_terminaron
 
   def autorUsername
-    object.user&.username
+    if object.user&.deleted == true || object.user&.persona.baneado == true
+      'Usuario de Readme'
+    else
+      object.user&.username
+    end
   end
 
   def cantidad_lecturas
