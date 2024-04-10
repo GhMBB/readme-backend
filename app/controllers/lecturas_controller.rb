@@ -44,6 +44,7 @@ class LecturasController < ApplicationController
     end
 
     @lectura.deleted = true
+    @lectura.deleted_by_user = true
     if @lectura.save
       render json: { message: 'Eliminado con éxito' }, status: :ok
     else

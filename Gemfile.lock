@@ -106,6 +106,7 @@ GEM
       activesupport
     childprocess (5.0.0)
     choice (0.2.0)
+    chronic (0.10.2)
     cloudinary (1.28.0)
       aws_cf_signer
       rest-client (>= 2.0.0)
@@ -365,6 +366,8 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    whenever (1.0.0)
+      chronic (>= 0.6.3)
     will_paginate (4.0.0)
     zeitwerk (2.6.13)
 
@@ -397,6 +400,7 @@ DEPENDENCIES
   rubocop
   rubycritic
   tzinfo-data
+  whenever
   will_paginate
 
 RUBY VERSION

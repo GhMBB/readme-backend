@@ -4,6 +4,13 @@ class UserSerializer < ActiveModel::Serializer
   attributes :id, :username, :role, :profile, :fecha_de_nacimiento, :portada, :descripcion, :nacionalidad, :direccion,
              :nombre, :created_at
 
+  def username
+    if object.deleted == true || object.persona.baneado == true
+      'Usuario de Readme'
+    else
+      object.username
+    end
+  end
   def fecha_de_nacimiento
     object.persona&.fecha_de_nacimiento
   end

@@ -38,7 +38,7 @@ class Favorito < ApplicationRecord
                                        .where('LOWER(libros.titulo) LIKE ? OR LOWER(users.username) LIKE ?', "%#{params[:busqueda].downcase}%", "%#{params[:busqueda].downcase}%")
     end
     libros_ids = favoritos_query.pluck(:libro_id)
-    favoritos = Libro.where(id: libros_ids).paginate(page: params[:page])
+    favoritos = Libro.where(id: libros_ids, deleted:false).paginate(page: params[:page])
 
     libros_serializados = favoritos.map { |libro| LibroSerializer.new(libro) }
 

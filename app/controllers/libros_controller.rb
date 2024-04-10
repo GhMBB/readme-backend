@@ -73,6 +73,7 @@ class LibrosController < ApplicationController
     end
 
     @libro.deleted = true
+    @libro.deleted_by_user = true
     if @libro.save
       render status: :ok
     else

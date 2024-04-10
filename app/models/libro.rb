@@ -2,6 +2,7 @@
     belongs_to :user
 
     attribute :deleted, :boolean, default: false
+    attribute :deleted_by_user, :boolean, default: false
     attribute :adulto, :boolean, default: false
     attribute :cantidad_lecturas, :integer, default: 0
     attribute :cantidad_resenhas, :integer, default: 0

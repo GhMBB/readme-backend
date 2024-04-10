@@ -2,9 +2,11 @@
 class AuthController < ApplicationController
   rescue_from StandardError, with: :internal_server_error
   def login
-    user = User.find_by(username: params[:username], deleted: false)
+    user = User.find_by(username: params[:username])
 
     if user && user.authenticate(params[:password])
+      return render json: {error: "Usuario baneado"}, status: :forbidden if user.persona.baneado == true
+      user.restablecer_cuenta(user, params) if user.persona.baneado != true  && !user.persona.fecha_eliminacion.nil? && user.persona.fecha_eliminacion > 30.days.ago
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
       profile = obtener_perfil(Persona.find_by(user_id: user.id).profile)

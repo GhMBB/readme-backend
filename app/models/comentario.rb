@@ -8,6 +8,7 @@ class Comentario < ApplicationRecord
   validates :libro_id, presence: { message: 'El ID de libro no puede estar en blanco' }
   validates :comentario, presence: { message: 'El comentario no puede estar en blanco' }
   attribute :deleted, :boolean, default: false
+  attribute :deleted_by_user, :boolean, default: false
 
   has_many :reportes, -> { where(deleted: false) }, foreign_key: :comentario_id
 
@@ -38,7 +39,8 @@ class Comentario < ApplicationRecord
     libro = Libro.find(comentario.libro_id)
     libro.decrement(:cantidad_comentarios)
     libro.save
-    comentario.update(deleted: true)
+    #Si fue eliminado por el usuario o no
+    comentario.update(deleted: true, deleted_by_user: true)
     [{ message: 'Eliminado exitosamente' }, :ok]
   end
 

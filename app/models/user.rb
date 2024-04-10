@@ -65,7 +65,7 @@ class User < ApplicationRecord
     }
   end
 
-  def self.update_password(params, user)
+  def update_password(params, user)
     if user.authenticate(params[:current_password])
       if params[:new_password] == params[:confirm_password]
         if user.update(password: params[:new_password])
@@ -82,7 +82,7 @@ class User < ApplicationRecord
   end
 
   # @return [[Hash{Symbol->String (frozen) | UserSerializer}, Symbol]]
-  def self.update_username(params, user)
+  def update_username(params, user)
     if user.authenticate(params[:password])
       if user.update(username: params[:username], password: params[:password])
         [{ message: 'Username actualizado con exito', user: UserSerializer.new(user) }, :ok]
@@ -94,14 +94,11 @@ class User < ApplicationRecord
     end
   end
 
-  def self.update_profile(params, user)
+  def update_profile(params, user)
     @persona = user.persona
     @persona = Persona.new(user_id: user.id) if @persona.nil?
-
     return { error: 'Se debe pasar el perfil' }, 400 unless params[:profile].present?
-
     @persona.profile = guardar_perfil(params)
-
     if @persona.save
       [user, :ok]
     else
@@ -109,7 +106,7 @@ class User < ApplicationRecord
     end
   end
 
-  def self.delete_profile(params, user)
+  def delete_profile(params, user)
     if user.authenticate(params[:password])
       @persona = user.persona
       @persona.profile = eliminar_perfil(@persona.profile)
@@ -123,7 +120,7 @@ class User < ApplicationRecord
     end
   end
 
-  def self.update_portada(params, user)
+  def update_portada(params, user)
     @persona = user.persona
     return { error: 'Se debe pasar el perfil' }, 400 unless params[:portada].present?
 
@@ -136,7 +133,7 @@ class User < ApplicationRecord
     end
   end
 
-  def self.delete_portada(user)
+  def delete_portada(user)
     @persona = user.persona
     @persona.portada = eliminar_perfil(@persona.portada)
     if @persona.save
@@ -146,20 +143,11 @@ class User < ApplicationRecord
     end
   end
 
-  def self.delete_user(user, usuario_a_eliminar, params)
-    return { error: 'El usuario no se encontró' }, :bad_request if usuario_a_eliminar.blank?
-    if usuario_a_eliminar.id != user.id && user.role != 'moderador'
-      return { error: 'El usuario no puede eliminar a otro usuario' }, :forbidden
-    end
-    if usuario_a_eliminar.id != user.id && usuario_a_eliminar.role == 'moderador' && user.role == 'moderador'
-      return { error: 'El moderador no puede eliminar a otro moderador' }, :forbidden
-    end
-
-    # Desactivar cuenta 30 dias de acceso
-
-    if usuario_a_eliminar.authenticate(params[:password])
-      eliminar_datos(usuario_a_eliminar.id)
-      if usuario_a_eliminar.update(deleted: true, password: params[:password])
+  def eliminar_cuenta(user, params)
+    if user.authenticate(params[:password])
+      eliminar_recuperar_datos(user.id, true)
+      user.persona.update(fecha_eliminacion: Time.now)
+      if user.update(deleted: true, password: params[:password])
         [{ message: 'Eliminado con exito' }, :ok]
       else
         [{ error: 'Error al eliminar el usuario' }, :unprocessable_entity]
@@ -169,8 +157,43 @@ class User < ApplicationRecord
     end
   end
 
-  private
+  def delete_user(user, usuario_a_eliminar, params)
+    return { error: 'El usuario no se encontró' }, :bad_request if usuario_a_eliminar.blank?
+    if usuario_a_eliminar.id != user.id && user.role != 'moderador' && user.role != 'administrador'
+      return { error: 'El usuario no puede eliminar a otro usuario' }, :forbidden
+    end
+    if usuario_a_eliminar.id != user.id && usuario_a_eliminar.role == 'moderador' && user.role == 'moderador'
+      return { error: 'El moderador no puede eliminar a otro moderador, solo un administrador' }, :forbidden
+    end
+    eliminar_recuperar_datos(usuario_a_eliminar.id, true)
+    if usuario_a_eliminar.persona.update(baneado: true)
+      [{ message: 'Eliminado con exito' }, :ok]
+    else
+      [{ error: 'Error al eliminar el usuario' }, :unprocessable_entity]
+    end
+  end
 
+  def restablecer_cuenta(user, params)
+    eliminar_recuperar_datos(user.id, false)
+    user.persona.update(fecha_eliminacion: nil)
+    user.update(deleted: false, password: params[:password])
+  end
+
+  def desbanear(id)
+    user = User.find_by(id: id)
+    return {message: "Usuario no encontrado"}, 400 if user.blank?
+    eliminar_recuperar_datos(user.id, false)
+    if user.persona.update(baneado: false, fecha_eliminacion: nil)
+      return {message: "Usuario desbaneado"}, 200
+    else
+      return {error: "Ha ocurrido un error al desbanear al usuario"}, 400
+    end
+  end
+
+  def eliminar_email_usuarios_no_baneados
+
+  end
+  private
   def guardar_perfil(params)
     if params[:profile].present?
       cloudinary_response = Cloudinary::Uploader.upload(params[:profile], folder: 'fotosPerfil')
@@ -187,35 +210,30 @@ class User < ApplicationRecord
   def guardar_portada(params)
     if params[:portada].present?
       cloudinary_response = Cloudinary::Uploader.upload(params[:portada], folder: 'fotosPerfil')
-
       return cloudinary_response['public_id'] if cloudinary_response['public_id'].present?
-
       render json: { error: 'No se pudo guardar la imagen.' }, status: :unprocessable_entity
       return
-
     end
     ''
   end
 
   def eliminar_perfil(public_id)
     return if public_id.blank?
-
     cloudinary_response = Cloudinary::Uploader.destroy(public_id)
     unless cloudinary_response['result'] == 'ok'
       # render json: { error: 'No se pudo eliminar la foto de perfil.' }, status: :unprocessable_entity
     end
     ''
   end
-
-  def eliminar_datos(user_id)
+  def eliminar_recuperar_datos(user_id, deleted)
     tables_to_update = ActiveRecord::Base.connection.tables.select do |table_name|
       ActiveRecord::Base.connection.column_exists?(table_name, :user_id) &&
-        ActiveRecord::Base.connection.column_exists?(table_name, :deleted)
+        ActiveRecord::Base.connection.column_exists?(table_name, :deleted) &&
+          ActiveRecord::Base.connection.column_exists?(table_name, :deleted_by_user)
     end
-    # Itera sobre cada tabla y actualiza los registros
     tables_to_update.each do |table_name|
       model_class = table_name.singularize.classify.constantize
-      model_class.where(user_id:).update_all(deleted: true)
+      model_class.where(user_id: user_id, deleted_by_user: false).update_all(deleted: deleted)
     end
   end
 end
