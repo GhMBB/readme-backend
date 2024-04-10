@@ -2,7 +2,7 @@
 
 class UsersController < ApplicationController
   before_action :authenticate_request
-  #before_action :set_user, only: %i[show]
+  before_action :set_user, only: %i[show]
 
   #rescue_from StandardError, with: :internal_server_error
 
@@ -13,37 +13,37 @@ class UsersController < ApplicationController
 
   def update_password
     @user = get_user
-    message, status = User.update_password(params, @user)
+    message, status = @user.update_password(params, @user)
     render json: message, status:
   end
 
   def update_username
     @user = get_user
-    message, status = User.update_username(params, @user)
+    message, status = @user.update_username(params, @user)
     render json: message, status:
   end
 
   def update_profile
     @user = get_user
-    message, status = User.update_profile(params, @user)
+    message, status = @user.update_profile(params, @user)
     render json: message, status:
   end
 
   def destroy_profile
     @user = get_user
-    message, status = User.delete_profile(params, @user)
+    message, status = @user.delete_profile(params, @user)
     render json: message, status:
   end
 
   def update_portada
     user = get_user
-    message, status = User.update_portada(params, user)
+    message, status = @user.update_portada(params, user)
     render json: message, status:
   end
 
   def destroy_portada
     @user = get_user
-    message, status = User.delete_portada(@user)
+    message, status = @user.delete_portada(@user)
     render json: message, status:
   end
 
@@ -58,7 +58,6 @@ class UsersController < ApplicationController
   end
 
   def find_by_username
-    #Agregar paginacion
     @user = User.where("username ILIKE ? and deleted = ?", "%#{params[:username]}%", false).paginate(page: params[:page], per_page: WillPaginate.per_page)
     user = @user.map { |user| UserSerializer.new(user)  }
     data = {
@@ -83,10 +82,22 @@ class UsersController < ApplicationController
   # DELETE /users/
   def destroy
     @user = get_user
-    usuario_a_eliminar = User.find_by(id: params[:id], deleted: false)
-    message, status = User.delete_user(@user, usuario_a_eliminar, params)
-    render json: message, status:
+    usuario_a_eliminar = User.find_by(id: params[:id])
+    message, status =  @user.delete_user(@user, usuario_a_eliminar, params )
+    render json: message, status: status
   end
+  def destroy_account
+    @user = get_user
+    message, status =  @user.eliminar_cuenta(@user, params)
+    render json: message, status: status
+  end
+
+  def desbanear
+    @user = authorize_moderador
+    message, status = @user.desbanear(params[:id])
+    render json: message, status: status
+  end
+
 
   private
 
