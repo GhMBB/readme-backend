@@ -39,6 +39,7 @@ class UserSerializer < ActiveModel::Serializer
     obtener_perfil(object.persona.portada)
   end
 
+  private
   def obtener_perfil(perfil_public_id)
     return '' unless perfil_public_id
 

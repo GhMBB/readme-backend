@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_action :authenticate_request
   before_action :set_user, only: %i[show]
 
-  rescue_from StandardError, with: :internal_server_error
+  #rescue_from StandardError, with: :internal_server_error
 
   # GET /users/1
   def show
@@ -14,37 +14,37 @@ class UsersController < ApplicationController
   def update_password
     @user = get_user
     message, status = @user.update_password(params, @user)
-    render json: message, status:
+    render json: message, status: status
   end
 
   def update_username
     @user = get_user
     message, status = @user.update_username(params, @user)
-    render json: message, status:
+    render json: message, status: status
   end
 
   def update_profile
     @user = get_user
     message, status = @user.update_profile(params, @user)
-    render json: message, status:
+    render json: message, status: status
   end
 
   def destroy_profile
     @user = get_user
     message, status = @user.delete_profile(params, @user)
-    render json: message, status:
+    render json: message, status: status
   end
 
   def update_portada
     user = get_user
     message, status = @user.update_portada(params, user)
-    render json: message, status:
+    render json: message, status: status
   end
 
   def destroy_portada
     @user = get_user
     message, status = @user.delete_portada(@user)
-    render json: message, status:
+    render json: message, status: status
   end
 
   # GET /users/byUsername
@@ -101,6 +101,16 @@ class UsersController < ApplicationController
     render json: message, status: status
   end
 
+  def find_follow
+    user = get_user
+    siguiendo = user.followed_relationships.exists?(followed_id: params[:user_id])
+    te_sigue = user.follower_relationships.exists?(follower_id: params[:user_id])
+    data = {
+      siguiendo: siguiendo,
+      te_sigue: te_sigue
+    }
+    render json: data
+  end
 
   private
 
