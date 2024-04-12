@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_action :authenticate_request
   before_action :set_user, only: %i[show]
 
-  #rescue_from StandardError, with: :internal_server_error
+  rescue_from StandardError, with: :internal_server_error
 
   # GET /users/1
   def show
