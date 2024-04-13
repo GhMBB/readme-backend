@@ -18,6 +18,12 @@ class User < ApplicationRecord
   has_many :lecturas
   has_one :persona
 
+  has_many :follower_relationships, foreign_key: :followed_id, class_name: 'Seguidor'
+  has_many :followers, through: :follower_relationships, source: :follower
+
+  has_many :followed_relationships, foreign_key: :follower_id, class_name: 'Seguidor'
+  has_many :followeds, through: :followed_relationships, source: :followed
+
   def libros_en_progreso(params)
     libros_en_progreso = Libro.joins(:lecturas)
                               .where(lecturas: { user_id: id, terminado: false, deleted: false })
