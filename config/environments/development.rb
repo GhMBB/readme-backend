@@ -1,10 +1,31 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+  config.after_initialize do
+    Bullet.enable        = true
+    Bullet.alert         = true
+    Bullet.bullet_logger = true
+    Bullet.console       = true
+    Bullet.rails_logger  = true
+    Bullet.add_footer    = true
+  end
+
   # Settings specified here will take precedence over those in config/application.rb.
 
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    user_name:            'readmeapp.social@gmail.com',
+    password:             'fkidtcifoyloolfx',
+    authentication:       'plain',
+    enable_starttls_auto: true
+  }
 
-
+=begin
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
+=end
 
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development

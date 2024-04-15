@@ -9,7 +9,6 @@ class ApplicationController < ActionController::API
 
     if authorization_header.nil?
       return render json: {error: "Debe proporcionar un token"}, status: :forbidden
-
     end
 
     token = authorization_header.split(" ").last
@@ -19,10 +18,14 @@ class ApplicationController < ActionController::API
 
       if decoded_token && decoded_token.key?('user_id')
         user_id = decoded_token['user_id']
-        user = User.find_by(id: user_id)
-
+        user = User.find_by(id: user_id, deleted: false)
+        return render json: {error: 'Usuario baneado'}, status: :forbidden if !user.blank? &&  user.persona.baneado == true
+        return render json: {error: 'Falta confirmar el correo electronico'}, status: :forbidden if !user.blank? &&  user.persona.email_confirmed == false
         if user
           return user
+        else
+          render json: {error: "Usuario no encontrado, token invalido"}, status: :forbidden
+          return nil
         end
       end
     rescue JWT::ExpiredSignature
@@ -50,6 +53,13 @@ class ApplicationController < ActionController::API
     user = decode_token
     unless user.role == "moderador"
       render json: {error: "Rol de moderador Requerido"}, status: :forbidden
+    end
+  end
+
+  def authorize_administrador
+    user = decode_token
+    unless user.role == "administrador"
+      render json: {error: "Rol de moderador administrador"}, status: :forbidden
     end
   end
 

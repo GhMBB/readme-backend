@@ -1,0 +1,2 @@
+class BookReportCategory < ApplicationRecord
+end

@@ -3,13 +3,14 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'readmeapp'
+app = 'readme-backend'
 primary_region = 'gru'
 console_command = '/rails/bin/rails console'
 
 [build]
 
 [deploy]
+   #pre = ["bundle install", "rails db:migrate", "rails db:seed", rails db:prepare]
    release_command = './bin/rails db:prepare'
 
 [http_service]

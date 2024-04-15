@@ -3,6 +3,7 @@ class ReportesLibrosController < ApplicationController
   before_action :set_libro, only: [:create]
   before_action :set_reporte, only: [:update, :destroy]
   before_action :authenticate_request
+  rescue_from StandardError, with: :internal_server_error
 
   def create
     user = get_user

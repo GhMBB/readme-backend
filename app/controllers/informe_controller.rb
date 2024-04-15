@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class InformeController < ApplicationController
   before_action :authenticate_request
-
+  rescue_from StandardError, with: :internal_server_error
   def lecturas_diarias_por_libro
     libro_id = params[:libro_id]
     fecha_inicio = params[:fecha_inicio]
@@ -14,7 +14,7 @@ class InformeController < ApplicationController
 
     usuarios_por_dia = FechaLectura.where(libro_id: libro_id, fecha: fecha_inicio..fecha_fin)
                                    .group(:fecha)
-                                   .distinct(:user_id)
+                                   #.distinct(:user_id)
                                    .count(:user_id)
 
     render json: usuarios_por_dia, status: :ok
@@ -31,23 +31,15 @@ class InformeController < ApplicationController
     fecha_inicio_semana_pasada = (fecha_actual - 7.days).beginning_of_day
     cantidad_lecturas_semana_pasada = FechaLectura.where(libro_id: libros.pluck(:id), fecha: fecha_inicio_semana_pasada..fecha_actual+1).count
 
-    # Calcular el crecimiento
-    crecimiento =  cantidad_lecturas_semana_pasada.to_f/cantidad_total
-
     # Contar la cantidad total de favoritos del usuario
     cantidad_total_favitos = Favorito.where(libro_id: libros.pluck(:id)).count
-
     # Calcular el crecimiento en la última semana
     cantidad_favoritos_semana_pasada = Favorito.where(libro_id: libros.pluck(:id), created_at: fecha_inicio_semana_pasada..fecha_actual+1).count
-
     # Contar la cantidad total de comentarios del usuario
     cantidad_total_comentarios = Comentario.where(libro_id: libros.pluck(:id)).count
-
     # Calcular el crecimiento en la última semana
     cantidad_comentarios_semana_pasada = Comentario.where(libro_id: libros.pluck(:id), created_at: fecha_inicio_semana_pasada..fecha_actual+1).count
-
     subquery = Lectura.where(libro_id: Libro.where(user_id: user.id).pluck(:id)).pluck(:user_id).uniq
-
     # Calcular la edad promedio de los lectores
     edad_promedio = Persona.where(user_id: subquery).average('DATE_PART(\'year\', AGE(fecha_de_nacimiento))').to_f.round(2)
     data = {
@@ -66,7 +58,4 @@ class InformeController < ApplicationController
 
   private
 
-  def set_lectura
-    @lectura = Lectura.find_by(id: params[:id], deleted: false)
-  end
 end

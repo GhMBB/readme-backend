@@ -2,6 +2,7 @@
     belongs_to :user
 
     attribute :deleted, :boolean, default: false
+    attribute :deleted_by_user, :boolean, default: false
     attribute :adulto, :boolean, default: false
     attribute :cantidad_lecturas, :integer, default: 0
     attribute :cantidad_resenhas, :integer, default: 0
@@ -18,8 +19,9 @@
     has_many :favoritos
     has_many :reportes, -> { where(deleted: false) }, foreign_key: :libro_id
     has_many :lecturas
-    has_many :lecturas_terminadas, -> { where(leido: true) }, class_name: "Lectura"
+    has_many :lecturas_terminadas, -> { where(leido: true,deleted: false) }, class_name: "Lectura"
     has_many :fecha_lecturas
+
     enum categoria: {
       ciencia_ficción: "Ciencia ficción",
       Fantasia: "Fantasía",
@@ -43,6 +45,15 @@
 
     def cantidad_total_lecturas(libro_id)
         fecha_lecturas.where(libro_id: libro_id).count
+    end
+
+    def self.delete_portada(public_id)
+        return if public_id.blank?
+        cloudinary_response = Cloudinary::Uploader.destroy(public_id)
+        unless cloudinary_response['result'] == 'ok'
+            # render json: { error: 'No se pudo eliminar la foto de perfil.' }, status: :unprocessable_entity
+        end
+        ''
     end
 =begin
     def validar_categoria_existente

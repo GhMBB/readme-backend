@@ -2,6 +2,7 @@
 class ComentariosController < ApplicationController
   before_action :authenticate_request
   before_action :set_comentario, only: %i[update destroy]
+  rescue_from StandardError, with: :internal_server_error
 
   def create
     user = get_user
@@ -31,9 +32,5 @@ class ComentariosController < ApplicationController
 
   def set_comentario
     @comentario = Comentario.find(params[:id])
-  end
-
-  def comentario_params
-    params.permit(:user_id, :libro_id, :comentario)
   end
 end
