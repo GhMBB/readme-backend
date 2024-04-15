@@ -69,6 +69,7 @@ class SeguidorsController < ApplicationController
 
   def seguidores
     return render json: { errors: 'Debe pasar el user_id' }, status: 400 if params[:user_id].blank?
+    actual_user = get_user
 
     @seguidor = Seguidor.where(followed_id: params[:user_id], deleted: false).paginate(page: params[:page])
     ids = @seguidor.pluck(:follower_id)
@@ -77,14 +78,20 @@ class SeguidorsController < ApplicationController
     data = {
       total_pages: @seguidor.total_pages,
       last_page: params[:page] == @seguidor.total_pages,
-      users: @users.map { |user| UserSerializer.new(user) }
+      users: @users.map do |user|
+        seguidor = Seguidor.exists?(follower_id: actual_user.id, followed_id: user.id,deleted:false)
+        seguido = Seguidor.exists?(follower_id: user.id, followed_id: actual_user.id,deleted:false)
+        user_serializer = UserSerializer.new(user)
+        user_serializer.serializable_hash.merge(seguidor: seguidor, seguido: seguido)
+      end
     }
-    render json: data, status: 200
+    render json: data, status: 200, serializer: nil
   end
 
   # No funciona
   def seguidos
     return render json: { errors: 'Debe pasar el user_id' }, status: 400 if params[:user_id].blank?
+    actual_user = get_user
 
     @seguidor = Seguidor.where(follower_id: params[:user_id], deleted: false).paginate(page: params[:page])
     ids = @seguidor.pluck(:followed_id)
@@ -93,7 +100,12 @@ class SeguidorsController < ApplicationController
     data = {
       total_pages: @seguidor.total_pages,
       last_page: params[:page] == @seguidor.total_pages,
-      users: @users.map { |user| UserSerializer.new(user) }
+      users: @users.map do |user|
+        seguidor = Seguidor.exists?(follower_id: actual_user.id, followed_id: user.id,deleted:false)
+        seguido = Seguidor.exists?(follower_id: user.id, followed_id: actual_user.id,deleted:false)
+        user_serializer = UserSerializer.new(user)
+        user_serializer.serializable_hash.merge(seguidor: seguidor, seguido: seguido)
+      end
     }
     render json: data, status: 200
   end

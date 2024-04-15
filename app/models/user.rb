@@ -37,6 +37,20 @@ class User < ApplicationRecord
     self.regenerate_reset_password_token # Genera un nuevo token de restablecimiento de contraseña
     self.save! # Guarda el registro actualizado en la base de datos
   end
+
+  def show(params, user)
+    finded_user = User.find_by(id: params[:id])
+    return [{ message: 'No se encontró el usuario' }, 404] if finded_user.nil?
+  
+    seguidor = Seguidor.exists?(follower_id: user.id, followed_id: finded_user.id,deleted:false)
+    seguido = Seguidor.exists?(follower_id: finded_user.id, followed_id: user.id,deleted:false)
+  
+    user_data = UserSerializer.new(finded_user).as_json
+    user_data[:seguidor] = seguidor
+    user_data[:seguido] = seguido
+  
+    user_data
+  end
   def libros_en_progreso(params)
     libros_en_progreso = Libro.joins(:lecturas)
                               .where(lecturas: { user_id: id, terminado: false, deleted: false })
