@@ -19,8 +19,8 @@ class ApplicationController < ActionController::API
       if decoded_token && decoded_token.key?('user_id')
         user_id = decoded_token['user_id']
         user = User.find_by(id: user_id, deleted: false)
-        return render json: {error: "Usuario baneado"}, status: :forbidden if !user.blank? &&  user.persona.baneado == true
-
+        return render json: {error: 'Usuario baneado'}, status: :forbidden if !user.blank? &&  user.persona.baneado == true
+        return render json: {error: 'Falta confirmar el correo electronico'}, status: :forbidden if !user.blank? &&  user.persona.email_confirmed == false
         if user
           return user
         else

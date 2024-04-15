@@ -11,7 +11,7 @@ console_command = '/rails/bin/rails console'
 
 [deploy]
    #pre = ["bundle install", "rails db:migrate", "rails db:seed", rails db:prepare]
-   release_command = './bin/rails db:seed'
+   release_command = './bin/rails db:prepare'
 
 [http_service]
   internal_port = 4000

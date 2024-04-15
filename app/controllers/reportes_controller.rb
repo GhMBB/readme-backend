@@ -4,7 +4,7 @@
 
 class ReportesController < ApplicationController
   before_action :authenticate_request
-  before_action :authorize_moderador
+  #before_action :authorize_moderador
   rescue_from StandardError, with: :internal_server_error
 
   def find_by_params
