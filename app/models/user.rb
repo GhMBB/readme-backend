@@ -1,14 +1,23 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  #before_create :generate_confirmation_token
   has_secure_password
+  has_secure_token :reset_password_token
+
+  validates :email, presence: { message: 'El email de usuario no puede estar en blanco' },
+            uniqueness: { message: 'El email de usuario ya está en uso' },
+            format: { with: URI::MailTo::EMAIL_REGEXP, message: 'El formato del email es inválido' }
+
   validates :username, presence: { message: 'El nombre de usuario no puede estar en blanco' },
-                       uniqueness: { message: 'El nombre de usuario ya está en uso' }
+            uniqueness: { message: 'El nombre de usuario ya está en uso' },
+            format: { with: /\A[a-z0-9]+\z/, message: 'El nombre de usuario solo puede contener letras minúsculas y números' }
   validates :password, length: { minimum: 8, message: 'La contraseña debe tener al menos 8 caracteres' },
                        format: { with: /\A.*(?=.*\d).*\z/, message: 'La contraseña debe contener al menos un dígito' }
   validates :role, inclusion: { in: %w[usuario moderador administrador], message: 'El rol no es válido' }
 
   attribute :deleted, :boolean, default: false
+  #attribute :email_confirmed, :boolean, default: false
 
   has_many :favoritos
   has_many :libros
@@ -24,6 +33,10 @@ class User < ApplicationRecord
   has_many :followed_relationships, foreign_key: :follower_id, class_name: 'Seguidor'
   has_many :followeds, through: :followed_relationships, source: :followed
 
+  def regenerate_reset_password_token!
+    self.regenerate_reset_password_token # Genera un nuevo token de restablecimiento de contraseña
+    self.save! # Guarda el registro actualizado en la base de datos
+  end
 
   def show(params, user)
     finded_user = User.find_by(id: params[:id])
@@ -38,7 +51,6 @@ class User < ApplicationRecord
   
     user_data
   end
-
   def libros_en_progreso(params)
     libros_en_progreso = Libro.joins(:lecturas)
                               .where(lecturas: { user_id: id, terminado: false, deleted: false })
@@ -127,8 +139,7 @@ class User < ApplicationRecord
     end
   end
 
-  def delete_profile(params, user)
-    if user.authenticate(params[:password])
+  def delete_profile(user)
       @persona = user.persona
       @persona.profile = eliminar_perfil(@persona.profile)
       if @persona.save
@@ -136,9 +147,6 @@ class User < ApplicationRecord
       else
         [@persona.errors, :unprocessable_entity]
       end
-    else
-      [{ error: 'Contraseña incorrecta' }, :unprocessable_entity]
-    end
   end
 
   def update_portada(params, user)
@@ -256,5 +264,9 @@ class User < ApplicationRecord
       model_class = table_name.singularize.classify.constantize
       model_class.where(user_id: user_id, deleted_by_user: false).update_all(deleted: deleted)
     end
+  end
+
+  def generate_confirmation_token
+    self.confirmation_token = SecureRandom.urlsafe_base64
   end
 end

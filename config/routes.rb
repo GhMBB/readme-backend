@@ -86,6 +86,13 @@ Rails.application.routes.draw do
   post 'users/desbanear/:id', to: 'users#desbanear'
 
   get 'users/findfollowrelationship/:user_id',to: 'users#find_follow'
+
+  #auth 2.0
+  post 'auth/register', to: 'auth#register_with_email'
+  post 'auth/email_confirmation', to: 'auth#email_confirmation'
+  post 'auth/login', to: 'auth#login_with_email'
+  get 'auth/forgot_password', to: 'auth#send_reset_password_email'
+  post 'auth/reset_password', to: 'auth#reset_password'
   # Defines the root path route ("/")
   # root "posts#index"
 end
