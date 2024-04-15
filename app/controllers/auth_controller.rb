@@ -33,7 +33,6 @@ class AuthController < ApplicationController
 
    if @user.save
      @persona = @user.persona
-     UserMailer.with(user: @user).email_confirmation.deliver_later
      if @persona.nil?
        @persona = Persona.new(user_id: @user.id, fecha_de_nacimiento: params[:fecha_nacimiento], email_confirmed: true)
        @persona.save
