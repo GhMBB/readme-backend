@@ -8,7 +8,9 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: @user
+    @user = get_user
+    message, status = @user.show(params, @user)
+    render json: message, status: status, serializer: nil
   end
 
   def update_password
@@ -47,15 +49,22 @@ class UsersController < ApplicationController
     render json: message, status: status
   end
 
-  # GET /users/byUsername
-  def get_user_by_username
-    @user = User.find_by(username: params[:username], deleted: false)
-    if @user
-      render json: @user, status: :ok
-    else
-      render json: { error: 'usuario con no encontrado' }, status: :unprocessable_entity
-    end
+# GET /users/byUsername
+def get_user_by_username
+  @user = User.find_by(username: params[:username], deleted: false)
+  actual_user = get_user
+
+  if @user.present?
+    seguidor = Seguidor.exists?(follower_id: actual_user.id, followed_id: @user.id,deleted:false)
+    seguido = Seguidor.exists?(follower_id: @user.id, followed_id: actual_user.id,deleted:false)
+    user_data = UserSerializer.new(@user)
+
+    render json: user_data.serializable_hash.merge(seguidor: seguidor, seguido: seguido), status: :ok
+  else
+    render json: { error: 'Usuario no encontrado' }, status: :unprocessable_entity
   end
+end
+
 
   def find_by_username
     @user = User.where("username ILIKE ? and deleted = ?", "%#{params[:username]}%", false).paginate(page: params[:page], per_page: WillPaginate.per_page)
