@@ -8,7 +8,7 @@ class ReportesController < ApplicationController
   rescue_from StandardError, with: :internal_server_error
 
   def find_by_params
-    reportes , status= Reporte.find_by_params(params)
+    reportes , status= Reporte.includes(:comentario, :user, :libro).order(created_at: :desc).find_by_params(params)
     render json:  reportes, status: status
   end
 
