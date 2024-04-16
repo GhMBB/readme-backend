@@ -39,6 +39,6 @@ class ReportesComentariosController < ApplicationController
   end
 
   def reporte_params
-    params.require(:reportes_comentario).permit(:id, :motivo, :estado, :categoria, :nuevo_estado, :conclusion)
+    params.require(:reporte).permit(:id, :motivo, :estado, :categoria, :nuevo_estado, :conclusion)
   end
 end
