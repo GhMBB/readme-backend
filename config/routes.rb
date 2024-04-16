@@ -50,7 +50,7 @@ Rails.application.routes.draw do
   get '/usersFind/:username', to: 'users#get_user_by_username', as: 'user_by_username'
   put 'users/portada', to: 'users#update_portada'
   put 'users/information', to: 'users#update_information'
-  resources :users, only: %i[show]
+  resources :users, only: %i[show destroy]
   get 'up' => 'rails/health#show', as: :rails_health_check
 
   get 'informe/lectura', to: 'informe#lecturas_diarias_por_libro'
@@ -81,7 +81,7 @@ Rails.application.routes.draw do
 
   get 'users/find_by_username/:username', to: 'users#find_by_username'
 
-  delete 'users/delete_account/', to: 'users#destroy_account'
+  delete 'users/delete_account/:id', to: 'users#destroy_account'
   delete 'users/ban/:id', to: 'users#destroy'
   post 'users/desbanear/:id', to: 'users#desbanear'
 

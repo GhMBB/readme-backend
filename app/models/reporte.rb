@@ -4,6 +4,7 @@ class Reporte < ApplicationRecord
   belongs_to :user
   belongs_to :libro, optional: true
   belongs_to :comentario, optional: true
+  belongs_to :usuario_reportado, class_name: 'User', optional: true
   belongs_to :moderador, class_name: 'User', optional: true
 
   validates :user_id, presence: { message: 'El ID de usuario no puede estar en blanco' }
@@ -43,12 +44,14 @@ class Reporte < ApplicationRecord
 
   def update_reporte(reporte_params, user)
     if user.role != 'moderador'
-      return { error: 'Debes ser moderador para actualizar los reportes' }, :unprocessable_entity
+      return [{ error: 'Debes ser moderador para actualizar los reportes' }, :unprocessable_entity]
     end
-    return { error: 'Reporte no encontrado' }, :not_found if nil?
-
-    update(reporte_params.merge(moderador_id: user.id))
-    [{ message: 'Reporte actualizado exitosamente', reporte: self }, :ok]
+    if self.nil?
+      [{ error: 'Reporte no encontrado' }, :not_found]
+    else
+      self.update(reporte_params.merge(moderador_id: user.id))
+      [{ message: 'Reporte actualizado exitosamente', reporte: self }, :ok]
+    end
   end
 
   def destroy_reporte(user)
@@ -64,21 +67,21 @@ class Reporte < ApplicationRecord
   def self.actualizar_muchos_reportes(tipo, tipo_id, estado, nuevo_estado, conclusion, mod_id)
     case tipo
     when 'libro'
-      reportes = Reporte.where(libro_id: tipo_id, estado:, deleted: false)
+      reportes = Reporte.where(libro_id: tipo_id, estado: estado, deleted: false)
     when 'comentario'
-      reportes = Reporte.where(comentario_id: tipo_id, estado:, deleted: false)
+      reportes = Reporte.where(comentario_id: tipo_id, estado: estado, deleted: false)
     when 'usuario'
-      reportes = Reporte.where(usuario_reportado_id: tipo_id, estado:, deleted: false)
+      reportes = Reporte.where(usuario_reportado_id: tipo_id, estado: estado, deleted: false)
     else
       return { error: 'Tipo de recurso inválido' }, :bad_request
     end
-
-    return [{error: 'El reporte no fue encontrado'}, 404]  if reportes.blank?
-
-
-    reportes.update_all(estado: nuevo_estado, conclusion:, moderador_id: mod_id)
+  
+    return [{error: 'El reporte no fue encontrado'}, 404] if reportes.blank?
+  
+    reportes.update_all(estado: nuevo_estado, conclusion: conclusion, moderador_id: mod_id)
     [{ message: 'El estado de los reportes se ha actualizado correctamente' }, :ok]
   end
+  
 
   def self.find_by_params(params)
     query = all
@@ -94,7 +97,7 @@ class Reporte < ApplicationRecord
     data = {
       total_pages: paginated_query.total_pages,
       total_items: query.count,
-      data: paginated_query
+      data: ActiveModel::Serializer::CollectionSerializer.new(paginated_query, serializer: ReporteSerializer)
     }
     return data, 200
   end
