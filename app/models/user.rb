@@ -101,7 +101,7 @@ class User < ApplicationRecord
   def update_password(params, user)
     if user.authenticate(params[:current_password])
       if params[:new_password] == params[:confirm_password]
-        if user.update(password: params[:new_password])
+        if user.update(password: params[:new_password], email: user.email)
           [{ message: 'Contraseña actualizada exitosamente' }, :ok]
         else
           [user.errors, :unprocessable_entity]
@@ -117,7 +117,7 @@ class User < ApplicationRecord
   # @return [[Hash{Symbol->String (frozen) | UserSerializer}, Symbol]]
   def update_username(params, user)
     if user.authenticate(params[:password])
-      if user.update(username: params[:username], password: params[:password])
+      if user.update(username: params[:username], password: params[:password], email: user.email)
         [{ message: 'Username actualizado con exito', user: UserSerializer.new(user) }, :ok]
       else
         [{ error: 'Nombre de usuario en uso.' }, :unprocessable_entity]

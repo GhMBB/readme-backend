@@ -33,7 +33,6 @@ class AuthController < ApplicationController
 
    if @user.save
      @persona = @user.persona
-     UserMailer.with(user: @user).email_confirmation.deliver_later
      if @persona.nil?
        @persona = Persona.new(user_id: @user.id, fecha_de_nacimiento: params[:fecha_nacimiento], email_confirmed: true)
        @persona.save
@@ -93,6 +92,15 @@ class AuthController < ApplicationController
     end
   end
 
+  def reenviar_email_confirmacion
+    user = User.find_by(email: params[:email])
+    if user.blank?
+      return render json: {error: 'El usuario no se encuentra'}, status: 200
+    end
+    UserMailer.with(user: user).email_confirmation.deliver_later
+    render json: {message: 'Correo reenviado'}, status: 200
+  end
+
   def email_confirmation
     authorization_header = request.headers["Authorization"]
     if authorization_header.nil?
@@ -104,7 +112,6 @@ class AuthController < ApplicationController
     user = User.find_by(id: user_id, deleted: false)
     if user.persona.confirmation_token == params[:email_confirmation_code]
       if user.persona.update(email_confirmed: true)
-        #cambiar el codigo de confirmacion de correo
         user.persona.regenerate_confirmation_token!
         return render json: {message: 'Correo confirmado con exito'}, status: :ok
       else
@@ -115,11 +122,13 @@ class AuthController < ApplicationController
     end
   end
 
+
+
   def send_reset_password_email
     user = User.find_by(email: params[:email])
     if !user.blank?
       UserMailer.with(user: user).restore_password.deliver_later
-      return render json: {error: 'Codigo de restauracion enviado'}, status: 200
+      return render json: {message: 'Codigo de restauracion enviado'}, status: 200
     else
       return render json: {error: 'Usuario no encontrado'}, status: 400
     end
@@ -129,7 +138,7 @@ class AuthController < ApplicationController
     if !user.blank?
       user.update(reset_params)
       user.regenerate_reset_password_token!
-      return render json: {error: 'Contraseña actualizada con exito, inicie sesion nuevamente'}, status: 200
+      return render json: {message: 'Contraseña actualizada con exito, inicie sesion nuevamente'}, status: 200
     else
       return render json: {error: 'Usuario no encontrado'}, status: 400
     end

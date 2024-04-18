@@ -11,6 +11,7 @@
 
 # Crea 10 usuarios y moderadores
 
+=begin
 
 5.times do |i|
   defaultUsuario = User.find_by(username: "usuario_#{i}")
@@ -25,6 +26,7 @@ moderadores = User.where(role: 'moderador')
 moderadores.each do |moderador|
   Persona.create(user_id: moderador.id, fecha_de_nacimiento: '01/01/2000')
 end
+=end
 
 =begin
 # Crea 10 libros para cada usuario
@@ -45,7 +47,7 @@ end
 # db/seeds.rb
 
 # Cargar datos para categorías de reportes de usuarios
-=begin
+
 UserReportCategory.create([
                             { name: 'Comportamiento inapropiado' },
                             { name: 'Suplantación de identidad' },
@@ -75,5 +77,5 @@ CommentReportCategory.create([
                                { name: 'Incitación al odio' },
                                { name: 'Otro' }
                              ])
-=end
+
 

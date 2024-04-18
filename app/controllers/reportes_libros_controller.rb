@@ -3,7 +3,6 @@ class ReportesLibrosController < ApplicationController
   before_action :set_libro, only: [:create]
   before_action :set_reporte, only: [:update, :destroy]
   before_action :authenticate_request
-  rescue_from StandardError, with: :internal_server_error
 
   def create
     user = get_user
@@ -40,6 +39,6 @@ class ReportesLibrosController < ApplicationController
   end
 
   def reporte_params
-    params.require(:reporte).permit(:motivo, :estado, :categoria, :nuevo_estado, :conclusion)
+    params.require(:reporte).permit(:id, :motivo, :estado, :categoria, :nuevo_estado, :conclusion)
   end
 end
