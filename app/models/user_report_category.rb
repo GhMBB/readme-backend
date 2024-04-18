@@ -1,0 +1,2 @@
+class UserReportCategory < ApplicationRecord
+end

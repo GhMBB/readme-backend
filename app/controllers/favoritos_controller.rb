@@ -1,6 +1,7 @@
 class FavoritosController < ApplicationController
   before_action :authenticate_request
   before_action :set_favorito, only: %i[show update destroy]
+  rescue_from StandardError, with: :internal_server_error
 
   # GET /favoritos
   def index

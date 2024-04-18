@@ -23,7 +23,7 @@ class CapitulosController < ApplicationController
     capitulos.each do |capitulo|
       capitulo.contenido = obtener_contenido(capitulo.nombre_archivo)
     end
-    
+
     if user == libro.user
       capitulos_serializados = capitulos.map{ |capitulo| CapituloForOwnerSerializer.new(capitulo).as_json }
 
@@ -55,14 +55,14 @@ class CapitulosController < ApplicationController
   def create
     libro = Libro.find_by(id: params[:libro_id])
     usuario = get_user
-    
+
     return if usuario.nil?
 
     if libro.nil?
       render json: {error: "Libro no encontrado"}, status: 404
       return
     end
-  
+
     if usuario != libro.user
       render json: {error: "Debes ser el propietario del libro para agregar capitulos."}, status: 404
       return
@@ -72,7 +72,7 @@ class CapitulosController < ApplicationController
       render json: {error: "Debe proporcionar el contendio del capitulo"}, status: 404
       return
     end
-  
+
     @capitulo = Capitulo.new(capitulo_params)
     @capitulo.libro = libro
 
@@ -82,13 +82,13 @@ class CapitulosController < ApplicationController
       render json: {error: "No se pudo guardar el contenido del capitulo."}, status: 400
       return
     end
-  
+
     if @capitulo.save
       @capitulo.contenido = obtener_contenido(@capitulo.nombre_archivo)
 
       if @capitulo.contenido == ""
         render json: {error: "No se pudo guardar el contenido del capitulo."}, status: 400
-      return
+        return
 
       end
       render json:  @capitulo, serializer: CapituloForOwnerSerializer,status: :created
@@ -104,17 +104,17 @@ class CapitulosController < ApplicationController
     user = get_user
     return if user.nil?
 
-   libro = @capitulo.libro
+    libro = @capitulo.libro
 
-   if libro.user != user
-    render json: { error: "Debes ser el propietario del libro para modificarlo." }, status: 400
-    return
-   end
-   
-   if !@capitulo.publicado && user != @capitulo.libro.user
-    render json: {error: "Capitulo no encontrado"}, status: 404
-    return
-  end
+    if libro.user != user
+      render json: { error: "Debes ser el propietario del libro para modificarlo." }, status: 400
+      return
+    end
+
+    if !@capitulo.publicado && user != @capitulo.libro.user
+      render json: {error: "Capitulo no encontrado"}, status: 404
+      return
+    end
 
     @capitulo.nombre_archivo = guardar_archivo()  if params[:contenido].present?
     @capitulo.titulo = params[:titulo] if params[:titulo].present?
@@ -131,13 +131,13 @@ class CapitulosController < ApplicationController
     user = get_user
     return if user.nil?
 
-   libro = @capitulo.libro
+    libro = @capitulo.libro
 
-   if libro.user != user
-    render json: { error: "Debes ser el propietario del libro para modificarlo." }, status: 400
-    return
-   end
-   
+    if libro.user != user
+      render json: { error: "Debes ser el propietario del libro para modificarlo." }, status: 400
+      return
+    end
+
 
     @capitulo.publicado = !@capitulo.publicado
     if @capitulo.save
@@ -155,21 +155,21 @@ class CapitulosController < ApplicationController
 
     return if user.nil?
 
-   libro = @capitulo.libro
+    libro = @capitulo.libro
 
-   if libro.user != user && user.role != "moderador"
-    render json: { error: "Debes ser el propietario del libro o ser moderador para modificarlo." }, status: 400
-    return
-  end
+    if libro.user != user && user.role != "moderador"
+      render json: { error: "Debes ser el propietario del libro o ser moderador para modificarlo." }, status: 400
+      return
+    end
 
-  @capitulo.deleted = true
-  if @capitulo.save
-    capitulos_del_libro = libro.capitulos.where(deleted:false)
-    
-    render status: :ok
-  else
-    render json: {error: "No se pudo eliminar el libro"}, status: 400
-  end
+    @capitulo.deleted = true
+    if @capitulo.save
+      capitulos_del_libro = libro.capitulos.where(deleted:false)
+
+      render status: :ok
+    else
+      render json: {error: "No se pudo eliminar el libro"}, status: 400
+    end
 
   end
 
@@ -177,41 +177,41 @@ class CapitulosController < ApplicationController
   def swap
     capitulo1 = Capitulo.find_by(id: params[:capitulo1_id], deleted: false)
     capitulo2 = Capitulo.find_by(id: params[:capitulo2_id], deleted: false)
-  
+
     if capitulo1.nil?
       render json: { error: "No se encontró el capitulo con el id=" + params[:capitulo1_id] }, status: 404
       return
     end
-  
+
     if capitulo2.nil?
       render json: { error: "No se encontró el capitulo con el id=" + params[:capitulo2_id] }, status: 404
       return
     end
-  
+
     if capitulo1.libro != capitulo2.libro
       render json: { error: "Los capitulos no pertenecen al mismo libro." }, status: 400
       return
     end
-  
+
     libro = capitulo1.libro
     user = get_user
 
     if user.nil?
       return
     end
-  
+
     if libro.user != user
       render json: { error: "Debes ser el propietario del libro para modificarlo." }, status: 400
       return
     end
-  
+
     Capitulo.transaction do
       temp_indice = capitulo1.indice
 
       capitulo1.update!(indice: capitulo2.indice)
       capitulo2.update!(indice: temp_indice)
-    
-      capitulos_del_libro = Capitulo.where(libro_id: capitulo1.libro_id, deleted: false)      
+
+      capitulos_del_libro = Capitulo.where(libro_id: capitulo1.libro_id, deleted: false)
     end
 
     render json: { message: "Intercambio de índices realizado exitosamente" }
@@ -220,7 +220,7 @@ class CapitulosController < ApplicationController
     render json: { error: e.message }, status: :unprocessable_entity
     return
   end
-  
+
 
   private
   def guardar_archivo
@@ -249,17 +249,17 @@ class CapitulosController < ApplicationController
     end
   end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_capitulo
-      @capitulo = Capitulo.find_by(id: params[:id],deleted:false)
-      if @capitulo.nil?
-        render json: {error: "Capitulo no encontrado"}, status: 404
-        return
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_capitulo
+    @capitulo = Capitulo.find_by(id: params[:id],deleted:false)
+    if @capitulo.nil?
+      render json: {error: "Capitulo no encontrado"}, status: 404
+      return
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def capitulo_params
-      params.permit(:libro_id, :titulo)
-    end
+  # Only allow a list of trusted parameters through.
+  def capitulo_params
+    params.permit(:libro_id, :titulo)
+  end
 end

@@ -1,9 +1,8 @@
 require 'cloudinary'
 
 class LibrosController < ApplicationController
-  before_action :set_libro, only: %i[ show update destroy ]
-  #before_action :authenticate_request
-
+  before_action :set_libro, only: %i[ show update destroy]
+  before_action :authenticate_request
   rescue_from StandardError, with: :internal_server_error
 
   # GET /libros
@@ -74,6 +73,7 @@ class LibrosController < ApplicationController
     end
 
     @libro.deleted = true
+    @libro.deleted_by_user = true
     if @libro.save
       render status: :ok
     else
@@ -84,6 +84,21 @@ class LibrosController < ApplicationController
     categorias_enum = Libro.categoria
     @categorias = categorias_enum.keys.map { |key| [key.to_s, categorias_enum[key]] }
     render json: @categorias
+  end
+
+  def destroy_portada
+    usuario = get_user
+    @libro = Libro.find_by(id: params[:id], deleted: false)
+    if @libro.user != usuario && usuario.role != "moderador"
+      render json: {error: "Debes ser el propietario del libro para editarlo o tener el rol de moderador."}, status: 401
+      return
+    end
+    @libro.portada = Libro.delete_portada(@libro.portada)
+    if @libro.save
+      return render json: @libro, status: :ok
+    else
+      return render json: {error: 'No se pudo eliminar la portada'}, status: :unprocessable_entity
+    end
   end
 
   private
@@ -123,10 +138,12 @@ class LibrosController < ApplicationController
     libros = libros.where(user_id: params[:user_id]) if params[:user_id]
     libros = libros.where(categoria: params[:categorias]) if params[:categorias].present?
     libros = libros.where("puntuacion_media >= ?", params[:puntuacion_media]) if params[:puntuacion_media].present?
-  
+    libros = libros.joins(:capitulos).where("capitulos.publicado = ?", true)
+                   .group("libros.id")
+                   .having("COUNT(capitulos.id) >= ?", params[:cantidad_minima_capitulos].to_i) if params[:cantidad_minima_capitulos]
+
     libros
   end
-  
 
   def paginate_libros(libros)
     page_number = params[:page].to_i

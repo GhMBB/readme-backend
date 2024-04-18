@@ -2,6 +2,7 @@
 class ResenhasController < ApplicationController
   before_action :authenticate_request
   before_action :set_resenha, only: %i[destroy]
+  rescue_from StandardError, with: :internal_server_error
 
   def destroy
     user = get_user

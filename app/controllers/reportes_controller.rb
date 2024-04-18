@@ -1,31 +1,50 @@
+# frozen_string_literal: true
+
 # app/controllers/reportes_controller.rb
 
 class ReportesController < ApplicationController
   before_action :authenticate_request
-  before_action :authorize_moderador
+  #before_action :authorize_moderador
+  rescue_from StandardError, with: :internal_server_error
 
   def find_by_params
-    reportes = Reporte.find_by_params(params)
-    render json: { reportes: reportes }, status: :ok
+    reportes , status= Reporte.includes(:comentario, :user, :libro).order(created_at: :desc).find_by_params(params)
+    render json:  reportes, status: status
   end
 
   def find_with_counts
-    reportes = Reporte.find_with_counts
-    render json: reportes, status: :ok
+    reportes, status = Reporte.find_with_counts(params)
+    render json: reportes, status: status
   end
 
   def estados
     estado_enum = Reporte.estados
-    @categorias = estado_enum.keys.map { |key| [key.to_s, estado_enum[key]] }
-    render json: @categorias
+    @estados = estado_enum.keys.map { |key| [key.to_s, estado_enum[key]] }
+    render json: @estados, status: :ok
   end
+
+  def repCatLibros
+    @categorias = BookReportCategory.all.select('id', 'name')
+    # serialized_categorias = @categorias.map { |e| ReporteCategoriaSerializer.new(e) }
+    render json: @categorias, status: :ok
+  end
+
+  def repCatComentarios
+    @categorias = CommentReportCategory.all.select('id', 'name')
+    render json: @categorias, status: :ok
+  end
+
+  def repCatUsuarios
+    @categorias = UserReportCategory.all.select('id', 'name')
+    render json: @categorias, status: :ok
+  end
+
+  #   def repCategorias
+  #     @categorias =  BookReportCategory.all + CommentReportCategory.all +  UserReportCategory.all
+  #     render json: @categorias, status: :ok
+  #   end
 
   private
-
-  # Use callbacks to share common setup or constraints between actions.
-  def set_reporte
-    @reporte = Reporte.find(params[:id])
-  end
 
   # Only allow a list of trusted parameters through.
   def reporte_params

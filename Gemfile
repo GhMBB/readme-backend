@@ -3,7 +3,7 @@ source "https://rubygems.org"
 ruby "3.1.4"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.1.3"
+gem "rails", "~> 7.1.3.1"
 
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1"
@@ -44,7 +44,9 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
- gem "rack-cors"
+gem "rack",  '>= 3.0.9.1'
+
+gem "rack-cors", '>= 2.0.2'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -56,8 +58,19 @@ end
 group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  gem "letter_opener"
 
   gem "error_highlight", ">= 0.4.0", platforms: [:ruby]
+  gem 'brakeman'
 end
 
 gem "dockerfile-rails", ">= 1.6", :group => :development
+
+gem 'rails_best_practices'
+#Auditar la aplicacion
+gem 'bundler-audit'
+#Crear un modelo de la db
+gem 'rails-erd', group: :development #bundle exec erd --filetype=dot
+gem "rubycritic"
+gem 'bullet', group: 'development'
+gem 'whenever', require: false

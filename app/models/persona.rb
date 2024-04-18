@@ -1,25 +1,23 @@
 class Persona < ApplicationRecord
   belongs_to :user
+  has_secure_token :confirmation_token
+
 
   validates :fecha_de_nacimiento, presence: { message: "Se debe pasar una fecha de nacimiento valida" }
   validates :user_id, presence: { message: "El ID de usuario no puede estar en blanco" }
   #validates :email, uniqueness: { message: "El email ya está en uso" }
 
   attribute :profile, :string, default: ""
+  attribute :email_confirmed,:boolean, default: false
 
-  def update_profile(profile)
-    if profile.present?
-      cloudinary_response = Cloudinary::Uploader.upload(profile, :folder => "fotosPerfil")
+  def self.actualizar_email_nil
+    personas_a_actualizar = Persona.where("fecha_eliminacion < ?", 30.days.ago)
+    personas_a_actualizar.update_all(email: nil)
+  end
 
-      if cloudinary_response['public_id'].present?
-        update(profile: cloudinary_response['public_id'])
-        return { message: 'Perfil actualizado exitosamente' }, status: :ok
-      else
-        render json: { error: 'No se pudo guardar la imagen.' }, status: :unprocessable_entity
-      end
-    else
-      render json: { error: 'Se debe pasar el perfil' }, status: 400
-    end
+  def regenerate_confirmation_token!
+    self.regenerate_confirmation_token # Genera un nuevo token de confirmación
+    self.save # Guarda el registro actualizado en la base de datos
   end
 
   private
