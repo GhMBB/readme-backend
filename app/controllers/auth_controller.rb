@@ -127,7 +127,7 @@ class AuthController < ApplicationController
   def send_reset_password_email
     user = User.find_by(email: params[:email])
     if !user.blank?
-      UserMailer.with(user: user).restore_password.deliver_now
+      UserMailer.with(user: user).restore_password.deliver_later
       return render json: {message: 'Codigo de restauracion enviado'}, status: 200
     else
       return render json: {error: 'Usuario no encontrado'}, status: 400
