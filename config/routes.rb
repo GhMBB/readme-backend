@@ -93,6 +93,7 @@ Rails.application.routes.draw do
   post 'auth/login', to: 'auth#login_with_email'
   get 'auth/forgot_password', to: 'auth#send_reset_password_email'
   post 'auth/reset_password', to: 'auth#reset_password'
+  get 'auth/resent_email_confirmation', to: 'auth#reenviar_email_confirmacion'
   # Defines the root path route ("/")
   # root "posts#index"
 end
