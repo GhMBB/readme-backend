@@ -69,6 +69,8 @@ class AuthController < ApplicationController
       user = get_user
       return render json: { error: "Debes ser moderador para crear otro moderador"}, status: :unprocessable_entity if (user.role.blank? || user.role != "moderador")
     end
+    return render json: { error: 'Las contraseñas no coinciden'}, status: :unprocessable_entity   if params[:password] != params[:password_confirmation]
+
     @user = User.new(user_params)
     unless ["usuario","moderador"].include?(@user.role)
       render json: { error: "Solo se permiten los roles 'usuario' y 'moderador'"}, status: :unprocessable_entity
