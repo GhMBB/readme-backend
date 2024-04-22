@@ -46,6 +46,7 @@
           text-align: center;
           margin-top: 20px;
       }
+
   </style>
 </head>
 <body>
@@ -55,8 +56,11 @@
   </div>
   <div class="content">
     <h2>¡Bienvenido <%= @user.username %> a Readme!</h2>
-    <p>Para completar tu registro, por favor confirma tu correo electrónico utilizando el siguiente código:</p>
-    <div class="confirmation-code"> <%= @code %> </div>
+    <p>Para completar tu registro, por favor confirma tu correo electrónico utilizando el siguiente código:
+    <div class="confirmation-code">
+      <a href="https://test--readme-test.netlify.app/auth/email_confirmation/<%= @code %>" style="color: #fff"> Haz Click en este enlace para confirmar tu email </a>
+    </div>
+    <!--<div class="confirmation-code"> <%#= @code %> </div>-->
     <p class="message">¡Gracias por unirte a nuestra comunidad de lectores!</p>
     <p class="message">¿No solicitaste este correo electrónico? Por favor, ignóralo. Tu cuenta está segura.</p>
   </div>

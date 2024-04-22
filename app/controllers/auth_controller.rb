@@ -54,7 +54,7 @@ class AuthController < ApplicationController
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
       profile = obtener_perfil(Persona.find_by(user_id: user.id).profile)
-      return render json: {error: 'Falta confirmar el correo electronico', token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile}, status: :forbidden if !user.blank? &&  user.persona.email_confirmed == false
+      return render json: {unconfirmed_email: true, token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile}, status: :ok if !user.blank? &&  user.persona.email_confirmed == false
       return render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile}
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
@@ -69,6 +69,8 @@ class AuthController < ApplicationController
       user = get_user
       return render json: { error: "Debes ser moderador para crear otro moderador"}, status: :unprocessable_entity if (user.role.blank? || user.role != "moderador")
     end
+    return render json: { error: 'Las contraseñas no coinciden'}, status: :unprocessable_entity   if params[:password] != params[:password_confirmation]
+
     @user = User.new(user_params)
     unless ["usuario","moderador"].include?(@user.role)
       render json: { error: "Solo se permiten los roles 'usuario' y 'moderador'"}, status: :unprocessable_entity
@@ -98,7 +100,7 @@ class AuthController < ApplicationController
       return render json: {error: 'El usuario no se encuentra'}, status: 200
     end
     UserMailer.with(user: user).email_confirmation.deliver_later
-    render json: {message: 'Correo reenviado'}, status: 200
+    render json: {message: 'Enlace de confirmacion de correo electronico reenviado'}, status: 200
   end
 
   def email_confirmation
