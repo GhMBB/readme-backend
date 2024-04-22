@@ -1,12 +1,8 @@
 class Persona < ApplicationRecord
   belongs_to :user
   has_secure_token :confirmation_token
-
-
   validates :fecha_de_nacimiento, presence: { message: "Se debe pasar una fecha de nacimiento valida" }
   validates :user_id, presence: { message: "El ID de usuario no puede estar en blanco" }
-  #validates :email, uniqueness: { message: "El email ya está en uso" }
-
   attribute :profile, :string, default: ""
   attribute :email_confirmed,:boolean, default: false
 
@@ -21,5 +17,4 @@ class Persona < ApplicationRecord
   end
 
   private
-
 end
