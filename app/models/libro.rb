@@ -90,6 +90,35 @@
           data: data
         }
       end
+
+      def self.restore_libro(user, libro_id)
+        libro = Libro.find_by(id: libro_id)
+        
+        if libro.nil?
+            return [{ errors: "Libro no encontrado" }, 404]
+        end
+
+
+        # Verificar si el usuario es el dueño del libro
+        if libro.user_id != user.id
+          return [{ errors: "Debes ser el dueño del libro" }, :unprocessable_entity]
+        end
+      
+        # Verificar si el libro está eliminado por el usuario
+        if libro.deleted_by_user
+            # Verificar si han pasado menos de 30 días desde la última actualización
+            if (Time.now - libro.updated_at) <= 30.days
+            # Actualizar el libro
+            libro.update(deleted: false, deleted_by_user: false)
+            return libro
+            else
+            return [{ errors: "Han pasado más de 30 días desde la eliminación del libro." }, :unprocessable_entity]
+            end
+        else
+            return [{ errors: "El libro no está eliminado por el usuario." }, :unprocessable_entity]
+        end
+      end
+      
       
       
       
