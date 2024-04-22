@@ -94,6 +94,8 @@ Rails.application.routes.draw do
   get 'auth/forgot_password', to: 'auth#send_reset_password_email'
   post 'auth/reset_password', to: 'auth#reset_password'
   get 'auth/resent_email_confirmation', to: 'auth#reenviar_email_confirmacion'
+
+  get '/papelera', to: "papelera#index"
   # Defines the root path route ("/")
   # root "posts#index"
 end

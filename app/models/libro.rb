@@ -55,6 +55,45 @@
         end
         ''
     end
+    def self.get_papelera(user, page)
+        fecha_limite = 30.days.ago
+
+        libros_deleted_by_user = Libro.where(user_id: user.id, deleted_by_user: true)
+                                 .where('updated_at > ? and updated_at <= ?', fecha_limite, Date.today+1.days)
+
+        subquery_libros_with_deleted_capitulos = Libro.joins(:capitulos)
+                       .where(user_id: user.id, deleted: false)
+                       .where('capitulos.deleted = ?', true)
+                       .where('capitulos.updated_at > ? and capitulos.updated_at <= ?', fecha_limite, Date.today+1.days)
+                       .select(:id)
+
+        libros = Libro.where(id: subquery_libros_with_deleted_capitulos)
+                      .or(libros_deleted_by_user)
+      
+        # Paginación
+        paginated_libros = libros.paginate(page: page, per_page: WillPaginate.per_page)
+      
+        # Serialización de los datos paginados
+        data = paginated_libros.map do |libro|
+          serialized_libro = LibroSerializer.new(libro, root: false)
+          serialized_libro.attributes.merge({
+            deleted: libro.deleted,
+            capitulos_eliminados: libro.capitulos.where(deleted: true)
+                                                .map { |capitulo| CapituloForOwnerSerializer.new(capitulo, root: false).attributes.merge(deleted: capitulo.deleted) }
+          })
+        end
+      
+        {
+          total_pages: paginated_libros.total_pages,
+          last_page: paginated_libros.total_pages==page,
+          total_items: libros.count,
+          data: data
+        }
+      end
+      
+      
+      
+      
 =begin
     def validar_categoria_existente
         if categoria.present? && !self.class.categorias.keys.include?(categoria)
