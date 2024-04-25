@@ -78,6 +78,7 @@
           serialized_libro = LibroSerializer.new(libro, root: false)
           serialized_libro.attributes.merge({
             deleted: libro.deleted,
+            updated_at: libro.updated_at,
             capitulos_eliminados: libro.capitulos.where(deleted: true)
                                                 .map { |capitulo| CapituloForOwnerSerializer.new(capitulo, root: false).attributes.merge(deleted: capitulo.deleted) }
           })
@@ -97,6 +98,15 @@
         if libro.nil?
             return [{ errors: "Libro no encontrado" }, 404]
         end
+
+        if !libro.deleted && !libro.deleted_by_user
+          return [{ errors: "El libro no esta eliminado" }, 400]
+        end
+
+        
+        if libro.deleted && !libro.deleted_by_user
+          return [{ errors: "No se puede restaurar un libro eliminado por un moderador" }, 400]
+        end  
 
 
         # Verificar si el usuario es el dueño del libro

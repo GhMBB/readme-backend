@@ -9,12 +9,12 @@ class PapeleraController < ApplicationController
     def restore_libro
         user = get_user
         response, status = Libro.restore_libro(user, params[:id])
-        render json: response, status: status, serializer: LibroSerializer
+        render json: response, status: status, serializer: nil
     end
 
     def restore_capitulo
         user = get_user
         response, status = Capitulo.restore_capitulo(user, params[:id])
-        render json: response, status: status, serializer: CapituloForOwnerSerializer
+        render json: response, status: status, serializer: nil
     end
 end
