@@ -41,6 +41,12 @@ class CapitulosController < ApplicationController
     user = get_user
     return if user.nil?
 
+    if @capitulo.libro.deleted
+      render json: {error: "Libro del capitulo eliminado"}, status: 404
+      return
+    end
+
+
     if @capitulo.libro.user != user && !@capitulo.publicado
       render json: {error: "Capitulo no encontrado"}, status: 404
       return
@@ -60,6 +66,12 @@ class CapitulosController < ApplicationController
 
     if libro.nil?
       render json: {error: "Libro no encontrado"}, status: 404
+      return
+    end
+
+    
+    if libro.deleted
+      render json: {error: "Libro del capitulo eliminado"}, status: 404
       return
     end
 
@@ -106,6 +118,12 @@ class CapitulosController < ApplicationController
 
     libro = @capitulo.libro
 
+    if @capitulo.libro.deleted
+      render json: {error: "Libro del capitulo eliminado"}, status: 404
+      return
+    end
+
+
     if libro.user != user
       render json: { error: "Debes ser el propietario del libro para modificarlo." }, status: 400
       return
@@ -132,6 +150,12 @@ class CapitulosController < ApplicationController
     return if user.nil?
 
     libro = @capitulo.libro
+
+    if @capitulo.libro.deleted
+      render json: {error: "Libro del capitulo eliminado"}, status: 404
+      return
+    end
+
 
     if libro.user != user
       render json: { error: "Debes ser el propietario del libro para modificarlo." }, status: 400
@@ -190,6 +214,11 @@ class CapitulosController < ApplicationController
 
     if capitulo1.libro != capitulo2.libro
       render json: { error: "Los capitulos no pertenecen al mismo libro." }, status: 400
+      return
+    end
+
+    if capitulo1.libro.deleted
+      render json: {error: "Libro de los capitulos eliminado"}, status: 404
       return
     end
 
