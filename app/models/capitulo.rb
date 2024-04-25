@@ -26,6 +26,11 @@ class Capitulo < ApplicationRecord
       return [{ errors: "Capitulo no encontrado" }, 404]
     end
 
+    if !capitulo.deleted
+      return [{ errors: "El capitulo no esta eliminado" }, 400]
+    end
+
+
     libro = capitulo.libro
 
     # Verificar si el usuario es el dueño del libro
