@@ -196,6 +196,7 @@ class User < ApplicationRecord
     end
     eliminar_recuperar_datos(usuario_a_eliminar.id, true)
     if usuario_a_eliminar.persona.update(baneado: true)
+      NotificationMailer.with(user: usuario_a_eliminar).ban_notification.deliver_later
       [{ message: 'Eliminado con exito' }, :ok]
     else
       [{ error: 'Error al eliminar el usuario' }, :unprocessable_entity]
