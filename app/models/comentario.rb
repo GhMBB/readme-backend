@@ -40,7 +40,10 @@ class Comentario < ApplicationRecord
     libro.decrement(:cantidad_comentarios)
     libro.save
     #Si fue eliminado por el usuario o no
-    comentario.update(deleted: true, deleted_by_user: true)
+    comentario.update(deleted: true, deleted_by_user: user.id == comentario.user_id)
+    if comentario.user_id != user.id && user.role == 'moderador'
+      NotificationMailer.with(user: comentario.user,comment:comentario).delete_comment_notification.deliver_later
+    end
     [{ message: 'Eliminado exitosamente' }, :ok]
   end
 

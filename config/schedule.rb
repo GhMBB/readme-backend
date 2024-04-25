@@ -1,3 +1,5 @@
+require 'schedule'
+
 # Use this file to easily define all of your cron jobs.
 #
 # It's helpful, but not entirely necessary to understand cron before proceeding.
@@ -21,4 +23,9 @@
 
 every 1.day, at: '4:30 am' do
   runner "Persona.actualizar_email_nil"
+end
+
+every 1.day, at: '00:00 am' do
+  User.all.each { |user| user.regenerate_reset_password_token! }
+  Persona.all.each { |persona| persona.regenerate_confirmation_token! }
 end

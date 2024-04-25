@@ -74,3 +74,4 @@ gem 'rails-erd', group: :development #bundle exec erd --filetype=dot
 gem "rubycritic"
 gem 'bullet', group: 'development'
 gem 'whenever', require: false
+gem 'schedule'
