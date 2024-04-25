@@ -16,8 +16,8 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
     port:                 587,
-    user_name:            'readmeapp.social@gmail.com',
-    password:             'fkidtcifoyloolfx',
+    user_name:            ENV["EMAIL"],
+    password:             ENV["EMAIL_PASSWORD"],
     authentication:       'plain',
     enable_starttls_auto: true
   }
