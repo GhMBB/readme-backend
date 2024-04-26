@@ -9,8 +9,8 @@
     attribute :puntuacion_media, :float, default: 0.0
     attribute :cantidad_comentarios, :integer, default: 0
     attribute :sumatoria, :integer,default: 0
-    validates :titulo, presence: { message: "El libro debe tener un titulo" }
-    validates :categoria, presence: {message: "El libro debe tener una categoría"}
+    validates :titulo, presence: { message: "El cap debe tener un titulo" }
+    validates :categoria, presence: {message: "El cap debe tener una categoría"}
     validates :categoria, inclusion: { in: ->(libro) { libro.class.categoria.keys }, message: "La categoría seleccionada no es válida" }
     #validate :validar_categoria_existente
 
@@ -90,7 +90,37 @@
           total_items: libros.count,
           data: data
         }
+    end
+    def self.get_papelera_capitulos(user, page)
+      fecha_limite = 30.days.ago
+      capitulos = Capitulo.where(libro_id: Libro.where(user_id: user.id, deleted: false)
+                                                .where('capitulos.deleted = ?', true)
+                                                .where('capitulos.updated_at > ? and capitulos.updated_at <= ?', fecha_limite, Date.today + 1.days)
+                                                .select(:id))
+
+      # Paginación
+      paginated_capitulos = capitulos.paginate(page: page, per_page: WillPaginate.per_page)
+
+      # Serialización de los datos paginados
+      data = paginated_capitulos.map do |cap|
+        serialized_libro = LibroSerializer.new(cap.libro, root: false)
+
+           CapituloForOwnerSerializer.new(cap, root: false).attributes.merge(deleted: cap.deleted,
+                                                                                                   titulo: cap.libro.titulo,
+                                                                                                   portada: serialized_libro.portada)
+
       end
+
+
+      {
+        total_pages: paginated_capitulos.total_pages,
+        last_page: paginated_capitulos.total_pages == page,
+        total_items: data.count,
+        data: data
+      }
+    end
+
+
 
       def self.restore_libro(user, libro_id)
         libro = Libro.find_by(id: libro_id)
@@ -100,32 +130,32 @@
         end
 
         if !libro.deleted && !libro.deleted_by_user
-          return [{ errors: "El libro no esta eliminado" }, 400]
+          return [{ errors: "El cap no esta eliminado" }, 400]
         end
 
         
         if libro.deleted && !libro.deleted_by_user
-          return [{ errors: "No se puede restaurar un libro eliminado por un moderador" }, 400]
+          return [{ errors: "No se puede restaurar un cap eliminado por un moderador" }, 400]
         end  
 
 
-        # Verificar si el usuario es el dueño del libro
+        # Verificar si el usuario es el dueño del cap
         if libro.user_id != user.id
-          return [{ errors: "Debes ser el dueño del libro" }, :unprocessable_entity]
+          return [{ errors: "Debes ser el dueño del cap" }, :unprocessable_entity]
         end
       
-        # Verificar si el libro está eliminado por el usuario
+        # Verificar si el cap está eliminado por el usuario
         if libro.deleted_by_user
             # Verificar si han pasado menos de 30 días desde la última actualización
             if (Time.now - libro.updated_at) <= 30.days
-            # Actualizar el libro
+            # Actualizar el cap
             libro.update(deleted: false, deleted_by_user: false)
             return libro
             else
-            return [{ errors: "Han pasado más de 30 días desde la eliminación del libro." }, :unprocessable_entity]
+            return [{ errors: "Han pasado más de 30 días desde la eliminación del cap." }, :unprocessable_entity]
             end
         else
-            return [{ errors: "El libro no está eliminado por el usuario." }, :unprocessable_entity]
+            return [{ errors: "El cap no está eliminado por el usuario." }, :unprocessable_entity]
         end
       end
       
@@ -138,7 +168,7 @@
         if categoria.present? && !self.class.categorias.keys.include?(categoria)
             errors.add(:categoria, "La categoría seleccionada no es válida")
         elsif categoria.blank?
-            errors.add(:categoria, "El libro debe tener una categoría")
+            errors.add(:categoria, "El cap debe tener una categoría")
         end
     end
 =end
