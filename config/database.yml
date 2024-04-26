@@ -30,7 +30,7 @@ development:
   username: postgres
 
   # The password associated with the PostgreSQL role (username).
-  password: postgres
+  password: 123
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -60,7 +60,7 @@ test:
   username: postgres
 
   # The password associated with the PostgreSQL role (username).
-  password: postgres
+  password: 123
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.
@@ -81,5 +81,5 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
-#production:
-#url: '<%= ENV["DATABASE_URL"] %>'
+production:
+  url: '<%= ENV["DATABASE_URL"] %>'
