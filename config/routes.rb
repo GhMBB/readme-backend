@@ -94,6 +94,10 @@ Rails.application.routes.draw do
   get 'auth/forgot_password', to: 'auth#send_reset_password_email'
   post 'auth/reset_password', to: 'auth#reset_password'
   get 'auth/resent_email_confirmation', to: 'auth#reenviar_email_confirmacion'
+
+  get '/papelera', to: "papelera#index"
+  put '/papelera/restore/libro/:id', to: "papelera#restore_libro"
+  put '/papelera/restore/capitulo/:id', to: "papelera#restore_capitulo"
   # Defines the root path route ("/")
   # root "posts#index"
 end

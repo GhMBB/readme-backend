@@ -73,8 +73,11 @@ class LibrosController < ApplicationController
     end
 
     @libro.deleted = true
-    @libro.deleted_by_user = true
+    @libro.deleted_by_user = @libro.user == usuario
     if @libro.save
+      if @libro.user != usuario && usuario.role == "moderador"
+        NotificationMailer.with(user: @libro.user, book:@libro).delete_book_notification.deliver_later
+      end
       render status: :ok
     else
       render json: {error: "No se pudo eliminar el libro"}, status: 400

@@ -22,6 +22,9 @@ gem 'rest-client'
 gem 'ffi'
 gem 'cloudinary'
 
+gem 'dotenv'
+
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
@@ -74,3 +77,4 @@ gem 'rails-erd', group: :development #bundle exec erd --filetype=dot
 gem "rubycritic"
 gem 'bullet', group: 'development'
 gem 'whenever', require: false
+gem 'schedule'

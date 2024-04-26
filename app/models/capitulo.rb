@@ -18,4 +18,42 @@ class Capitulo < ApplicationRecord
     ultimo_indice = self.libro.capitulos.maximum(:indice)
     self.indice = ultimo_indice ? ultimo_indice + 1 : 1
   end
+
+  def self.restore_capitulo(user, capitulo_id)
+    capitulo = Capitulo.find_by(id: capitulo_id)
+    
+    if capitulo.nil?
+      return [{ errors: "Capitulo no encontrado" }, 404]
+    end
+
+    if !capitulo.deleted
+      return [{ errors: "El capitulo no esta eliminado" }, 400]
+    end
+
+
+    libro = capitulo.libro
+
+    # Verificar si el usuario es el dueño del libro
+    if libro.user_id != user.id
+      capitulo.errors.add(:base, "Debes ser el dueño del libro")
+      return capitulo
+    end
+  
+    # Verificar si el capitulo está eliminado por el usuario
+    if capitulo.deleted
+        # Verificar si han pasado menos de 30 días desde la última actualización
+        if (Time.now - capitulo.updated_at) <= 30.days
+            # Actualizar el capitulo
+            capitulo.update(deleted: false)
+            return capitulo
+        else
+            capitulo.errors.add(:base, "Han pasado más de 30 días desde la eliminación del capitulo.")
+            return capitulo
+        end
+    else
+        capitulo.errors.add(:base, "El capitulo no está eliminado por el usuario.")
+        return capitulo
+    end
+end
+
 end

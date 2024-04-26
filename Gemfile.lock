@@ -127,6 +127,7 @@ GEM
     dockerfile-rails (1.6.5)
       rails (>= 3.0.0)
     domain_name (0.6.20240107)
+    dotenv (3.1.0)
     drb (2.2.0)
       ruby2_keywords
     dry-configurable (1.1.0)
@@ -342,6 +343,7 @@ GEM
       simplecov (>= 0.22.0)
       tty-which (~> 0.5.0)
       virtus (~> 2.0)
+    schedule (0.0.1)
     sexp_processor (4.17.1)
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -387,6 +389,7 @@ DEPENDENCIES
   cloudinary
   debug
   dockerfile-rails (>= 1.6)
+  dotenv
   error_highlight (>= 0.4.0)
   ffi
   jwt
@@ -402,6 +405,7 @@ DEPENDENCIES
   rest-client
   rubocop
   rubycritic
+  schedule
   tzinfo-data
   whenever
   will_paginate

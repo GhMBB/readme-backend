@@ -1,8 +1,8 @@
-<!-- app/views/user_mailer/reset_password_email.html.erb -->
+<!-- app/views/user_mailer/confirmation_email.html.erb -->
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Restablecimiento de Contraseña - EjemploCorp</title>
+  <title>Su cuenta ha sido eliminada - Readme</title>
   <style>
       body {
           font-family: Arial, sans-serif;
@@ -29,7 +29,7 @@
       .content {
           margin-bottom: 20px;
       }
-      .reset-code {
+      .confirmation-code {
           background-color: #007bff;
           color: #fff;
           font-size: 24px;
@@ -46,6 +46,7 @@
           text-align: center;
           margin-top: 20px;
       }
+
   </style>
 </head>
 <body>
@@ -54,13 +55,11 @@
     <img src="https://res.cloudinary.com/dkrmah0f7/image/upload/f_auto,q_auto/v1/logos/ba9gzat2ppzgg89rhqbm" alt="Readme Logo">
   </div>
   <div class="content">
-    <h2>Hola <%= @user.username %>,</h2>
-    <p>Recibes este correo electrónico porque has solicitado restablecer la contraseña de tu cuenta en Readme.</p>
-    <p>Utiliza el siguiente código para restablecer tu contraseña:</p>
-    <div class="reset-code">
-      <a href="<%= ENV["FRONT_URL"] %>/auth/reset_password/<%= @reset_code %>" style="color: #fff"> Haz Click Aqui para restaurar tu contraseña </a>
-    </div>
-    <p class="message">Si no solicitaste este cambio, simplemente ignora este mensaje y tu contraseña permanecerá sin cambios.</p>
+    <h2>Cuenta eliminada</h2>
+    <p>Hola <%= @user.username %>, te informamos que tu cuenta de Readme ha sido eliminada.</p>
+    <p>Tu cuenta ha sido eliminada debido a una violación de nuestros Términos de servicio.</p>
+    <p>Si crees que tu cuenta ha sido eliminada por error, por favor ponte en contacto con nosotros inmediatamente para resolver este problema.</p>
+    <p class="message">Readme se reserva el derecho de borrar cualquier cuenta que viole nuestros Términos de servicio.</p>
   </div>
   <div class="footer">
     <p>¿Necesitas ayuda? <a href="">Contáctanos</a></p>
@@ -68,4 +67,5 @@
   </div>
 </div>
 </body>
+
 </html>
