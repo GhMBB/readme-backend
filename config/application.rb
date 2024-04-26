@@ -33,5 +33,8 @@ module ReadmeBackend
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     #config.i18n.default_locale = :es
+    config.action_dispatch.default_headers['X-Frame-Options'] = 'SAMEORIGIN'
+    config.action_dispatch.default_headers['X-Content-Type-Options'] = 'nosniff'
+    config.action_dispatch.default_headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
   end
 end
