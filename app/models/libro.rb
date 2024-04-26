@@ -106,7 +106,7 @@
         serialized_libro = LibroSerializer.new(cap.libro, root: false)
 
            CapituloForOwnerSerializer.new(cap, root: false).attributes.merge(deleted: cap.deleted,
-                                                                                                   titulo: cap.libro.titulo,
+                                                                                                   titulo_libro: cap.libro.titulo,
                                                                                                    portada: serialized_libro.portada)
 
       end
