@@ -22,6 +22,9 @@ gem 'rest-client'
 gem 'ffi'
 gem 'cloudinary'
 
+gem 'dotenv'
+
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
