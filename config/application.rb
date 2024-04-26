@@ -36,5 +36,6 @@ module ReadmeBackend
     config.action_dispatch.default_headers['X-Frame-Options'] = 'SAMEORIGIN'
     config.action_dispatch.default_headers['X-Content-Type-Options'] = 'nosniff'
     config.action_dispatch.default_headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    config.action_dispatch.default_headers['Permissions-Policy'] = "geolocation=(self #{ENV['FRONT_URL']})"
   end
 end
