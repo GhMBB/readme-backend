@@ -9,8 +9,8 @@
     attribute :puntuacion_media, :float, default: 0.0
     attribute :cantidad_comentarios, :integer, default: 0
     attribute :sumatoria, :integer,default: 0
-    validates :titulo, presence: { message: "El cap debe tener un titulo" }
-    validates :categoria, presence: {message: "El cap debe tener una categoría"}
+    validates :titulo, presence: { message: "El libro debe tener un titulo" }
+    validates :categoria, presence: {message: "El libro debe tener una categoría"}
     validates :categoria, inclusion: { in: ->(libro) { libro.class.categoria.keys }, message: "La categoría seleccionada no es válida" }
     #validate :validar_categoria_existente
 
@@ -130,32 +130,32 @@
         end
 
         if !libro.deleted && !libro.deleted_by_user
-          return [{ errors: "El cap no esta eliminado" }, 400]
+          return [{ errors: "El libro no esta eliminado" }, 400]
         end
 
         
         if libro.deleted && !libro.deleted_by_user
-          return [{ errors: "No se puede restaurar un cap eliminado por un moderador" }, 400]
+          return [{ errors: "No se puede restaurar un libro eliminado por un moderador" }, 400]
         end  
 
 
-        # Verificar si el usuario es el dueño del cap
+        # Verificar si el usuario es el dueño del libro
         if libro.user_id != user.id
-          return [{ errors: "Debes ser el dueño del cap" }, :unprocessable_entity]
+          return [{ errors: "Debes ser el dueño del libro" }, :unprocessable_entity]
         end
       
-        # Verificar si el cap está eliminado por el usuario
+        # Verificar si el libro está eliminado por el usuario
         if libro.deleted_by_user
             # Verificar si han pasado menos de 30 días desde la última actualización
             if (Time.now - libro.updated_at) <= 30.days
-            # Actualizar el cap
+            # Actualizar el libro
             libro.update(deleted: false, deleted_by_user: false)
             return libro
             else
-            return [{ errors: "Han pasado más de 30 días desde la eliminación del cap." }, :unprocessable_entity]
+            return [{ errors: "Han pasado más de 30 días desde la eliminación del libro." }, :unprocessable_entity]
             end
         else
-            return [{ errors: "El cap no está eliminado por el usuario." }, :unprocessable_entity]
+            return [{ errors: "El libro no está eliminado por el usuario." }, :unprocessable_entity]
         end
       end
       
@@ -168,7 +168,7 @@
         if categoria.present? && !self.class.categorias.keys.include?(categoria)
             errors.add(:categoria, "La categoría seleccionada no es válida")
         elsif categoria.blank?
-            errors.add(:categoria, "El cap debe tener una categoría")
+            errors.add(:categoria, "El libro debe tener una categoría")
         end
     end
 =end
