@@ -96,6 +96,7 @@ Rails.application.routes.draw do
   get 'auth/resent_email_confirmation', to: 'auth#reenviar_email_confirmacion'
 
   get '/papelera', to: "papelera#index"
+  get '/papelera/capitulos/', to: 'papelera#index_capitulo'
   put '/papelera/restore/libro/:id', to: "papelera#restore_libro"
   put '/papelera/restore/capitulo/:id', to: "papelera#restore_capitulo"
   # Defines the root path route ("/")
