@@ -38,11 +38,15 @@ module ReadmeBackend
     config.action_dispatch.default_headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     config.action_dispatch.default_headers['Permissions-Policy'] = "geolocation=(self #{ENV['FRONT_URL']})"
     # Configuración de Content-Security-Policy (CSP)
+=begin
     config.content_security_policy do |policy|
-      policy.default_src :self
-      policy.script_src :self, :https
-      policy.style_src :self, :https
-      policy.img_src :self, :https, :data
+      policy.default_src :self, :https
+      policy.font_src    :self, :https, :data
+      policy.img_src     :self, :https, :data
+      policy.object_src  :none
+      policy.script_src  :self, :https
+      policy.style_src   :self, :https
     end
+=end
   end
 end

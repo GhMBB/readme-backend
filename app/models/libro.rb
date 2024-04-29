@@ -110,8 +110,6 @@
                                                                                                    portada: serialized_libro.portada)
 
       end
-
-
       {
         total_pages: paginated_capitulos.total_pages,
         last_page: paginated_capitulos.total_pages == page,
