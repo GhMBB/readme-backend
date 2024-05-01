@@ -21,7 +21,7 @@ class LibroSerializer < ActiveModel::Serializer
   end
 
   def cantidad_capitulos_publicados
-    object.capitulos.where(publicado: true).count
+    object.capitulos.where(publicado: true, deleted: false).count
   end
 
   def portada

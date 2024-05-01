@@ -90,7 +90,35 @@
           total_items: libros.count,
           data: data
         }
+    end
+    def self.get_papelera_capitulos(user, page)
+      fecha_limite = 30.days.ago
+      capitulos = Capitulo.where(libro_id: Libro.where(user_id: user.id, deleted: false)
+                                                .where('capitulos.deleted = ?', true)
+                                                .where('capitulos.updated_at > ? and capitulos.updated_at <= ?', fecha_limite, Date.today + 1.days)
+                                                .select(:id))
+
+      # Paginación
+      paginated_capitulos = capitulos.paginate(page: page, per_page: WillPaginate.per_page)
+
+      # Serialización de los datos paginados
+      data = paginated_capitulos.map do |cap|
+        serialized_libro = LibroSerializer.new(cap.libro, root: false)
+
+           CapituloForOwnerSerializer.new(cap, root: false).attributes.merge(deleted: cap.deleted,
+                                                                                                   titulo_libro: cap.libro.titulo,
+                                                                                                   portada: serialized_libro.portada)
+
       end
+      {
+        total_pages: paginated_capitulos.total_pages,
+        last_page: paginated_capitulos.total_pages == page,
+        total_items: data.count,
+        data: data
+      }
+    end
+
+
 
       def self.restore_libro(user, libro_id)
         libro = Libro.find_by(id: libro_id)

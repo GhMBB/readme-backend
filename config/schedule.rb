@@ -24,8 +24,15 @@ require 'schedule'
 every 1.day, at: '4:30 am' do
   runner "Persona.actualizar_email_nil"
 end
+every ENV['TIME_TO_LIVE'].to_i.minute do
+  runner "User.all.each { |user| user.regenerate_reset_password_token! }"
+  runner "Persona.all.each { |persona| persona.regenerate_confirmation_token! }"
+end
 
+=begin
 every 1.day, at: '00:00 am' do
   User.all.each { |user| user.regenerate_reset_password_token! }
   Persona.all.each { |persona| persona.regenerate_confirmation_token! }
 end
+=end
+
