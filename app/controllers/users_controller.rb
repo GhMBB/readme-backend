@@ -110,6 +110,15 @@ end
     render json: message, status: status
   end
 
+  def cambiar_rol
+    @user = get_user
+    unless @user.role == "administrador"
+      return render json: {error: "Rol de administrador Requerido"}, status: :forbidden
+    end
+    message, status = @user.cambiar_rol(params[:id],params[:role])
+    render json: message, status: status
+  end
+
   def find_follow
     user = get_user
     siguiendo = user.followed_relationships.exists?(followed_id: params[:user_id])

@@ -81,6 +81,22 @@ class User < ApplicationRecord
       libros: libros_serializados }
   end
 
+  def cambiar_rol(id,role)
+    usuario = User.find_by(id: id)
+    if usuario.nil?
+      return [{ error: 'Usuario no encontrado' }, :unprocessable_entity]
+    end
+
+    if !(role=='moderador') && !(role=='usuario') && !(role=='administrador')
+      return [{ error: 'Rol invalido' }, :unprocessable_entity]
+    end
+
+    usuario.role = role
+    usuario.update_columns(role:role)
+    return [usuario, :ok]
+
+  end
+
   def borradores(params, user)
     libros = user.libros.includes(:capitulos).where(capitulos: { publicado: false }).distinct.paginate(page: params[:page])
 
