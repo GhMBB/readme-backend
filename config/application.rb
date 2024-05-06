@@ -44,5 +44,6 @@ module ReadmeBackend
     #  policy.style_src :self, :https
      # policy.img_src :self, :https, :data
     #end
+
   end
 end
