@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   get '/usersFind/:username', to: 'users#get_user_by_username', as: 'user_by_username'
   put 'users/portada', to: 'users#update_portada'
   put 'users/information', to: 'users#update_information'
+  put '/users/role', to: 'users#cambiar_rol'
   resources :users, only: %i[show destroy]
   get 'up' => 'rails/health#show', as: :rails_health_check
 
