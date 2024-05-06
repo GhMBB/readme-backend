@@ -33,16 +33,16 @@ module ReadmeBackend
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     #config.i18n.default_locale = :es
-    config.action_dispatch.default_headers['X-Frame-Options'] = 'SAMEORIGIN'
-    config.action_dispatch.default_headers['X-Content-Type-Options'] = 'nosniff'
-    config.action_dispatch.default_headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-    config.action_dispatch.default_headers['Permissions-Policy'] = "geolocation=(self #{ENV['FRONT_URL']})"
+  #  config.action_dispatch.default_headers['X-Frame-Options'] = 'SAMEORIGIN'
+   # config.action_dispatch.default_headers['X-Content-Type-Options'] = 'nosniff'
+   # config.action_dispatch.default_headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+   # config.action_dispatch.default_headers['Permissions-Policy'] = "geolocation=(self #{ENV['FRONT_URL']})"
     # Configuración de Content-Security-Policy (CSP)
-    config.content_security_policy do |policy|
-      policy.default_src :self
-      policy.script_src :self, :https
-      policy.style_src :self, :https
-      policy.img_src :self, :https, :data
-    end
+  #  config.content_security_policy do |policy|
+    #  policy.default_src :self
+    #  policy.script_src :self, :https
+    #  policy.style_src :self, :https
+     # policy.img_src :self, :https, :data
+    #end
   end
 end
