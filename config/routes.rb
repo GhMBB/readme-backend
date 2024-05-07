@@ -105,6 +105,8 @@ Rails.application.routes.draw do
   post '/solicitud_desbaneos/aceptar/:solicitud_id', to: "solicitud_desbaneos#aceptar_desbaneo"
   post '/solicitud_desbaneos/rechazar/:solicitud_id', to: "solicitud_desbaneos#rechazar_desbaneo"
 
+  post '/libros/notificacion/:libro_id', to: "libros#handle_notification"
+
   # Defines the root path route ("/")
   # root "posts#index"
 end
