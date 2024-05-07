@@ -24,6 +24,18 @@ class NotificationMailer < ApplicationMailer
     @greeting = "Hi"
     mail to: @user.email
   end
+  
+  def desban_notification
+    @user = params[:user]
+    @greeting = "Hi"
+    mail to: @user.email
+  end
+
+  def desban_rejected_notification
+    @user = params[:user]
+    @greeting = "Hi"
+    mail to: @user.email
+  end
 
 
 
