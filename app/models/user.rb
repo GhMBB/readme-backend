@@ -212,6 +212,10 @@ class User < ApplicationRecord
     end
     eliminar_recuperar_datos(usuario_a_eliminar.id, true)
     if usuario_a_eliminar.persona.update(baneado: true)
+      solicitud = SolicitudDesbaneo.new(estado:"pendiente")
+      solicitud.baneado = usuario_a_eliminar
+      solicitud.moderador_id = user.id
+      solicitud.save!
       NotificationMailer.with(user: usuario_a_eliminar).ban_notification.deliver_later
       [{ message: 'Eliminado con exito' }, :ok]
     else

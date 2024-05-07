@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_06_222437) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_07_130139) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -182,7 +182,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_06_222437) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "deleted"
+    t.bigint "moderador_id"
     t.index ["baneado_id"], name: "index_solicitud_desbaneos_on_baneado_id"
+    t.index ["moderador_id"], name: "index_solicitud_desbaneos_on_moderador_id"
   end
 
   create_table "total_resenhas", force: :cascade do |t|
@@ -239,5 +241,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_06_222437) do
   add_foreign_key "seguidors", "users", column: "followed_id"
   add_foreign_key "seguidors", "users", column: "follower_id"
   add_foreign_key "solicitud_desbaneos", "users", column: "baneado_id"
+  add_foreign_key "solicitud_desbaneos", "users", column: "moderador_id"
   add_foreign_key "total_resenhas", "libros"
 end

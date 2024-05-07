@@ -55,7 +55,7 @@ class AuthController < ApplicationController
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
       if user.persona.baneado
-        solicitud = SolicitudDesbaneo.find_by(baneado_id: user.id, deleted:false)
+        solicitud = SolicitudDesbaneo.where(baneado_id: user.id, deleted: false).order(created_at: :desc).first
         estado = solicitud.nil? ? "pendiente" : solicitud.estado        
         return render json: {error: "Usuario baneado", estado: estado}, status: :forbidden 
       end

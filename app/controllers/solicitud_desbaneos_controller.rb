@@ -4,9 +4,27 @@ class SolicitudDesbaneosController < ApplicationController
 
   # GET /solicitud_desbaneos
   def index
-    @solicitud_desbaneos = SolicitudDesbaneo.all
+    usuario = get_user
+    if !(usuario.role=="moderador") && !(usuario.role=="administrador")
+      render json: {error: "No tienes los permisos necesarios para realizar esta accion"}, status: 401
+      return
+    end
 
-    render json: @solicitud_desbaneos
+    if !params[:page].present?
+      render json: {error: "Debe proporcionar el numero de la pagina"}, status: 400
+      return
+    end
+
+
+    solicitudes = SolicitudDesbaneo.getPage(
+                              params[:page],
+                              params[:username],
+                              params[:estado],
+                              params[:fecha_desde],
+                              params[:fecha_hasta]
+                            )
+
+    render json: solicitudes, status: :ok, serializer: nil
   end
 
   # POST /solicitud_desbaneos
@@ -18,7 +36,7 @@ class SolicitudDesbaneosController < ApplicationController
     end
 
     message, status = SolicitudDesbaneo.create_solicitud(params[:email],params[:justificacion])
-    render json: message, status: status
+    render json: message, status: status, serializer: SolicitudDesbaneoSerializer
   end
 
   def aceptar_desbaneo
@@ -28,8 +46,8 @@ class SolicitudDesbaneosController < ApplicationController
       return
     end
 
-    message, status = SolicitudDesbaneo.aceptar_desbaneo(params[:solicitud_id])
-    render json: message, status: status
+    message, status = SolicitudDesbaneo.aceptar_desbaneo(params[:solicitud_id],usuario)
+    render json: message, status: status, serializer: SolicitudDesbaneoSerializer
   end
 
   def rechazar_desbaneo
@@ -39,8 +57,8 @@ class SolicitudDesbaneosController < ApplicationController
       return
     end
 
-    message, status = SolicitudDesbaneo.rechazar_desbaneo(params[:solicitud_id])
-    render json: message, status: status
+    message, status = SolicitudDesbaneo.rechazar_desbaneo(params[:solicitud_id],usuario)
+    render json: message, status: status, serializer: nil
   end
 
 

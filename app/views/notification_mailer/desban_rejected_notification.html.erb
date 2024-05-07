@@ -1,0 +1,72 @@
+<!-- app/views/user_mailer/confirmation_email.html.erb -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Solicitud de desbanear rechazada - Readme</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f5f5f5;
+          margin: 0;
+          padding: 0;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+          background-color: #fff;
+          border-radius: 5px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .logo {
+          text-align: center;
+          margin-bottom: 20px;
+      }
+      .logo img {
+          width: 150px;
+          height: auto;
+      }
+      .content {
+          margin-bottom: 20px;
+      }
+      .confirmation-code {
+          background-color: #007bff;
+          color: #fff;
+          font-size: 24px;
+          font-weight: bold;
+          text-align: center;
+          padding: 10px;
+          border-radius: 5px;
+      }
+      .message {
+          text-align: center;
+          margin-top: 20px;
+      }
+      .footer {
+          text-align: center;
+          margin-top: 20px;
+      }
+
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <img src="https://res.cloudinary.com/dkrmah0f7/image/upload/f_auto,q_auto/v1/logos/ba9gzat2ppzgg89rhqbm" alt="Readme Logo">
+  </div>
+  <div class="content">
+    <h2>Solicitud de desbanear rechazada</h2>
+    <p>Hola <%= @user.username %>,</p>
+    <p>Lamentamos informarte que tu solicitud de desbanear tu cuenta de Readme ha sido rechazada.</p>
+    <p>Después de revisar cuidadosamente tu caso, hemos decidido que tu cuenta permanecerá eliminada debido a una violación de nuestros Términos de servicio.</p>
+    <p>Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.</p>
+    <p class="message">Gracias por tu comprensión.</p>
+  </div>
+  <div class="footer">
+    <p>¿Necesitas ayuda? <a href="">Contáctanos</a></p>
+    <p>Readme &copy; <%= Time.now.year %></p>
+  </div>
+</div>
+</body>
+
+</html>
