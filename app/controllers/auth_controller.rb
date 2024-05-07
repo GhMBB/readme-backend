@@ -4,7 +4,12 @@ class AuthController < ApplicationController
   def login
     user = User.find_by(username: params[:username])
     if user && user.authenticate(params[:password])
-      return render json: {error: "Usuario baneado"}, status: :forbidden if user.persona.baneado == true
+      if user.persona.baneado
+        solicitud = SolicitudDesbaneo.find_by(baneado:user,deleted:false)
+        estado = solicitud.estado
+        estado = "pendiente" if solicitud.nil?
+        return render json: {error: "Usuario baneado", estado: estado}, status: :forbidden 
+      end
       user.restablecer_cuenta(user, params) if user.persona.baneado != true  && !user.persona.fecha_eliminacion.nil? && user.persona.fecha_eliminacion > 30.days.ago
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
@@ -49,7 +54,11 @@ class AuthController < ApplicationController
   def login_with_email
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
-      return render json: {error: "Usuario baneado"}, status: :forbidden if user.persona.baneado == true
+      if user.persona.baneado
+        solicitud = SolicitudDesbaneo.find_by(baneado_id: user.id, deleted:false)
+        estado = solicitud.nil? ? "pendiente" : solicitud.estado        
+        return render json: {error: "Usuario baneado", estado: estado}, status: :forbidden 
+      end
       user.restablecer_cuenta(user, params) if user.persona.baneado != true  && !user.persona.fecha_eliminacion.nil? && user.persona.fecha_eliminacion > 30.days.ago
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']

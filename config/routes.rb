@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :solicitud_desbaneos
   resources :lecturas, only: %i[create destroy]
   post '/login', to: 'auth#login'
   post '/register', to: 'auth#register'
@@ -100,6 +101,10 @@ Rails.application.routes.draw do
   get '/papelera/capitulos/', to: 'papelera#index_capitulo'
   put '/papelera/restore/libro/:id', to: "papelera#restore_libro"
   put '/papelera/restore/capitulo/:id', to: "papelera#restore_capitulo"
+
+  post '/solicitud_desbaneos/aceptar/:solicitud_id', to: "solicitud_desbaneos#aceptar_desbaneo"
+  post '/solicitud_desbaneos/rechazar/:solicitud_id', to: "solicitud_desbaneos#rechazar_desbaneo"
+
   # Defines the root path route ("/")
   # root "posts#index"
 end
