@@ -22,6 +22,13 @@ class LibrosController < ApplicationController
 
   # GET /libros/1
   def show
+    edad_usuario = calcular_edad(get_user.persona.fecha_de_nacimiento)
+
+    if edad_usuario < 18 && @libro.adulto
+      render json: {error: "Debes ser mayor de edad para leer este libros"}, status: 403
+      return
+    end
+
     @libro.cantidad_lecturas = @libro.cantidad_lecturas+1
     @libro.save
     formated_libro = @libro
@@ -135,6 +142,17 @@ class LibrosController < ApplicationController
     end
   end
 
+  def calcular_edad(fecha_nacimiento)
+    begin
+      now = Time.now.utc.to_date
+      now.year - fecha_nacimiento.year - ((now.month > fecha_nacimiento.month || (now.month == fecha_nacimiento.month && now.day >= fecha_nacimiento.day)) ? 0 : 1)
+    rescue => e
+      puts "Error al calcular la edad: #{e.message}"
+      # Aquí puedes manejar el error de la manera que desees, como devolver un valor predeterminado o lanzar una excepción diferente.
+    end
+  end
+  
+
   def filter_libros(libros)
     libros = libros.where("titulo ILIKE ?", "%#{params[:titulo]}%") if params[:titulo]
     libros = libros.where(adulto: params[:adulto]) if params[:adulto]
@@ -144,9 +162,14 @@ class LibrosController < ApplicationController
     libros = libros.joins(:capitulos).where("capitulos.publicado = ?", true)
                    .group("libros.id")
                    .having("COUNT(capitulos.id) >= ?", params[:cantidad_minima_capitulos].to_i) if params[:cantidad_minima_capitulos]
+   edad_usuario = calcular_edad(get_user.persona.fecha_de_nacimiento)
+   puts edad_usuario
+   libros = libros.where(adulto: false) if edad_usuario < 18
 
     libros
   end
+
+
 
   def paginate_libros(libros)
     page_number = params[:page].to_i
@@ -164,7 +187,7 @@ class LibrosController < ApplicationController
     {
       total_pages: total_pages,
       last_page: page_number == total_pages,
-      total_items: libros.count,
+      total_items: paginated_libros.total_entries,
       data: data
     }
   end
