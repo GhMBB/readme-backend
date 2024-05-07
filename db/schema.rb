@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_07_130139) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_07_145754) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -108,6 +108,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_07_130139) do
     t.integer "sumatoria"
     t.boolean "deleted_by_user"
     t.index ["user_id"], name: "index_libros_on_user_id"
+  end
+
+  create_table "notificacion_de_capitulos", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "libro_id", null: false
+    t.boolean "deleted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["libro_id"], name: "index_notificacion_de_capitulos_on_libro_id"
+    t.index ["user_id"], name: "index_notificacion_de_capitulos_on_user_id"
   end
 
   create_table "personas", force: :cascade do |t|
@@ -230,6 +240,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_07_130139) do
   add_foreign_key "lecturas", "libros"
   add_foreign_key "lecturas", "users"
   add_foreign_key "libros", "users"
+  add_foreign_key "notificacion_de_capitulos", "libros"
+  add_foreign_key "notificacion_de_capitulos", "users"
   add_foreign_key "personas", "users"
   add_foreign_key "reportes", "comentarios"
   add_foreign_key "reportes", "libros"

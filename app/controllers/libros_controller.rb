@@ -33,7 +33,7 @@ class LibrosController < ApplicationController
     @libro.save
     formated_libro = @libro
     formated_libro.portada = obtener_portada(@libro.portada)
-    render json: formated_libro
+    render json: formated_libro, usuario_id: get_user.id
   end
 
   # POST /libros
@@ -110,6 +110,27 @@ class LibrosController < ApplicationController
       return render json: {error: 'No se pudo eliminar la portada'}, status: :unprocessable_entity
     end
   end
+
+  def handle_notification
+    usuario = get_user
+    if !params[:libro_id].present?
+      return render json: { error: 'Debe proporcionar el id del libro' }, status: 400
+    end
+  
+    notificacion = NotificacionDeCapitulo.find_by(user_id: usuario.id, libro_id: params[:libro_id])
+  
+    if notificacion.nil?
+      NotificacionDeCapitulo.create(user_id: usuario.id, libro_id: params[:libro_id], deleted: false)
+      return render json: { message: 'Notificación Activada correctamente' }, status: :ok
+    elsif notificacion.deleted
+      notificacion.update(deleted: false)
+      return render json: { message: 'Notificación Activada correctamente' }, status: :ok
+    else
+      notificacion.update(deleted: true)
+      return render json: { message: 'Notificación Desactivada correctamente' }, status: :ok
+    end
+  end
+  
 
   private
   def guardar_portada

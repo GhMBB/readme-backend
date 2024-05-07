@@ -2,7 +2,8 @@
 
 class LibroSerializer < ActiveModel::Serializer
   attributes :id, :titulo, :sinopsis, :portada, :adulto, :cantidad_lecturas, :cantidad_resenhas, :puntuacion_media,
-             :cantidad_comentarios, :categoria, :user_id, :autorUsername, :cantidad_capitulos, :cantidad_capitulos_publicados, :cantidad_usuarios_leyeron, :cantidad_usuarios_terminaron
+             :cantidad_comentarios, :categoria, :user_id, :autorUsername, :cantidad_capitulos, :cantidad_capitulos_publicados, :cantidad_usuarios_leyeron, :cantidad_usuarios_terminaron,
+             :notificacion
 
   def autorUsername
     if object.user&.deleted == true || object.user&.persona.baneado == true
@@ -35,7 +36,11 @@ class LibroSerializer < ActiveModel::Serializer
   def cantidad_usuarios_terminaron
     object.lecturas_terminadas.distinct.count(:user_id)
   end
-
+  
+  def notificacion
+    return !NotificacionDeCapitulo.find_by(user_id: instance_options[:usuario_id], libro_id: object.id, deleted: false).nil?
+  end
+  
   private
 
   def obtener_portada(portada_public_id)
