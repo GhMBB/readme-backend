@@ -187,7 +187,7 @@ class LibrosController < ApplicationController
     {
       total_pages: total_pages,
       last_page: page_number == total_pages,
-      total_items: libros.count,
+      total_items: paginated_libros.total_entries,
       data: data
     }
   end
