@@ -38,5 +38,14 @@ class NotificationMailer < ApplicationMailer
   end
 
 
+  def chapter_notification
+    @user = params[:user]
+    @capitulo = params[:capitulo]
+    @libro = params[:libro]
+    mail to: @user.email, subject: "¡Nuevo capítulo publicado en #{@libro.titulo}!"
+  end
+  
+
+
 
 end
