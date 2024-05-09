@@ -32,7 +32,7 @@ class Comentario < ApplicationRecord
   def self.destroy_comentario(comentario_id, user)
     comentario = Comentario.find(comentario_id)
     return { error: 'El comentario no se encontró' }, :bad_request if comentario.nil? || comentario.deleted
-    if comentario.user_id != user.id && user.role != 'moderador'
+    if comentario.user_id != user.id && user.role != 'moderador' && user.role != 'administrador'
       return { error: 'El usuario no puede eliminar el comentario de otro usuario' }, :forbidden
     end
 
@@ -41,7 +41,7 @@ class Comentario < ApplicationRecord
     libro.save
     #Si fue eliminado por el usuario o no
     comentario.update(deleted: true, deleted_by_user: user.id == comentario.user_id)
-    if comentario.user_id != user.id && user.role == 'moderador'
+    if comentario.user_id != user.id && user.role == 'moderador' && user.role != 'administrador'
       NotificationMailer.with(user: comentario.user,comment:comentario).delete_comment_notification.deliver_later
     end
     [{ message: 'Eliminado exitosamente' }, :ok]

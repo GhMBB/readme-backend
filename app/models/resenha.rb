@@ -15,7 +15,7 @@ class Resenha < ApplicationRecord
     resenha = Resenha.find_by(id: resenha_id)
     user = User.find_by(id: user_id)
     return { error: 'La reseña no se encontró' }, :not_found if resenha.nil?
-    if resenha.user_id != user.id && user.role != 'moderador'
+    if resenha.user_id != user.id && user.role != 'moderador' && user.role != 'administrador'
       return { error: 'El usuario no puede eliminar la reseña de otro usuario' }, :forbidden
     end
 

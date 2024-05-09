@@ -74,7 +74,7 @@ class LibrosController < ApplicationController
   # DELETE /libros/1
   def destroy
     usuario = get_user
-    if @libro.user != usuario && usuario.role != "moderador"
+    if @libro.user != usuario && usuario.role != "moderador" && usuario.role != "administrador"
       render json: {error: "Debes ser el propietario del libro para editarlo o tener el rol de moderador."}, status: 401
       return
     end
@@ -82,7 +82,7 @@ class LibrosController < ApplicationController
     @libro.deleted = true
     @libro.deleted_by_user = @libro.user == usuario
     if @libro.save
-      if @libro.user != usuario && usuario.role == "moderador"
+      if @libro.user != usuario && usuario.role == "moderador" && usuario.role != "administrador"
         NotificationMailer.with(user: @libro.user, book:@libro).delete_book_notification.deliver_later
       end
       render status: :ok
@@ -99,7 +99,7 @@ class LibrosController < ApplicationController
   def destroy_portada
     usuario = get_user
     @libro = Libro.find_by(id: params[:id], deleted: false)
-    if @libro.user != usuario && usuario.role != "moderador"
+    if @libro.user != usuario && usuario.role != "moderador" && usuario.role != "administrador"
       render json: {error: "Debes ser el propietario del libro para editarlo o tener el rol de moderador."}, status: 401
       return
     end

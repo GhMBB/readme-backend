@@ -185,7 +185,7 @@ class CapitulosController < ApplicationController
 
     libro = @capitulo.libro
 
-    if libro.user != user && user.role != "moderador"
+    if libro.user != user && user.role != "moderador"  && user.role != "administrador"
       render json: { error: "Debes ser el propietario del libro o ser moderador para modificarlo." }, status: 400
       return
     end
