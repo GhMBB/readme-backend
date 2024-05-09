@@ -24,7 +24,7 @@ class SolicitudDesbaneosController < ApplicationController
                               params[:fecha_hasta]
                             )
 
-    render json: solicitudes, status: :ok, serializer: nil
+    render json: solicitudes, status: :ok
   end
 
   # POST /solicitud_desbaneos
@@ -36,7 +36,7 @@ class SolicitudDesbaneosController < ApplicationController
     end
 
     message, status = SolicitudDesbaneo.create_solicitud(params[:email],params[:justificacion])
-    render json: message, status: status, serializer: SolicitudDesbaneoSerializer
+    render json: message, status: status
   end
 
   def aceptar_desbaneo
@@ -47,7 +47,7 @@ class SolicitudDesbaneosController < ApplicationController
     end
 
     message, status = SolicitudDesbaneo.aceptar_desbaneo(params[:solicitud_id],usuario)
-    render json: message, status: status, serializer: SolicitudDesbaneoSerializer
+    render json: message, status: status
   end
 
   def rechazar_desbaneo
@@ -58,7 +58,7 @@ class SolicitudDesbaneosController < ApplicationController
     end
 
     message, status = SolicitudDesbaneo.rechazar_desbaneo(params[:solicitud_id],usuario)
-    render json: message, status: status, serializer: nil
+    render json: message, status: status
   end
 
 

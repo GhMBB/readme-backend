@@ -50,13 +50,13 @@ class SolicitudDesbaneo < ApplicationRecord
 
     begin
       ActiveRecord::Base.transaction do
-        solicitud.update!(estado: "aceptado")
-        usuario_baneado.update_columns(deleted: false)
-        persona.update!(baneado: false)
+        solicitud.update!(estado: "aceptado",moderador_id:moderador.id)
+        usuario_baneado.desbanear(usuario_baneado.id)
         NotificationMailer.with(user: usuario_baneado).desban_notification.deliver_later
-        return [ solicitud , :ok]
+        return [ SolicitudDesbaneoSerializer.new(solicitud).to_json, :ok]
       end
     rescue StandardError => e
+      puts e
       return [{ error: 'No se ha podido procesar la solicitud' }, :unprocessable_entity]
     end
   end
@@ -90,6 +90,7 @@ class SolicitudDesbaneo < ApplicationRecord
 
   def self.getPage(page,username,estado,fecha_desde,fecha_hasta)
     solicitudes = SolicitudDesbaneo.where(deleted: false)
+    solicitudes = solicitudes.where.not(estado:"pendiente")
     solicitudes = solicitudes.where(estado: estado) if estado.present?
     solicitudes = solicitudes.where('solicitud_desbaneos.created_at >= ?', fecha_desde) if fecha_desde.present?
     solicitudes = solicitudes.where('solicitud_desbaneos.created_at <= ?', fecha_hasta) if fecha_hasta.present?
