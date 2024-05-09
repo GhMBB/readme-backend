@@ -69,6 +69,7 @@
 
         libros = Libro.where(id: subquery_libros_with_deleted_capitulos)
                       .or(libros_deleted_by_user)
+                      .order(updated_at: :desc)
       
         # Paginación
         paginated_libros = libros.paginate(page: page, per_page: WillPaginate.per_page)
