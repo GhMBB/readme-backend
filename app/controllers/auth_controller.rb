@@ -76,7 +76,7 @@ class AuthController < ApplicationController
         return render json: {error: "Debe proporcionar un token"}, status: :forbidden
       end
       user = get_user
-      return render json: { error: "Debes ser moderador para crear otro moderador"}, status: :unprocessable_entity if (user.role.blank? || user.role != "moderador")
+      return render json: { error: "Debes ser administrador para crear un moderador"}, status: :unprocessable_entity if (user.role.blank? || user.role != "administrador" )
     end
     return render json: { error: 'Las contraseñas no coinciden'}, status: :unprocessable_entity   if params[:password] != params[:password_confirmation]
 

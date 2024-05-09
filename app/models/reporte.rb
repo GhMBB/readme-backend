@@ -43,7 +43,7 @@ class Reporte < ApplicationRecord
   end
 
   def update_reporte(reporte_params, user)
-    if user.role != 'moderador'
+    if user.role != 'moderador' || user.role != 'administrador'
       return [{ error: 'Debes ser moderador para actualizar los reportes' }, :unprocessable_entity]
     end
     if self.nil?

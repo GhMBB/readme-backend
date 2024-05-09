@@ -103,7 +103,7 @@ end
 
   def desbanear
     @user = get_user
-    unless @user.role == "moderador"
+    unless @user.role == "moderador" || @user.role == "administrador"
       return render json: {error: "Rol de moderador Requerido"}, status: :forbidden
     end
     message, status = @user.desbanear(params[:id])

@@ -38,7 +38,7 @@ class LecturasController < ApplicationController
       return
     end
 
-    if @lectura.user != user && user.role != 'moderador'
+    if @lectura.user != user && user.role != 'moderador' && user.role != 'administrador'
       render json: { error: 'Debes ser el propietario para editarlo o tener el rol de moderador.' }, status: 401
       return
     end
