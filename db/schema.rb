@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_07_145754) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_11_172658) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -197,6 +197,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_07_145754) do
     t.index ["moderador_id"], name: "index_solicitud_desbaneos_on_moderador_id"
   end
 
+  create_table "solicitud_restauracion_contenidos", force: :cascade do |t|
+    t.bigint "reportado_id", null: false
+    t.bigint "libro_id"
+    t.bigint "comentario_id"
+    t.string "estado"
+    t.string "justificacion"
+    t.boolean "deleted"
+    t.bigint "moderador_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comentario_id"], name: "index_solicitud_restauracion_contenidos_on_comentario_id"
+    t.index ["libro_id"], name: "index_solicitud_restauracion_contenidos_on_libro_id"
+    t.index ["moderador_id"], name: "index_solicitud_restauracion_contenidos_on_moderador_id"
+    t.index ["reportado_id"], name: "index_solicitud_restauracion_contenidos_on_reportado_id"
+  end
+
   create_table "total_resenhas", force: :cascade do |t|
     t.bigint "libro_id", null: false
     t.integer "cantidad"
@@ -254,5 +270,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_07_145754) do
   add_foreign_key "seguidors", "users", column: "follower_id"
   add_foreign_key "solicitud_desbaneos", "users", column: "baneado_id"
   add_foreign_key "solicitud_desbaneos", "users", column: "moderador_id"
+  add_foreign_key "solicitud_restauracion_contenidos", "comentarios"
+  add_foreign_key "solicitud_restauracion_contenidos", "libros"
+  add_foreign_key "solicitud_restauracion_contenidos", "users", column: "moderador_id"
+  add_foreign_key "solicitud_restauracion_contenidos", "users", column: "reportado_id"
   add_foreign_key "total_resenhas", "libros"
 end

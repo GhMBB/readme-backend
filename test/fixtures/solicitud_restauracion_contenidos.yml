@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  reportado: one
+  libro: one
+  comentario: one
+  estado: MyString
+  deleted: false
+  moderador: one
+
+two:
+  reportado: two
+  libro: two
+  comentario: two
+  estado: MyString
+  deleted: false
+  moderador: two
