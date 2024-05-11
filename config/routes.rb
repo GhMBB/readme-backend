@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :solicitud_restauracion_contenidos
   resources :solicitud_desbaneos
   resources :lecturas, only: %i[create destroy]
   post '/login', to: 'auth#login'
@@ -106,6 +107,14 @@ Rails.application.routes.draw do
   post '/solicitud_desbaneos/rechazar/:solicitud_id', to: "solicitud_desbaneos#rechazar_desbaneo"
 
   post '/libros/notificacion/:libro_id', to: "libros#handle_notification"
+
+  get 'reportes/user/:id', to: "reportes#getAllByUserId"
+
+  post '/solicitud_restauracion/libro/:libro_id', to: "solicitud_restauracion_contenidos#create_solicitud_libro"
+  post '/solicitud_restauracion/comentario/:comentario_id', to: "solicitud_restauracion_contenidos#create_solicitud_comentario"
+  post '/solicitud_restauracion/aceptar/:solicitud_id', to: "solicitud_restauracion_contenidos#aceptar_restauracion"
+  post '/solicitud_restauracion/rechazar/:solicitud_id', to: "solicitud_restauracion_contenidos#rechazar_restauracion"
+  get '/solicitud_restauracion', to: "solicitud_restauracion_contenidos#index"
 
   # Defines the root path route ("/")
   # root "posts#index"
