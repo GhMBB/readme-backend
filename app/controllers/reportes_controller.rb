@@ -5,7 +5,7 @@
 class ReportesController < ApplicationController
   before_action :authenticate_request
   #before_action :authorize_moderador
-  rescue_from StandardError, with: :internal_server_error
+  #{}rescue_from StandardError, with: :internal_server_error
 
   def find_by_params
     reportes , status= Reporte.includes(:comentario, :user, :libro).order(created_at: :desc).find_by_params(params)
@@ -37,6 +37,15 @@ class ReportesController < ApplicationController
   def repCatUsuarios
     @categorias = UserReportCategory.all.select('id', 'name')
     render json: @categorias, status: :ok
+  end
+
+  def getAllByUserId
+    usuario = get_user
+    if !(usuario.role == "administrador") && !(usuario.role == "moderador")
+      return render json: {error: "Debe ser administrador o moderador"}, status: 401
+    end
+    message, status = Reporte.getAllByUserId(params[:id],params)
+    render json: message, status: status
   end
 
   #   def repCategorias

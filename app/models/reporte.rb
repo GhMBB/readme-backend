@@ -81,8 +81,36 @@ class Reporte < ApplicationRecord
     reportes.update_all(estado: nuevo_estado, conclusion: conclusion, moderador_id: mod_id)
     [{ message: 'El estado de los reportes se ha actualizado correctamente' }, :ok]
   end
-  
 
+  def self.getAllByUserId(id,params)
+    usuario = User.find_by(id: id)
+    if usuario.nil?
+      return [{error: 'Usuario no encontrado'}, 404]
+    end
+
+    begin
+      query = Reporte.where(deleted: false, user_id: id, estado: "resuelto")
+      query = Reporte.where(deleted: false, estado: "resuelto")
+      .joins("LEFT JOIN libros ON reportes.libro_id = libros.id")
+      .joins("LEFT JOIN comentarios ON reportes.comentario_id = comentarios.id")
+      .where("libros.user_id = ? OR comentarios.user_id = ?", id, id)
+      paginated_query = query.paginate(page: params[:page], per_page: WillPaginate.per_page)
+
+      data = {
+        total_pages: paginated_query.total_pages,
+        total_items: query.count,
+        data: paginated_query.map {|reporte| ReporteSerializer.new(reporte)}
+      }
+      return data, 200
+    rescue => e
+      puts "Error: #{e.message}"
+      puts e.backtrace
+      return { error: e.message }, 500
+    end
+    
+  end
+
+  
   def self.find_by_params(params)
     query = all
     query = query.where(deleted: false)
