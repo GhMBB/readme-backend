@@ -99,7 +99,14 @@ class Reporte < ApplicationRecord
       data = {
         total_pages: paginated_query.total_pages,
         total_items: query.count,
-        data: paginated_query.map {|reporte| ReporteSerializer.new(reporte)}
+        data: paginated_query.map do |reporte|
+          # Verificar si existe una solicitud de desbaneo para el libro o comentario
+          solicitud_desbaneo = SolicitudRestauracionContenido.where(
+            "(reportado_id = ? AND libro_id = ?) OR (reportado_id = ? AND comentario_id = ?)",
+            id, reporte.libro_id, id, reporte.comentario_id
+          ).exists?
+          ReporteSerializer.new(reporte).as_json.merge(solicitud_desbaneo: solicitud_desbaneo)
+        end
       }
       return data, 200
     rescue => e
