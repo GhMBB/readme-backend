@@ -63,8 +63,8 @@ class AuthController < ApplicationController
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
       profile = obtener_perfil(Persona.find_by(user_id: user.id).profile)
-      return render json: {unconfirmed_email: true, token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile}, status: :ok if !user.blank? &&  user.persona.email_confirmed == false
-      return render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile}
+      return render json: {unconfirmed_email: true, token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile, email: user.email}, status: :ok if !user.blank? &&  user.persona.email_confirmed == false
+      return render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile, email: user.email}
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
     end
