@@ -91,9 +91,19 @@ class Reporte < ApplicationRecord
     begin
       query = Reporte.where(deleted: false, user_id: id, estado: "resuelto")
       query = Reporte.where(deleted: false, estado: "resuelto")
-      .joins("LEFT JOIN libros ON reportes.libro_id = libros.id")
-      .joins("LEFT JOIN comentarios ON reportes.comentario_id = comentarios.id")
-      .where("libros.user_id = ? OR comentarios.user_id = ?", id, id)
+
+      query = case params[:tipo]
+      when 'libro'
+        query.joins("LEFT JOIN libros ON reportes.libro_id = libros.id")
+                     .where("libros.user_id = ?", id)
+      when 'comentario'
+        query.joins("LEFT JOIN comentarios ON reportes.comentario_id = comentarios.id")
+                     .where("comentarios.user_id = ?", id)
+      else
+        query.joins("LEFT JOIN libros ON reportes.libro_id = libros.id")
+                       .joins("LEFT JOIN comentarios ON reportes.comentario_id = comentarios.id")
+                       .where("libros.user_id = ? OR comentarios.user_id = ?", id, id)
+              end
       paginated_query = query.paginate(page: params[:page], per_page: WillPaginate.per_page)
 
       data = {
