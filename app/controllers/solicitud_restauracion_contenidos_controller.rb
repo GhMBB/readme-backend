@@ -20,7 +20,8 @@ class SolicitudRestauracionContenidosController < ApplicationController
                               params[:username],
                               params[:estado],
                               params[:fecha_desde],
-                              params[:fecha_hasta]
+                              params[:fecha_hasta],
+                              params[:tipo]
                             )
 
     render json: solicitudes, status: :ok
