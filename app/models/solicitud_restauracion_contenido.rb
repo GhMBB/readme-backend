@@ -131,7 +131,7 @@ def self.create_solicitud_comentario(usuario,params)
     end
   end
 
-  def self.getPage(page,username,estado,fecha_desde,fecha_hasta)
+  def self.getPage(page,username,estado,fecha_desde,fecha_hasta, tipo)
     solicitudes = SolicitudRestauracionContenido.where(deleted: false)
     solicitudes = solicitudes.where.not(estado:"pendiente")
     solicitudes = solicitudes.where(estado: estado) if estado.present?
@@ -139,7 +139,11 @@ def self.create_solicitud_comentario(usuario,params)
     solicitudes = solicitudes.where('solicitud_restauracion_contenidos.created_at <= ?', fecha_hasta) if fecha_hasta.present?
     solicitudes = solicitudes.joins(:reportado).where("users.username ILIKE ?", "%#{username}%") if username.present?
 
-    
+    if tipo == "libro"
+      solicitudes = solicitudes.where.not(libro_id: nil).where(comentario_id: nil)
+    elsif tipo == "comentario"
+      solicitudes = solicitudes.where(libro_id: nil).where.not(comentario_id: nil)
+    end
 
     solicitudes_paginadas = solicitudes.paginate(page: page.to_i)
     solicitudes_serializadas = solicitudes_paginadas.map do |solicitud|
