@@ -131,7 +131,7 @@ def self.create_solicitud_comentario(usuario,params)
     end
   end
 
-  def self.getPage(page,username,estado,fecha_desde,fecha_hasta,baneador_username)
+  def self.getPage(page,username,estado,fecha_desde,fecha_hasta)
     solicitudes = SolicitudRestauracionContenido.where(deleted: false)
     solicitudes = solicitudes.where.not(estado:"pendiente")
     solicitudes = solicitudes.where(estado: estado) if estado.present?
