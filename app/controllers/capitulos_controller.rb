@@ -144,33 +144,37 @@ class CapitulosController < ApplicationController
     end
   end
 
-  # PATCH/PUT /capitulos/publicar/1
   def publicar
     user = get_user
     return if user.nil?
-
+  
     libro = @capitulo.libro
-
+  
     if @capitulo.libro.deleted
-      render json: {error: "Libro del capitulo eliminado"}, status: 404
+      render json: { error: "Libro del capitulo eliminado" }, status: 404
       return
     end
-
-
+  
     if libro.user != user
       render json: { error: "Debes ser el propietario del libro para modificarlo." }, status: 400
       return
     end
-
-
+  
     @capitulo.publicado = !@capitulo.publicado
     if @capitulo.save
+      if @capitulo.publicado
+        NotificacionDeCapitulo.where(libro_id: @capitulo.libro.id, deleted: false).map do |notificacion|
+          user = User.find(notificacion.user_id)
+          NotificationMailer.with(user: user, capitulo: @capitulo, libro: @capitulo.libro).chapter_notification.deliver_later
+        end
+      end
       @capitulo.contenido = obtener_contenido(@capitulo.nombre_archivo)
       render json: @capitulo, serializer: CapituloForOwnerSerializer
     else
       render json: @capitulo.errors, status: :unprocessable_entity
     end
   end
+  
 
 
   # DELETE /capitulos/1
@@ -181,7 +185,7 @@ class CapitulosController < ApplicationController
 
     libro = @capitulo.libro
 
-    if libro.user != user && user.role != "moderador"
+    if libro.user != user && user.role != "moderador"  && user.role != "administrador"
       render json: { error: "Debes ser el propietario del libro o ser moderador para modificarlo." }, status: 400
       return
     end

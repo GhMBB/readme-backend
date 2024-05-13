@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_15_190740) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_11_172658) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -110,6 +110,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_15_190740) do
     t.index ["user_id"], name: "index_libros_on_user_id"
   end
 
+  create_table "notificacion_de_capitulos", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "libro_id", null: false
+    t.boolean "deleted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["libro_id"], name: "index_notificacion_de_capitulos_on_libro_id"
+    t.index ["user_id"], name: "index_notificacion_de_capitulos_on_user_id"
+  end
+
   create_table "personas", force: :cascade do |t|
     t.date "fecha_de_nacimiento"
     t.string "profile"
@@ -175,6 +185,34 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_15_190740) do
     t.index ["follower_id"], name: "index_seguidors_on_follower_id"
   end
 
+  create_table "solicitud_desbaneos", force: :cascade do |t|
+    t.bigint "baneado_id", null: false
+    t.string "justificacion"
+    t.string "estado"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "deleted"
+    t.bigint "moderador_id"
+    t.index ["baneado_id"], name: "index_solicitud_desbaneos_on_baneado_id"
+    t.index ["moderador_id"], name: "index_solicitud_desbaneos_on_moderador_id"
+  end
+
+  create_table "solicitud_restauracion_contenidos", force: :cascade do |t|
+    t.bigint "reportado_id", null: false
+    t.bigint "libro_id"
+    t.bigint "comentario_id"
+    t.string "estado"
+    t.string "justificacion"
+    t.boolean "deleted"
+    t.bigint "moderador_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comentario_id"], name: "index_solicitud_restauracion_contenidos_on_comentario_id"
+    t.index ["libro_id"], name: "index_solicitud_restauracion_contenidos_on_libro_id"
+    t.index ["moderador_id"], name: "index_solicitud_restauracion_contenidos_on_moderador_id"
+    t.index ["reportado_id"], name: "index_solicitud_restauracion_contenidos_on_reportado_id"
+  end
+
   create_table "total_resenhas", force: :cascade do |t|
     t.bigint "libro_id", null: false
     t.integer "cantidad"
@@ -218,6 +256,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_15_190740) do
   add_foreign_key "lecturas", "libros"
   add_foreign_key "lecturas", "users"
   add_foreign_key "libros", "users"
+  add_foreign_key "notificacion_de_capitulos", "libros"
+  add_foreign_key "notificacion_de_capitulos", "users"
   add_foreign_key "personas", "users"
   add_foreign_key "reportes", "comentarios"
   add_foreign_key "reportes", "libros"
@@ -228,5 +268,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_15_190740) do
   add_foreign_key "resenhas", "users"
   add_foreign_key "seguidors", "users", column: "followed_id"
   add_foreign_key "seguidors", "users", column: "follower_id"
+  add_foreign_key "solicitud_desbaneos", "users", column: "baneado_id"
+  add_foreign_key "solicitud_desbaneos", "users", column: "moderador_id"
+  add_foreign_key "solicitud_restauracion_contenidos", "comentarios"
+  add_foreign_key "solicitud_restauracion_contenidos", "libros"
+  add_foreign_key "solicitud_restauracion_contenidos", "users", column: "moderador_id"
+  add_foreign_key "solicitud_restauracion_contenidos", "users", column: "reportado_id"
   add_foreign_key "total_resenhas", "libros"
 end

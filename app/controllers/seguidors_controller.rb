@@ -53,7 +53,7 @@ class SeguidorsController < ApplicationController
     @seguidor = Seguidor.find_by(follower_id: @user.id, followed_id: params[:id], deleted: false)
     return render json: { error: 'No se encuentra el seguimiento del usuario' }, status: :not_found if @seguidor.nil?
 
-    if @seguidor.follower_id != @user.id && @user.role != 'moderador'
+    if @seguidor.follower_id != @user.id && @user.role != 'moderador' && @user.role != 'administrador'
       return render json: { error: 'El usuario no puede eliminar el seguidor de otro usuario' },
                     status: :forbidden
     end
@@ -130,7 +130,7 @@ class SeguidorsController < ApplicationController
     @seguidor = Seguidor.find_by(followed_id: @user.id, follower_id: params[:id], deleted: false)
     return render json: { error: 'No se encuentra el seguimiento del usuario' }, status: :not_found if @seguidor.nil?
 
-    if @seguidor.followed_id != @user.id && @user.role != 'moderador'
+    if @seguidor.followed_id != @user.id && @user.role != 'moderador' && @user.role != 'administrador'
       return render json: { error: 'El usuario no puede eliminar el seguidor de otro usuario' },
                     status: :forbidden
     end

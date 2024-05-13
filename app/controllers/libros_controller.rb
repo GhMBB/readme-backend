@@ -22,11 +22,18 @@ class LibrosController < ApplicationController
 
   # GET /libros/1
   def show
+    edad_usuario = calcular_edad(get_user.persona.fecha_de_nacimiento)
+
+    if edad_usuario < 18 && @libro.adulto
+      render json: {error: "Debes ser mayor de edad para leer este libros"}, status: 403
+      return
+    end
+
     @libro.cantidad_lecturas = @libro.cantidad_lecturas+1
     @libro.save
     formated_libro = @libro
     formated_libro.portada = obtener_portada(@libro.portada)
-    render json: formated_libro
+    render json: formated_libro, usuario_id: get_user.id
   end
 
   # POST /libros
@@ -67,7 +74,7 @@ class LibrosController < ApplicationController
   # DELETE /libros/1
   def destroy
     usuario = get_user
-    if @libro.user != usuario && usuario.role != "moderador"
+    if @libro.user != usuario && usuario.role != "moderador" && usuario.role != "administrador"
       render json: {error: "Debes ser el propietario del libro para editarlo o tener el rol de moderador."}, status: 401
       return
     end
@@ -75,7 +82,7 @@ class LibrosController < ApplicationController
     @libro.deleted = true
     @libro.deleted_by_user = @libro.user == usuario
     if @libro.save
-      if @libro.user != usuario && usuario.role == "moderador"
+      if @libro.user != usuario && usuario.role == "moderador" && usuario.role != "administrador"
         NotificationMailer.with(user: @libro.user, book:@libro).delete_book_notification.deliver_later
       end
       render status: :ok
@@ -92,7 +99,7 @@ class LibrosController < ApplicationController
   def destroy_portada
     usuario = get_user
     @libro = Libro.find_by(id: params[:id], deleted: false)
-    if @libro.user != usuario && usuario.role != "moderador"
+    if @libro.user != usuario && usuario.role != "moderador" && usuario.role != "administrador"
       render json: {error: "Debes ser el propietario del libro para editarlo o tener el rol de moderador."}, status: 401
       return
     end
@@ -103,6 +110,27 @@ class LibrosController < ApplicationController
       return render json: {error: 'No se pudo eliminar la portada'}, status: :unprocessable_entity
     end
   end
+
+  def handle_notification
+    usuario = get_user
+    if !params[:libro_id].present?
+      return render json: { error: 'Debe proporcionar el id del libro' }, status: 400
+    end
+  
+    notificacion = NotificacionDeCapitulo.find_by(user_id: usuario.id, libro_id: params[:libro_id])
+  
+    if notificacion.nil?
+      NotificacionDeCapitulo.create(user_id: usuario.id, libro_id: params[:libro_id], deleted: false)
+      return render json: { message: 'Notificación Activada correctamente' }, status: :ok
+    elsif notificacion.deleted
+      notificacion.update(deleted: false)
+      return render json: { message: 'Notificación Activada correctamente' }, status: :ok
+    else
+      notificacion.update(deleted: true)
+      return render json: { message: 'Notificación Desactivada correctamente' }, status: :ok
+    end
+  end
+  
 
   private
   def guardar_portada
@@ -135,6 +163,17 @@ class LibrosController < ApplicationController
     end
   end
 
+  def calcular_edad(fecha_nacimiento)
+    begin
+      now = Time.now.utc.to_date
+      now.year - fecha_nacimiento.year - ((now.month > fecha_nacimiento.month || (now.month == fecha_nacimiento.month && now.day >= fecha_nacimiento.day)) ? 0 : 1)
+    rescue => e
+      puts "Error al calcular la edad: #{e.message}"
+      # Aquí puedes manejar el error de la manera que desees, como devolver un valor predeterminado o lanzar una excepción diferente.
+    end
+  end
+  
+
   def filter_libros(libros)
     libros = libros.where("titulo ILIKE ?", "%#{params[:titulo]}%") if params[:titulo]
     libros = libros.where(adulto: params[:adulto]) if params[:adulto]
@@ -144,9 +183,14 @@ class LibrosController < ApplicationController
     libros = libros.joins(:capitulos).where("capitulos.publicado = ?", true)
                    .group("libros.id")
                    .having("COUNT(capitulos.id) >= ?", params[:cantidad_minima_capitulos].to_i) if params[:cantidad_minima_capitulos]
+   edad_usuario = calcular_edad(get_user.persona.fecha_de_nacimiento)
+   puts edad_usuario
+   libros = libros.where(adulto: false) if edad_usuario < 18
 
     libros
   end
+
+
 
   def paginate_libros(libros)
     page_number = params[:page].to_i
@@ -164,7 +208,7 @@ class LibrosController < ApplicationController
     {
       total_pages: total_pages,
       last_page: page_number == total_pages,
-      total_items: libros.count,
+      total_items: paginated_libros.total_entries,
       data: data
     }
   end

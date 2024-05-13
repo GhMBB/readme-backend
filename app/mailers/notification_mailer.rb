@@ -24,6 +24,27 @@ class NotificationMailer < ApplicationMailer
     @greeting = "Hi"
     mail to: @user.email
   end
+  
+  def desban_notification
+    @user = params[:user]
+    @greeting = "Hi"
+    mail to: @user.email
+  end
+
+  def desban_rejected_notification
+    @user = params[:user]
+    @greeting = "Hi"
+    mail to: @user.email
+  end
+
+
+  def chapter_notification
+    @user = params[:user]
+    @capitulo = params[:capitulo]
+    @libro = params[:libro]
+    mail to: @user.email, subject: "¡Nuevo capítulo publicado en #{@libro.titulo}!"
+  end
+  
 
 
 

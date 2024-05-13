@@ -22,10 +22,12 @@ class User < ApplicationRecord
   has_many :favoritos
   has_many :libros
   has_many :reportes, -> { where(deleted: false) }, foreign_key: :usuario_reportado_id
+  has_many :reportes_manipulados, -> { where(deleted: false) }, class_name: 'Reporte', foreign_key: :moderador_id
   has_many :resenhas
   has_many :comentarios
   has_many :lecturas
   has_one :persona
+  belongs_to :role_updated_by, class_name: 'User', foreign_key: 'role_updated_by_id',  optional: true
 
   has_many :follower_relationships, foreign_key: :followed_id, class_name: 'Seguidor'
   has_many :followers, through: :follower_relationships, source: :follower
@@ -79,6 +81,22 @@ class User < ApplicationRecord
     { total_pages: libros_en_progreso.total_pages,
       total_items:,
       libros: libros_serializados }
+  end
+
+  def cambiar_rol(id,role)
+    usuario = User.find_by(id: id)
+    if usuario.nil?
+      return [{ error: 'Usuario no encontrado' }, :unprocessable_entity]
+    end
+
+    if !(role=='moderador') && !(role=='usuario') && !(role=='administrador')
+      return [{ error: 'Rol invalido' }, :unprocessable_entity]
+    end
+
+    usuario.role = role
+    usuario.update_columns(role:role, role_updated_by_id: self.id, role_updated_at: Time.now)
+    return [usuario, :ok]
+
   end
 
   def borradores(params, user)
@@ -196,6 +214,10 @@ class User < ApplicationRecord
     end
     eliminar_recuperar_datos(usuario_a_eliminar.id, true)
     if usuario_a_eliminar.persona.update(baneado: true)
+      solicitud = SolicitudDesbaneo.new(estado:"pendiente")
+      solicitud.baneado = usuario_a_eliminar
+      solicitud.moderador_id = user.id
+      solicitud.save!
       NotificationMailer.with(user: usuario_a_eliminar).ban_notification.deliver_later
       [{ message: 'Eliminado con exito' }, :ok]
     else

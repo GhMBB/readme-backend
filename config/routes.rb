@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :solicitud_restauracion_contenidos
+  resources :solicitud_desbaneos
   resources :lecturas, only: %i[create destroy]
   post '/login', to: 'auth#login'
   post '/register', to: 'auth#register'
@@ -50,11 +52,13 @@ Rails.application.routes.draw do
   get '/usersFind/:username', to: 'users#get_user_by_username', as: 'user_by_username'
   put 'users/portada', to: 'users#update_portada'
   put 'users/information', to: 'users#update_information'
+  put '/users/role', to: 'users#cambiar_rol'
   resources :users, only: %i[show destroy]
   get 'up' => 'rails/health#show', as: :rails_health_check
 
   get 'informe/lectura', to: 'informe#lecturas_diarias_por_libro'
   get 'informe/estadisticas_usuario', to: 'informe#estadisticas_usuario'
+  get 'informe/estadisticas_moderador', to: 'informe#estadisticas_moderador'
 
   get 'libros_categorias', to: 'libros#categorias'
 
@@ -99,6 +103,20 @@ Rails.application.routes.draw do
   get '/papelera/capitulos/', to: 'papelera#index_capitulo'
   put '/papelera/restore/libro/:id', to: "papelera#restore_libro"
   put '/papelera/restore/capitulo/:id', to: "papelera#restore_capitulo"
+
+  post '/solicitud_desbaneos/aceptar/:solicitud_id', to: "solicitud_desbaneos#aceptar_desbaneo"
+  post '/solicitud_desbaneos/rechazar/:solicitud_id', to: "solicitud_desbaneos#rechazar_desbaneo"
+
+  post '/libros/notificacion/:libro_id', to: "libros#handle_notification"
+
+  get 'reportes/user/:id', to: "reportes#getAllByUserId"
+
+  post '/solicitud_restauracion/libro/:libro_id', to: "solicitud_restauracion_contenidos#create_solicitud_libro"
+  post '/solicitud_restauracion/comentario/:comentario_id', to: "solicitud_restauracion_contenidos#create_solicitud_comentario"
+  post '/solicitud_restauracion/aceptar/:solicitud_id', to: "solicitud_restauracion_contenidos#aceptar_restauracion"
+  post '/solicitud_restauracion/rechazar/:solicitud_id', to: "solicitud_restauracion_contenidos#rechazar_restauracion"
+  get '/solicitud_restauracion', to: "solicitud_restauracion_contenidos#index"
+
   # Defines the root path route ("/")
   # root "posts#index"
 end

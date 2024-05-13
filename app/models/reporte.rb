@@ -43,7 +43,7 @@ class Reporte < ApplicationRecord
   end
 
   def update_reporte(reporte_params, user)
-    if user.role != 'moderador'
+    if user.role != 'moderador' || user.role != 'administrador'
       return [{ error: 'Debes ser moderador para actualizar los reportes' }, :unprocessable_entity]
     end
     if self.nil?
@@ -81,8 +81,53 @@ class Reporte < ApplicationRecord
     reportes.update_all(estado: nuevo_estado, conclusion: conclusion, moderador_id: mod_id)
     [{ message: 'El estado de los reportes se ha actualizado correctamente' }, :ok]
   end
-  
 
+  def self.getAllByUserId(id,params)
+    usuario = User.find_by(id: id)
+    if usuario.nil?
+      return [{error: 'Usuario no encontrado'}, 404]
+    end
+
+    begin
+      query = Reporte.where(deleted: false, user_id: id, estado: "resuelto")
+      query = Reporte.where(deleted: false, estado: "resuelto")
+
+      query = case params[:tipo]
+      when 'libro'
+        query.joins("LEFT JOIN libros ON reportes.libro_id = libros.id")
+                     .where("libros.user_id = ?", id)
+      when 'comentario'
+        query.joins("LEFT JOIN comentarios ON reportes.comentario_id = comentarios.id")
+                     .where("comentarios.user_id = ?", id)
+      else
+        query.joins("LEFT JOIN libros ON reportes.libro_id = libros.id")
+                       .joins("LEFT JOIN comentarios ON reportes.comentario_id = comentarios.id")
+                       .where("libros.user_id = ? OR comentarios.user_id = ?", id, id)
+              end
+      paginated_query = query.paginate(page: params[:page], per_page: WillPaginate.per_page)
+
+      data = {
+        total_pages: paginated_query.total_pages,
+        total_items: query.count,
+        data: paginated_query.map do |reporte|
+          # Verificar si existe una solicitud de desbaneo para el libro o comentario
+          solicitud_desbaneo = SolicitudRestauracionContenido.where(
+            "(reportado_id = ? AND libro_id = ?) OR (reportado_id = ? AND comentario_id = ?)",
+            id, reporte.libro_id, id, reporte.comentario_id
+          ).exists?
+          ReporteSerializer.new(reporte).as_json.merge(solicitud_desbaneo: solicitud_desbaneo)
+        end
+      }
+      return data, 200
+    rescue => e
+      puts "Error: #{e.message}"
+      puts e.backtrace
+      return { error: e.message }, 500
+    end
+    
+  end
+
+  
   def self.find_by_params(params)
     query = all
     query = query.where(deleted: false)

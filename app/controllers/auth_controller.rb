@@ -4,7 +4,12 @@ class AuthController < ApplicationController
   def login
     user = User.find_by(username: params[:username])
     if user && user.authenticate(params[:password])
-      return render json: {error: "Usuario baneado"}, status: :forbidden if user.persona.baneado == true
+      if user.persona.baneado
+        solicitud = SolicitudDesbaneo.find_by(baneado:user,deleted:false)
+        estado = solicitud.estado
+        estado = "pendiente" if solicitud.nil?
+        return render json: {error: "Usuario baneado", estado: estado}, status: :forbidden 
+      end
       user.restablecer_cuenta(user, params) if user.persona.baneado != true  && !user.persona.fecha_eliminacion.nil? && user.persona.fecha_eliminacion > 30.days.ago
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
@@ -49,13 +54,17 @@ class AuthController < ApplicationController
   def login_with_email
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
-      return render json: {error: "Usuario baneado"}, status: :forbidden if user.persona.baneado == true
+      if user.persona.baneado
+        solicitud = SolicitudDesbaneo.where(baneado_id: user.id, deleted: false).order(created_at: :desc).first
+        estado = solicitud.nil? ? "pendiente" : solicitud.estado        
+        return render json: {error: "Usuario baneado", estado: estado}, status: :forbidden 
+      end
       user.restablecer_cuenta(user, params) if user.persona.baneado != true  && !user.persona.fecha_eliminacion.nil? && user.persona.fecha_eliminacion > 30.days.ago
       token = JwtService.encode(user)
       expiration = JwtService.decode(token)['exp']
       profile = obtener_perfil(Persona.find_by(user_id: user.id).profile)
-      return render json: {unconfirmed_email: true, token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile}, status: :ok if !user.blank? &&  user.persona.email_confirmed == false
-      return render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile}
+      return render json: {unconfirmed_email: true, token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile, email: user.email}, status: :ok if !user.blank? &&  user.persona.email_confirmed == false
+      return render json: { token: token, expiration: Time.at(expiration), username: user.username, role:user.role, user_id: user.id, profile: profile, email: user.email}
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
     end
@@ -67,7 +76,7 @@ class AuthController < ApplicationController
         return render json: {error: "Debe proporcionar un token"}, status: :forbidden
       end
       user = get_user
-      return render json: { error: "Debes ser moderador para crear otro moderador"}, status: :unprocessable_entity if (user.role.blank? || user.role != "moderador")
+      return render json: { error: "Debes ser administrador para crear un moderador"}, status: :unprocessable_entity if (user.role.blank? || user.role != "administrador" )
     end
     return render json: { error: 'Las contraseñas no coinciden'}, status: :unprocessable_entity   if params[:password] != params[:password_confirmation]
 
