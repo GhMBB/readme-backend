@@ -20,6 +20,19 @@ class InformeController < ApplicationController
     render json: usuarios_por_dia, status: :ok
   end
 
+  def estadisticas_moderador
+    moderadores = User.where("username ILIKE ? and deleted = ? and role = ?", "%#{params[:username]}%", false, 'moderador')
+    moderadores = moderadores.paginate(page: params[:page], per_page: WillPaginate.per_page)
+  
+    data = {
+      total_pages: moderadores.total_pages,
+      total_items: moderadores.total_entries,
+      moderadores: ActiveModel::Serializer::CollectionSerializer.new(moderadores, serializer: UserModeradorSerializer)
+    }
+  
+    render json: data, status: :ok
+  end
+
   def estadisticas_usuario
     user = get_user
     libros = user.libros
