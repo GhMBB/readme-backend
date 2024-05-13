@@ -41,8 +41,8 @@ class ReportesController < ApplicationController
 
   def getAllByUserId
     usuario = get_user
-    if !(usuario.role == "administrador") && !(usuario.role == "moderador")
-      return render json: {error: "Debe ser administrador o moderador"}, status: 401
+    if !(usuario.role == "administrador") && !(usuario.role == "moderador") && !(usuario.id == params[:id])
+      return render json: {error: "No tiene los permisos requeridos"}, status: 401
     end
     message, status = Reporte.getAllByUserId(params[:id],params)
     render json: message, status: status
