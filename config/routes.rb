@@ -58,6 +58,7 @@ Rails.application.routes.draw do
 
   get 'informe/lectura', to: 'informe#lecturas_diarias_por_libro'
   get 'informe/estadisticas_usuario', to: 'informe#estadisticas_usuario'
+  get 'informe/estadisticas_moderador', to: 'informe#estadisticas_moderador'
 
   get 'libros_categorias', to: 'libros#categorias'
 
