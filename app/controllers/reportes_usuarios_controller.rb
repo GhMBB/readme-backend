@@ -17,6 +17,7 @@ class ReportesUsuariosController < ApplicationController
 
   def update
     user = get_user
+    puts("\n\n#{@reporte.to_json}\n\n")
     result, status = @reporte.update_reporte(reporte_params, user)
     render json: result, status: status
   end
@@ -29,7 +30,7 @@ class ReportesUsuariosController < ApplicationController
 
   def actualizar_muchos_reportes
     user = get_user
-    if user.role != "moderador" || usuario.role != "administrador"
+    if user.role != "moderador" && usuario.role != "administrador"
       render json: { error: "Debes ser moderador para actualizar los reportes" }, status: :unprocessable_entity
       return
     end
