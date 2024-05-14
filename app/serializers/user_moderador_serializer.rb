@@ -13,7 +13,8 @@ class UserModeradorSerializer < ActiveModel::Serializer
       :reportes_resueltos_comentarios,
       :reportes_rechazados_comentarios,
       :reportes_resueltos_usuarios,
-      :reportes_rechazados_usuarios
+      :reportes_rechazados_usuarios,
+      :created_at
 
     def username
         if object.deleted == true || object.persona.baneado == true
