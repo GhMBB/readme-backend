@@ -17,7 +17,6 @@ class ReportesUsuariosController < ApplicationController
 
   def update
     user = get_user
-    puts("\n\n#{@reporte.to_json}\n\n")
     result, status = @reporte.update_reporte(reporte_params, user)
     render json: result, status: status
   end
