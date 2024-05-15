@@ -29,7 +29,7 @@ class ReportesUsuariosController < ApplicationController
 
   def actualizar_muchos_reportes
     user = get_user
-    if user.role != "moderador" || usuario.role != "administrador"
+    if user.role != "moderador" && usuario.role != "administrador"
       render json: { error: "Debes ser moderador para actualizar los reportes" }, status: :unprocessable_entity
       return
     end
