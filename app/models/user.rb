@@ -206,7 +206,7 @@ class User < ApplicationRecord
 
   def delete_user(user, usuario_a_eliminar, params)
     return { error: 'El usuario no se encontró' }, :bad_request if usuario_a_eliminar.blank?
-    if usuario_a_eliminar.id != user.id && user.role != 'moderador' && user.role != 'administrador'
+    if usuario_a_eliminar.id != user.id && user.role == 'usuario'
       return { error: 'El usuario no puede eliminar a otro usuario' }, :forbidden
     end
     if usuario_a_eliminar.id != user.id && usuario_a_eliminar.role == 'moderador' && user.role == 'moderador'
