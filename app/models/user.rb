@@ -209,9 +209,9 @@ class User < ApplicationRecord
     if usuario_a_eliminar.id != user.id && user.role == 'usuario'
       return { error: 'El usuario no puede eliminar a otro usuario' }, :forbidden
     end
-    #if usuario_a_eliminar.id != user.id && usuario_a_eliminar.role == 'moderador' && user.role == 'moderador'
-    #  return { error: 'El moderador no puede eliminar a otro moderador, solo un administrador' }, :forbidden
-    #end
+    if usuario_a_eliminar.id != user.id && usuario_a_eliminar.role == 'moderador' && user.role == 'moderador'
+      return { error: 'El moderador no puede eliminar a otro moderador, solo un administrador' }, :forbidden
+    end
     eliminar_recuperar_datos(usuario_a_eliminar.id, true)
     if usuario_a_eliminar.persona.update(baneado: true)
       solicitud = SolicitudDesbaneo.new(estado:"pendiente")
