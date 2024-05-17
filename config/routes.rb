@@ -116,7 +116,9 @@ Rails.application.routes.draw do
   post '/solicitud_restauracion/aceptar/:solicitud_id', to: "solicitud_restauracion_contenidos#aceptar_restauracion"
   post '/solicitud_restauracion/rechazar/:solicitud_id', to: "solicitud_restauracion_contenidos#rechazar_restauracion"
   get '/solicitud_restauracion', to: "solicitud_restauracion_contenidos#index"
-
+  get '/libros/get/intereses', to: 'libros#getIntereses'
+  put '/users/redes_sociales', to: 'users#update_redes_sociales'
+  put '/users/visibilidad', to: 'users#update_visbility'
   # Defines the root path route ("/")
   # root "posts#index"
 end

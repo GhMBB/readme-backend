@@ -130,6 +130,12 @@ class LibrosController < ApplicationController
       return render json: { message: 'Notificación Desactivada correctamente' }, status: :ok
     end
   end
+
+  def getIntereses
+    message, status = Libro.getIntereses()
+    render json: message.to_json, status: status
+  end
+
   
 
   private
@@ -212,7 +218,6 @@ class LibrosController < ApplicationController
       data: data
     }
   end
-
 
 
   def set_libro
