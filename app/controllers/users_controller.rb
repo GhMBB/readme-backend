@@ -101,6 +101,16 @@ end
     end
   end
 
+  def update_visbility
+    @user = get_user
+    @persona = @user.persona
+    if @persona.update(visibility_params)
+      render json: @user, status: :ok
+    else
+      render json: @persona.errors, status: :unprocessable_entity
+    end
+  end
+
   # DELETE /users/
   def destroy
     @user = get_user
@@ -153,5 +163,9 @@ end
   # Only allow a list of trusted parameters through.
   def persona_params
     params.permit(:fecha_de_nacimiento, :descripcion, :nacionalidad, :direccion, :nombre, :redes_sociales)
+  end
+
+  def visibility_params
+    params.permit(:mostrar_datos_personales,:mostrar_lecturas,:mostrar_seguidores,:mostrar_seguidos)
   end
 end

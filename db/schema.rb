@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_17_162426) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_17_164825) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -140,6 +140,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_17_162426) do
     t.string "unconfirmed_email"
     t.boolean "email_confirmed"
     t.text "redes_sociales"
+    t.boolean "mostrar_seguidos"
+    t.boolean "mostrar_seguidores"
+    t.boolean "mostrar_lecturas"
+    t.boolean "mostrar_datos_personales"
     t.index ["user_id"], name: "index_personas_on_user_id"
   end
 

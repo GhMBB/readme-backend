@@ -7,6 +7,15 @@ class Persona < ApplicationRecord
   attribute :email_confirmed,:boolean, default: false
   attribute :redes_sociales, default: ""
 
+  attribute :mostrar_seguidos, default: true
+  attribute :mostrar_seguidores, default: true
+  attribute :mostrar_lecturas, default: true
+  attribute :mostrar_datos_personales, default: true
+
+
+
+
+
   def self.actualizar_email_nil
     personas_a_actualizar = Persona.where("fecha_eliminacion < ?", 30.days.ago)
     personas_a_actualizar.update_all(email: nil)

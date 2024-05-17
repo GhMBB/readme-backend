@@ -118,7 +118,7 @@ Rails.application.routes.draw do
   get '/solicitud_restauracion', to: "solicitud_restauracion_contenidos#index"
   get '/libros/get/intereses', to: 'libros#getIntereses'
   put '/users/redes_sociales', to: 'users#update_redes_sociales'
-
+  put '/users/visibilidad', to: 'users#update_visbility'
   # Defines the root path route ("/")
   # root "posts#index"
 end
