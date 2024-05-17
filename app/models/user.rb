@@ -12,6 +12,7 @@ class User < ApplicationRecord
   validates :username, presence: { message: 'El nombre de usuario no puede estar en blanco' },
             uniqueness: { message: 'El nombre de usuario ya está en uso' },
             format: { with: /\A[a-z0-9]+\z/, message: 'El nombre de usuario solo puede contener letras minúsculas y números' }
+            length: { in: 3..10, message: 'El nombre de usuario debe tener entre 3 y 10 caracteres' }
   validates :password, length: { minimum: 8, message: 'La contraseña debe tener al menos 8 caracteres' },
                        format: { with: /\A.*(?=.*\d).*\z/, message: 'La contraseña debe contener al menos un dígito' }
   validates :role, inclusion: { in: %w[usuario moderador administrador], message: 'El rol no es válido' }
