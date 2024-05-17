@@ -3,7 +3,7 @@ require 'cloudinary'
 class LibrosController < ApplicationController
   before_action :set_libro, only: %i[ show update destroy]
   before_action :authenticate_request
-  rescue_from StandardError, with: :internal_server_error
+  #{}rescue_from StandardError, with: :internal_server_error
 
   # GET /libros
   def index
@@ -130,6 +130,13 @@ class LibrosController < ApplicationController
       return render json: { message: 'Notificación Desactivada correctamente' }, status: :ok
     end
   end
+
+  def getIntereses
+    message, status = Libro.getIntereses()
+    puts message
+    render json: message.to_json, status: status
+  end
+
   
 
   private
@@ -212,7 +219,6 @@ class LibrosController < ApplicationController
       data: data
     }
   end
-
 
 
   def set_libro
