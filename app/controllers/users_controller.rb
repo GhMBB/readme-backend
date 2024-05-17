@@ -88,6 +88,19 @@ end
     end
   end
 
+  def update_redes_sociales
+    @user = get_user
+    @persona = @user.persona
+    if params[:redes_sociales].nil?
+      return render json: {error: "Debe proporcionar el valor para las redes sociales"}, status: 400
+    end
+    if @persona.update(redes_sociales: params[:redes_sociales])
+      render json: @user, status: :ok
+    else
+      render json: @persona.errors, status: :unprocessable_entity
+    end
+  end
+
   # DELETE /users/
   def destroy
     @user = get_user
@@ -139,6 +152,6 @@ end
 
   # Only allow a list of trusted parameters through.
   def persona_params
-    params.permit(:fecha_de_nacimiento, :descripcion, :nacionalidad, :direccion, :nombre)
+    params.permit(:fecha_de_nacimiento, :descripcion, :nacionalidad, :direccion, :nombre, :redes_sociales)
   end
 end
