@@ -161,7 +161,6 @@
       def self.getIntereses()
         paginated_libros = Libro.categoria.keys.each_with_object({}) do |categoria, hash|
           libros = Libro.where(categoria: categoria).paginate(page: 1, per_page: WillPaginate.per_page)
-          puts libros
           serialized_libros = libros.map() do |libro|
             LibroSerializer.new(libro)
           end
