@@ -21,6 +21,12 @@ class InformeController < ApplicationController
   end
 
   def estadisticas_moderador
+    usuario = get_user
+
+    if usuario.role != "administrador"
+      return render json: {error:"No tienes los permisos necesarios"}, status: 403
+    end
+
     moderadores = User.where("username ILIKE ? and deleted = ? and role = ?", "%#{params[:username]}%", false, 'moderador')
     moderadores = moderadores.paginate(page: params[:page], per_page: WillPaginate.per_page)
   
