@@ -58,9 +58,9 @@ test:
   database: readme_backend_test
 
   username: postgres
-  host: localhost
-  # The password associated with the PostgreSQL role (username).
-  password: 123
+  password: 2UjAMF3pJjuvSML
+  host: rough-water-270.flycast
+  port: 5432
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.

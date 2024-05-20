@@ -27,9 +27,7 @@ jobs:
           bundle install
 
       - name: Set up database
-        run: |
-          cp config/database.yml.ci config/database.yml
-          bundle exec rails db:prepare RAILS_ENV=test
+        run: bundle exec rails db:prepare RAILS_ENV=test
 
       - name: Run tests
         run: bundle exec rails test
