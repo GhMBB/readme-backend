@@ -1,11 +1,142 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# test/fixtures/users.yml
 
 one:
-  username: MyString
-  password_digest: <%= BCrypt::Password.create('ab123456') %>
-  role: MyString
+  username: user1
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: usuario
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  fecha_nacimiento: 1990-01-01
+  profile: Profile for user 1
+  email: user1@example.com
+  reset_password_token: <%= SecureRandom.hex(10) %>
+  reset_password_sent_at: <%= Time.zone.now %>
+  role_updated_at: <%= Time.zone.now %>
 
 two:
-  username: MyString
-  password_digest: <%= BCrypt::Password.create('ab123456') %>
-  role: MyString
+  username: user2
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: usuario
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  fecha_nacimiento: 1985-05-15
+  profile: Profile for user 2
+  email: user2@example.com
+  reset_password_token: <%= SecureRandom.hex(10) %>
+  reset_password_sent_at: <%= Time.zone.now %>
+  role_updated_at: <%= Time.zone.now %>
+
+three:
+  username: user3
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: usuario
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  fecha_nacimiento: 1992-08-20
+  profile: Profile for user 3
+  email: user3@example.com
+  reset_password_token: <%= SecureRandom.hex(10) %>
+  reset_password_sent_at: <%= Time.zone.now %>
+  role_updated_at: <%= Time.zone.now %>
+
+# Usuarios adicionales
+four:
+  username: user4
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: moderador
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  fecha_nacimiento: 1987-12-10
+  profile: Profile for user 4
+  email: user4@example.com
+  reset_password_token: <%= SecureRandom.hex(10) %>
+  reset_password_sent_at: <%= Time.zone.now %>
+  role_updated_at: <%= Time.zone.now %>
+
+five:
+  username: user5
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: moderador
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  fecha_nacimiento: 1994-03-25
+  profile: Profile for user 5
+  email: user5@example.com
+  reset_password_token: <%= SecureRandom.hex(10) %>
+  reset_password_sent_at: <%= Time.zone.now %>
+  role_updated_at: <%= Time.zone.now %>
+
+six:
+  username: user6
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: moderador
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  fecha_nacimiento: 1983-06-14
+  profile: Profile for user 6
+  email: user6@example.com
+  reset_password_token: <%= SecureRandom.hex(10) %>
+  reset_password_sent_at: <%= Time.zone.now %>
+  role_updated_at: <%= Time.zone.now %>
+
+seven:
+  username: user7
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: moderador
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  fecha_nacimiento: 1991-09-18
+  profile: Profile for user 7
+  email: user7@example.com
+  reset_password_token: <%= SecureRandom.hex(10) %>
+  reset_password_sent_at: <%= Time.zone.now %>
+  role_updated_at: <%= Time.zone.now %>
+
+eight:
+  username: user8
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: administrador
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  fecha_nacimiento: 1988-11-30
+  profile: Profile for user 8
+  email: user8@example.com
+  reset_password_token: <%= SecureRandom.hex(10) %>
+  reset_password_sent_at: <%= Time.zone.now %>
+  role_updated_at: <%= Time.zone.now %>
+
+nine:
+  username: user9
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: administrador
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  fecha_nacimiento: 1993-04-09
+  profile: Profile for user 9
+  email: user9@example.com
+  reset_password_token: <%= SecureRandom.hex(10) %>
+  reset_password_sent_at: <%= Time.zone.now %>
+  role_updated_at: <%= Time.zone.now %>
+
+ten:
+  username: user10
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: administrador
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  fecha_nacimiento: 1995-07-12
+  profile: Profile for user 10
+  email: user10@example.com
+  reset_password_token: <%= SecureRandom.hex(10) %>
+  reset_password_sent_at: <%= Time.zone.now %>
+  role_updated_at: <%= Time.zone.now %>
