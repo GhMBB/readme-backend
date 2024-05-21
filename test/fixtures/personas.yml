@@ -1,11 +1,252 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# test/fixtures/personas.yml
 
 one:
-  fecha_de_nacimiento: 2024-03-13
-  profile: MyString
+  fecha_de_nacimiento: 1990-01-01
+  profile: Profile for user 1
   user: one
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  descripcion: Descripción de persona 1
+  nacionalidad: Nacionalidad de persona 1
+  direccion: Dirección de persona 1
+  email: persona1@example.com
+  portada: URL de la portada de persona 1
+  nombre: Nombre de persona 1
+  baneado: false
+  fecha_eliminacion: 
+  confirmation_token: 
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+  unconfirmed_email: 
+  email_confirmed: true
+  redes_sociales: Redes sociales de persona 1
+  mostrar_seguidos: true
+  mostrar_seguidores: true
+  mostrar_lecturas: true
+  mostrar_datos_personales: true
 
 two:
-  fecha_de_nacimiento: 2024-03-13
-  profile: MyString
+  fecha_de_nacimiento: 1985-05-15
+  profile: Profile for user 2
   user: two
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  descripcion: Descripción de persona 2
+  nacionalidad: Nacionalidad de persona 2
+  direccion: Dirección de persona 2
+  email: persona2@example.com
+  portada: URL de la portada de persona 2
+  nombre: Nombre de persona 2
+  baneado: false
+  fecha_eliminacion: 
+  confirmation_token: 
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+  unconfirmed_email: 
+  email_confirmed: true
+  redes_sociales: Redes sociales de persona 2
+  mostrar_seguidos: true
+  mostrar_seguidores: true
+  mostrar_lecturas: true
+  mostrar_datos_personales: true
+
+three:
+  fecha_de_nacimiento: 1992-08-20
+  profile: Profile for user 3
+  user: three
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  descripcion: Descripción de persona 3
+  nacionalidad: Nacionalidad de persona 3
+  direccion: Dirección de persona 3
+  email: persona3@example.com
+  portada: URL de la portada de persona 3
+  nombre: Nombre de persona 3
+  baneado: false
+  fecha_eliminacion: 
+  confirmation_token: 
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+  unconfirmed_email: 
+  email_confirmed: true
+  redes_sociales: Redes sociales de persona 3
+  mostrar_seguidos: true
+  mostrar_seguidores: true
+  mostrar_lecturas: true
+  mostrar_datos_personales: true
+
+# Personas adicionales
+four:
+  fecha_de_nacimiento: 1987-12-10
+  profile: Profile for user 4
+  user: four
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  descripcion: Descripción de persona 4
+  nacionalidad: Nacionalidad de persona 4
+  direccion: Dirección de persona 4
+  email: persona4@example.com
+  portada: URL de la portada de persona 4
+  nombre: Nombre de persona 4
+  baneado: false
+  fecha_eliminacion: 
+  confirmation_token: 
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+  unconfirmed_email: 
+  email_confirmed: true
+  redes_sociales: Redes sociales de persona 4
+  mostrar_seguidos: true
+  mostrar_seguidores: true
+  mostrar_lecturas: true
+  mostrar_datos_personales: true
+
+five:
+  fecha_de_nacimiento: 1994-03-25
+  profile: Profile for user 5
+  user: five
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  descripcion: Descripción de persona 5
+  nacionalidad: Nacionalidad de persona 5
+  direccion: Dirección de persona 5
+  email: persona5@example.com
+  portada: URL de la portada de persona 5
+  nombre: Nombre de persona 5
+  baneado: false
+  fecha_eliminacion: 
+  confirmation_token: 
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+  unconfirmed_email: 
+  email_confirmed: true
+  redes_sociales: Redes sociales de persona 5
+  mostrar_seguidos: true
+  mostrar_seguidores: true
+  mostrar_lecturas: true
+  mostrar_datos_personales: true
+
+six:
+  fecha_de_nacimiento: 1983-06-14
+  profile: Profile for user 6
+  user: six
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  descripcion: Descripción de persona 6
+  nacionalidad: Nacionalidad de persona 6
+  direccion: Dirección de persona 6
+  email: persona6@example.com
+  portada: URL de la portada de persona 6
+  nombre: Nombre de persona 6
+  baneado: false
+  fecha_eliminacion: 
+  confirmation_token: 
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+  unconfirmed_email: 
+  email_confirmed: true
+  redes_sociales: Redes sociales de persona 6
+  mostrar_seguidos: true
+  mostrar_seguidores: true
+  mostrar_lecturas: true
+  mostrar_datos_personales: true
+
+seven:
+  fecha_de_nacimiento: 1991-09-18
+  profile: Profile for user 7
+  user: seven
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  descripcion: Descripción de persona 7
+  nacionalidad: Nacionalidad de persona 7
+  direccion: Dirección de persona 7
+  email: persona7@example.com
+  portada: URL de la portada de persona 7
+  nombre: Nombre de persona 7
+  baneado: false
+  fecha_eliminacion: 
+  confirmation_token: 
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+  unconfirmed_email: 
+  email_confirmed: true
+  redes_sociales: Redes sociales de persona 7
+  mostrar_seguidos: true
+  mostrar_seguidores: true
+  mostrar_lecturas: true
+  mostrar_datos_personales: true
+
+eight:
+  fecha_de_nacimiento: 1988-11-30
+  profile: Profile for user 8
+  user: eight
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  descripcion: Descripción de persona 8
+  nacionalidad: Nacionalidad de persona 8
+  direccion: Dirección de persona 8
+  email: persona8@example.com
+  portada: URL de la portada de persona 8
+  nombre: Nombre de persona 8
+  baneado: false
+  fecha_eliminacion: 
+  confirmation_token: 
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+  unconfirmed_email: 
+  email_confirmed: true
+  redes_sociales: Redes sociales de persona 8
+  mostrar_seguidos: true
+  mostrar_seguidores: true
+  mostrar_lecturas: true
+  mostrar_datos_personales: true
+
+nine:
+  fecha_de_nacimiento: 1993-04-09
+  profile: Profile for user 9
+  user: nine
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  descripcion: Descripción de persona 9
+  nacionalidad: Nacionalidad de persona 9
+  direccion: Dirección de persona 9
+  email: persona9@example.com
+  portada: URL de la portada de persona 9
+  nombre: Nombre de persona 9
+  baneado: false
+  fecha_eliminacion: 
+  confirmation_token: 
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+  unconfirmed_email: 
+  email_confirmed: true
+  redes_sociales: Redes sociales de persona 9
+  mostrar_seguidos: true
+  mostrar_seguidores: true
+  mostrar_lecturas: true
+  mostrar_datos_personales: true
+
+ten:
+  fecha_de_nacimiento: 1995-07-12
+  profile: Profile for user 10
+  user: ten
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  descripcion: Descripción de persona 10
+  nacionalidad: Nacionalidad de persona 10
+  direccion: Dirección de persona 10
+  email: persona10@example.com
+  portada: URL de la portada de persona 10
+  nombre: Nombre de persona 10
+  baneado: false
+  fecha_eliminacion: 
+  confirmation_token: 
+  confirmed_at: <%= Time.zone.now %>
+  confirmation_sent_at: <%= Time.zone.now %>
+  unconfirmed_email: 
+  email_confirmed: true
+  redes_sociales: Redes sociales de persona 10
+  mostrar_seguidos: true
+  mostrar_seguidores: true
+  mostrar_lecturas: true
+  mostrar_datos_personales: true

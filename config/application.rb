@@ -18,7 +18,7 @@ module ReadmeBackend
     config.autoload_lib(ignore: %w(assets tasks))
     config.cloudinary_cloud_name = 'dkrmah0f7'
     config.cloudinary_api_key = '183549582925518'
-
+    config.cloudunary_api_secret = 'LRDlCyJxSBI03yiQzOGQZpBdrvA'
     config.secret_key = ENV['SECRET_KEY']
     # Configuration for the application, engines, and railties goes here.
     #

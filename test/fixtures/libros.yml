@@ -10,8 +10,9 @@ one:
   puntuacion_media: 4.5
   cantidad_comentarios: 30
   sumatoria: 20
-  categoria: "Categoria del libro one"
+  categoria: "Romance"
   user: one
+  deleted: false
 
 two:
   titulo: "Libro Two"
@@ -22,5 +23,6 @@ two:
   cantidad_resenhas: 10
   puntuacion_media: 3.8
   cantidad_comentarios: 15
-  categoria: "Categoria del libro two"
+  categoria: "Romance"
   user: two
+  deleted: false
