@@ -1,11 +1,101 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# test/fixtures/capitulos.yml
 
-one:
+one_1:
   libro: one
-  titulo: MyString
-  nombre_archivo: MyString
+  titulo: "El comienzo de la aventura"
+  nombre_archivo: <%=CloudinaryService.guardar_archivo(Rails.root.join('test/fixtures/files/capitulo_test.txt'))%>
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  indice: 1
+  publicado: true
 
-two:
+one_2:
+  libro: one
+  titulo: "Segunda parte de la aventura"
+  nombre_archivo: <%=CloudinaryService.guardar_archivo(Rails.root.join('test/fixtures/files/capitulo_test.txt'))%>
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  indice: 2
+  publicado: true
+
+one_3:
+  libro: one
+  titulo: "El desenlace de la aventura"
+  nombre_archivo: <%=CloudinaryService.guardar_archivo(Rails.root.join('test/fixtures/files/capitulo_test.txt'))%>
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  indice: 3
+  publicado: true
+
+one_4:
+  libro: one
+  titulo: "Epílogo de la aventura"
+  nombre_archivo: <%=CloudinaryService.guardar_archivo(Rails.root.join('test/fixtures/files/capitulo_test.txt'))%>
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  indice: 4
+  publicado: true
+
+one_5:
+  libro: one
+  titulo: "Apéndice de la aventura"
+  nombre_archivo: <%=CloudinaryService.guardar_archivo(Rails.root.join('test/fixtures/files/capitulo_test.txt'))%>
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  indice: 5
+  publicado: true
+
+two_1:
   libro: two
-  titulo: MyString
-  nombre_archivo: MyString
+  titulo: "Un giro inesperado"
+  nombre_archivo: <%=CloudinaryService.guardar_archivo(Rails.root.join('test/fixtures/files/capitulo_test.txt'))%>
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  indice: 1
+  publicado: true
+
+two_2:
+  libro: two
+  titulo: "La trama se complica"
+  nombre_archivo: <%=CloudinaryService.guardar_archivo(Rails.root.join('test/fixtures/files/capitulo_test.txt'))%>
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  indice: 2
+  publicado: true
+
+two_3:
+  libro: two
+  titulo: "Momento crucial"
+  nombre_archivo: <%=CloudinaryService.guardar_archivo(Rails.root.join('test/fixtures/files/capitulo_test.txt'))%>
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  indice: 3
+  publicado: true
+
+two_4:
+  libro: two
+  titulo: "La resolución final"
+  nombre_archivo: <%=CloudinaryService.guardar_archivo(Rails.root.join('test/fixtures/files/capitulo_test.txt'))%>
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  indice: 4
+  publicado: true
+
+two_5:
+  libro: two
+  titulo: "El epílogo sorpresa"
+  nombre_archivo: <%=CloudinaryService.guardar_archivo(Rails.root.join('test/fixtures/files/capitulo_test.txt'))%>
+  created_at: <%= Time.zone.now %>
+  updated_at: <%= Time.zone.now %>
+  deleted: false
+  indice: 5
+  publicado: true

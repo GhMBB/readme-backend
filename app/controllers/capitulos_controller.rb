@@ -262,6 +262,7 @@ class CapitulosController < ApplicationController
         cloudinary_response = Cloudinary::Uploader.upload(params[:contenido], resource_type: :auto, folder: "capitulos")
         return cloudinary_response['public_id']
       rescue CloudinaryException => e
+        puts e
         return ""
       end
     else
