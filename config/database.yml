@@ -54,13 +54,8 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: readme_backend_test
+  url: 'postgres://postgres:2UjAMF3pJjuvSML@rough-water-270.flycast:5432/readme_backend_test'
 
-  username: postgres
-  password: 2UjAMF3pJjuvSML
-  host: rough-water-270.flycast
-  port: 5432
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.
@@ -82,5 +77,6 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 #production:
+#  url: '<%= ENV["DATABASE_URL"] %>'
 #  url: '<%= ENV["DATABASE_URL"] %>'
 
