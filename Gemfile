@@ -23,6 +23,8 @@ gem 'ffi'
 gem 'cloudinary'
 
 gem 'dotenv'
+gem 'dotenv-rails'
+
 
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
