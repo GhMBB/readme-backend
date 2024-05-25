@@ -17,4 +17,4 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - run: flyctl deploy --app readme-backend
+      - run: flyctl deploy --app readmeapp
