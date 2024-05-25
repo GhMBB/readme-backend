@@ -2,7 +2,6 @@
 
 # Crear o verificar la base de datos de test
 echo "Checking and preparing test database..."
-./bin/rails db:test:create
 ./bin/rails db:test:prepare
 # Ejecutar pruebas
 echo "Running tests..."
