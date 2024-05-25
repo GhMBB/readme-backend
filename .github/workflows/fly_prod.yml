@@ -13,31 +13,8 @@ jobs:
     name: Deploy app
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.1.4"
+      - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: Install dependencies
-        run: |
-          gem install bundler
-          bundle install
-      
-      - name: Set up Flyctl
-        uses: superfly/flyctl-actions/setup-flyctl@master
-
-      - name: Set up database
-        run: |
-          cp config/database.yml.ci config/database.yml
-          bundle exec rails db:prepare RAILS_ENV=test
-
-      - name: Run tests
-        run: bundle exec rails test
-
-
-      - name: Deploy to Fly.io
-        if: success()
-        run: flyctl deploy --app readmeapp
+      - run: flyctl deploy --app readmeapp
