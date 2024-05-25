@@ -1,8 +1,9 @@
 #!/bin/sh
 
-# Crear o verificar la base de datos de test
+# Verificar y preparar la base de datos de test con protección desactivada
 echo "Checking and preparing test database..."
-./bin/rails db:test:prepare
+DISABLE_DATABASE_ENVIRONMENT_CHECK=1 ./bin/rails db:test:prepare
+
 # Ejecutar pruebas
 echo "Running tests..."
 if ./bin/rails test; then

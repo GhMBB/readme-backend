@@ -58,6 +58,7 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
   gem 'rails-controller-testing'
   gem 'rubocop', require: false
+  gem 'bullet'
 end
 
 group :development do
