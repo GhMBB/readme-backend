@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Ejecutar pruebas
+echo "Running tests..."
+if ./bin/rails test; then
+echo "Tests passed. Preparing database..."
+       ./bin/rails db:prepare
+else
+  echo "Tests failed. Aborting release."
+  exit 1
+  fi
