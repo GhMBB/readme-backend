@@ -128,6 +128,9 @@ GEM
       rails (>= 3.0.0)
     domain_name (0.6.20240107)
     dotenv (3.1.0)
+    dotenv-rails (3.1.0)
+      dotenv (= 3.1.0)
+      railties (>= 6.1)
     drb (2.2.0)
       ruby2_keywords
     dry-configurable (1.1.0)
@@ -390,6 +393,7 @@ DEPENDENCIES
   debug
   dockerfile-rails (>= 1.6)
   dotenv
+  dotenv-rails
   error_highlight (>= 0.4.0)
   ffi
   jwt
