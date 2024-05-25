@@ -2,8 +2,11 @@
 
 # Verificar y preparar la base de datos de test con protección desactivada
 echo "Checking and preparing test database..."
-DISABLE_DATABASE_ENVIRONMENT_CHECK=1
-./bin/rails db:test:migrate
+DISABLE_DATABASE_ENVIRONMENT_CHECK=1 ./bin/rails db:test:prepare
+
+# Asegurarse de que todas las migraciones se han aplicado
+echo "Running migrations..."
+DISABLE_DATABASE_ENVIRONMENT_CHECK=1 ./bin/rails db:migrate
 
 # Ejecutar pruebas
 echo "Running tests..."
