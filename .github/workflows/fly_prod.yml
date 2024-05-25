@@ -25,6 +25,9 @@ jobs:
         run: |
           gem install bundler
           bundle install
+      
+      - name: Set up Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Set up database
         run: |
@@ -34,8 +37,6 @@ jobs:
       - name: Run tests
         run: bundle exec rails test
 
-      - name: Set up Flyctl
-        uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy to Fly.io
         if: success()
