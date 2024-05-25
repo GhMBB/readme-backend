@@ -25,9 +25,10 @@ jobs:
         run: |
           gem install bundler
           bundle install
+          rails db:create RAILS_ENV=test
 
       - name: Set up database
-        run: bundle exec rails db:prepare RAILS_ENV=test
+        run: rails db:prepare RAILS_ENV=test
 
       - name: Run tests
         run: bundle exec rails test
