@@ -1,6 +1,8 @@
 #!/bin/sh
 
-# Verificar y preparar la base de datos de test con protección desactivada
+set -e
+
+# Verificar y preparar la base de datos de prueba
 echo "Checking and preparing test database..."
 DISABLE_DATABASE_ENVIRONMENT_CHECK=1 ./bin/rails db:test:prepare
 

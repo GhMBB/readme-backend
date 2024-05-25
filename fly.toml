@@ -45,5 +45,5 @@ console_command = '/rails/bin/rails console'
   url_prefix = '/'
 
 # Add the environment variable for database environment check disable
-#[env]
-#  DISABLE_DATABASE_ENVIRONMENT_CHECK = "1"
+[env]
+  DISABLE_DATABASE_ENVIRONMENT_CHECK = "1"
