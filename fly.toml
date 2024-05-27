@@ -10,7 +10,7 @@ console_command = '/rails/bin/rails console'
 [build]
 
 [deploy]
-   release_command = './bin/release'
+   release_command = './bin/rails rails db:prepare'
 
 [http_service]
   internal_port = 4000
@@ -45,5 +45,6 @@ console_command = '/rails/bin/rails console'
   url_prefix = '/'
 
 # Add the environment variable for database environment check disable
-[env]
-  DISABLE_DATABASE_ENVIRONMENT_CHECK = "1"
+
+#[env]
+# DISABLE_DATABASE_ENVIRONMENT_CHECK = "1"
