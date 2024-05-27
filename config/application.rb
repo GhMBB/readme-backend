@@ -1,6 +1,7 @@
 require_relative "boot"
 
 require "rails/all"
+require "dotenv"
 
 
 # Require the gems listed in Gemfile, including any gems
@@ -9,16 +10,18 @@ Bundler.require(*Rails.groups)
 
 module ReadmeBackend
   class Application < Rails::Application
+    Dotenv.load
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.1
-
+    puts "DATABASE_URL: #{ENV['DATABASE_URL']} \n\n"
+    puts "DATABASE_TEST_URL: #{ENV['DATABASE_TEST_URL']}\n\n"
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w(assets tasks))
     config.cloudinary_cloud_name = 'dkrmah0f7'
     config.cloudinary_api_key = '183549582925518'
-
+    config.cloudunary_api_secret = 'LRDlCyJxSBI03yiQzOGQZpBdrvA'
     config.secret_key = ENV['SECRET_KEY']
     # Configuration for the application, engines, and railties goes here.
     #

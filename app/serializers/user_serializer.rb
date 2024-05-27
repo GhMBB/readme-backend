@@ -2,7 +2,8 @@
 
 class UserSerializer < ActiveModel::Serializer
   attributes :id, :username, :role, :profile, :fecha_de_nacimiento, :portada, :descripcion, :nacionalidad, :direccion,
-             :nombre, :created_at
+             :nombre, :created_at, :redes_sociales, :mostrar_datos_personales,
+             :mostrar_lecturas, :mostrar_seguidores, :mostrar_seguidos
 
   def username
     if object.deleted == true || object.persona.baneado == true
@@ -29,6 +30,26 @@ class UserSerializer < ActiveModel::Serializer
 
   def direccion
     object.persona&.direccion
+  end
+
+  def redes_sociales
+    object.persona&.redes_sociales
+  end
+
+  def mostrar_datos_personales
+    object.persona&.mostrar_datos_personales
+  end
+
+  def mostrar_lecturas
+    object.persona&.mostrar_lecturas
+  end
+
+  def mostrar_seguidos
+    object.persona&.mostrar_seguidos
+  end
+
+  def mostrar_seguidores
+    object.persona&.mostrar_seguidores
   end
 
   def profile

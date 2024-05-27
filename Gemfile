@@ -23,6 +23,8 @@ gem 'ffi'
 gem 'cloudinary'
 
 gem 'dotenv'
+gem 'dotenv-rails'
+
 
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
@@ -56,13 +58,14 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
   gem 'rails-controller-testing'
   gem 'rubocop', require: false
+  gem 'bullet'
 end
 
 group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  gem 'bullet'
   gem "letter_opener"
-
   gem "error_highlight", ">= 0.4.0", platforms: [:ruby]
   gem 'brakeman'
 end
@@ -75,6 +78,5 @@ gem 'bundler-audit'
 #Crear un modelo de la db
 gem 'rails-erd', group: :development #bundle exec erd --filetype=dot
 gem "rubycritic"
-gem 'bullet', group: 'development'
 gem 'whenever', require: false
 gem 'schedule'

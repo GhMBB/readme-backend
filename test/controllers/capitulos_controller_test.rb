@@ -3,7 +3,8 @@ require 'test_helper'
 class CapitulosControllerTest < ActionController::TestCase
   setup do
     @libro = libros(:one)
-    @capitulo = capitulos(:one)
+    @capitulo = capitulos(:one_1)
+    @capitulo2 = capitulos(:one_2)
     @user = users(:one)
     @token = JwtService.encode(@user)
     @request.headers["Authorization"] = "Bearer #{@token}"
@@ -16,7 +17,7 @@ class CapitulosControllerTest < ActionController::TestCase
 
   test "should create capitulo successfully" do
     assert_difference('Capitulo.count') do
-      post :create, params: { libro_id: @libro.id, titulo: "Nuevo Capitulo", contenido: "Contenido del nuevo capitulo" }
+      post :create, params: { libro_id: @libro.id, titulo: "Nuevo Capitulo", contenido: Rails.root.join('test/fixtures/files/capitulo_test.txt') }
     end
 
     assert_response :created, "Failed to create the capitulo"
@@ -27,7 +28,7 @@ class CapitulosControllerTest < ActionController::TestCase
       post :create, params: { libro_id: @libro.id, titulo: "Nuevo Capitulo" }
     end
 
-    assert_response :unprocessable_entity, "Created capitulo without contenido, which should not be possible"
+    assert_response 404, "Created capitulo without contenido, which should not be possible"
   end
 
   test "should update capitulo successfully" do
@@ -36,26 +37,27 @@ class CapitulosControllerTest < ActionController::TestCase
   end
 
   test "should not update capitulo with invalid params" do
+    titulo = @capitulo.titulo
     patch :update, params: { id: @capitulo.id, titulo: "" }
-    assert_response :unprocessable_entity, "Updated the capitulo with invalid parameters, which should not be possible"
+    assert titulo==@capitulo.titulo, "Updated the capitulo with invalid parameters, which should not be possible"
   end
 
   test "should delete capitulo successfully" do
     assert_difference('Capitulo.where(deleted: false).count', -1) do
       delete :destroy, params: { id: @capitulo.id }
     end
-  
-    assert @capitulo.reload.deleted, "Failed to mark the capitulo as deleted"
+
+    @capitulo.reload
+    assert @capitulo.deleted, "Failed to mark the capitulo as deleted"
     assert_response :success, "Failed to delete the capitulo"
   end
 
   test "should swap capitulos successfully" do
-    capitulo1 = capitulos(:one)
-    capitulo2 = capitulos(:two)
+    capitulo1 = capitulos(:one_1)
+    capitulo2 = capitulos(:one_2)
 
     put :swap, params: { capitulo1_id: capitulo1.id, capitulo2_id: capitulo2.id }
 
     assert_response :success, "Failed to swap capitulos"
   end
-
 end

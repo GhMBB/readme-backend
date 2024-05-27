@@ -157,6 +157,17 @@
             return [{ errors: "El libro no está eliminado por el usuario." }, :unprocessable_entity]
         end
       end
+
+      def self.getIntereses()
+        paginated_libros = Libro.categoria.keys.each_with_object({}) do |categoria, hash|
+          libros = Libro.where(categoria: categoria).paginate(page: 1, per_page: WillPaginate.per_page)
+          serialized_libros = libros.map() do |libro|
+            LibroSerializer.new(libro)
+          end
+          hash[Libro.categoria[categoria]] = serialized_libros
+        end
+        return [paginated_libros, :ok]
+      end
       
       
       
