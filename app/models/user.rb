@@ -55,7 +55,7 @@ class User < ApplicationRecord
   end
   def libros_en_progreso(params)
     libros_en_progreso = Libro.joins(:lecturas)
-                              .where(lecturas: { user_id: id, terminado: false, deleted: false })
+                              .where(lecturas: { user_id: id, terminado: false, deleted: false },deleted:false,deleted_by_user:false)
                               .order(updated_at: :desc)
                               .distinct
                               .paginate(page: params[:page])
@@ -71,7 +71,7 @@ class User < ApplicationRecord
 
   def lista_lectura(params)
     libros_en_progreso = Libro.joins(:lecturas)
-                              .where(lecturas: { user_id: params[:user_id], deleted: false })
+                              .where(lecturas: { user_id: params[:user_id], deleted: false }, deleted:false,deleted_by_user:false)
                               .order(updated_at: :desc)
                               .distinct
                               .paginate(page: params[:page])
