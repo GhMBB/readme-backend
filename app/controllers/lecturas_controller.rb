@@ -5,7 +5,7 @@
 class LecturasController < ApplicationController
   before_action :authenticate_request
   before_action :set_lectura, only: [:destroy]
-  rescue_from StandardError, with: :internal_server_error
+  #{}rescue_from StandardError, with: :internal_server_error
 
   def showById
     user = get_user
