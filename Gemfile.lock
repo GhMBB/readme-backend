@@ -128,6 +128,9 @@ GEM
       rails (>= 3.0.0)
     domain_name (0.6.20240107)
     dotenv (3.1.0)
+    dotenv-rails (3.1.0)
+      dotenv (= 3.1.0)
+      railties (>= 6.1)
     drb (2.2.0)
       ruby2_keywords
     dry-configurable (1.1.0)
@@ -219,9 +222,9 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.0)
-    nokogiri (1.16.2-x64-mingw-ucrt)
+    nokogiri (1.16.5-x64-mingw-ucrt)
       racc (~> 1.4)
-    nokogiri (1.16.2-x86_64-linux)
+    nokogiri (1.16.5-x86_64-linux)
       racc (~> 1.4)
     parallel (1.24.0)
     parser (3.3.0.5)
@@ -390,6 +393,7 @@ DEPENDENCIES
   debug
   dockerfile-rails (>= 1.6)
   dotenv
+  dotenv-rails
   error_highlight (>= 0.4.0)
   ffi
   jwt

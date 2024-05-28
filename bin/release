@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -e
+
+# Verificar y preparar la base de datos de prueba
+echo "Checking and preparing test database..."
+./bin/rails db:test:prepare
+
+# Asegurarse de que todas las migraciones se han aplicado
+echo "Running migrations..."
+./bin/rails db:migrate
+
+# Ejecutar pruebas
+echo "Running tests..."
+if ./bin/rails test; then
+  echo "Tests passed. Preparing database..."
+  ./bin/rails db:prepare
+else
+  echo "Tests failed. Aborting release."
+  exit 1
+fi
