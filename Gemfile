@@ -23,6 +23,8 @@ gem 'ffi'
 gem 'cloudinary'
 
 gem 'dotenv'
+gem 'dotenv-rails'
+
 
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
@@ -56,6 +58,7 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
   gem 'rails-controller-testing'
   gem 'rubocop', require: false
+  gem 'bullet'
 end
 
 group :development do

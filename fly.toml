@@ -10,7 +10,6 @@ console_command = '/rails/bin/rails console'
 [build]
 
 [deploy]
-   #pre = ["bundle install", "rails db:migrate", "rails db:seed", rails db:prepare]
    release_command = './bin/rails db:prepare'
 
 [http_service]
@@ -46,5 +45,6 @@ console_command = '/rails/bin/rails console'
   url_prefix = '/'
 
 # Add the environment variable for database environment check disable
+
 #[env]
-#  DISABLE_DATABASE_ENVIRONMENT_CHECK = "1"
+# DISABLE_DATABASE_ENVIRONMENT_CHECK = "1"
